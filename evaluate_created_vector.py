@@ -68,7 +68,7 @@ sampling_kwargs={"use_cache": True, "pad_token_id": tokenizer.eos_token_id, "max
 tokenizer.padding_side = "left"
 
 # --- Load steering vector ---
-vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}.pkl")
+vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}_final.pkl")
 with open(vector_path, "rb") as f:
     steering_vector = pickle.load(f)
 
