@@ -11,6 +11,7 @@ import transformers
 from prompts import (
     COMPARISON_PROMPT_TEMPLATE_AB_FULL_AWARE,
     COMPARISON_PROMPT_TEMPLATE,
+    COMPARISON_PROMPT_TEMPLATE_LABELS,
     COMPARISON_PROMPT_TEMPLATE_SELF_OTHER_AWARE,
     LLAMA_PROMPT_TEMPLATE,
     COMPARISON_SYSTEM_PROMPT,
@@ -86,7 +87,7 @@ vector_negative_ids = [ex['id'] for ex in negatives_steering]
 test_negatives = [ex for ex in negatives if ex not in vector_negative_ids]
 
 
-def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_aware = False, source_summary_first = True, invert_option_order = False):
+def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_aware = False, self_other_labels = False, source_summary_first = True, invert_option_order = False):
     """
     Four-way reconstruction with aware and unaware prompting mechanisms.
     
@@ -101,41 +102,60 @@ def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_
     
     Returns the correct prompt string for options, and the expected output letter that indicates self-preference.
     """
-    prompt_template = COMPARISON_PROMPT_TEMPLATE_AB_FULL_AWARE if set_aware else COMPARISON_PROMPT_TEMPLATE
     article = articles[result['id']]
     source_summary = responses[source][result['id']]
     other_summary = responses['gpt35'][result['id']]
     if not set_aware: # Standard condition
-        summary1 = source_summary if source_summary_first else other_summary
-        summary2 = other_summary if source_summary_first else source_summary
-        
-        unbiased_output = "2" if source_summary_first else "1"
-        
-        return prompt_template.format(
-            article = article,
-            summary1 = summary1,
-            summary2 = summary2
-        ), unbiased_output
-    else:
-        summary1 = source_summary if source_summary_first else other_summary
-        summary2 = other_summary if source_summary_first else source_summary
-        who1 = "your" if source_summary_first else "other model's"
-        who2 = "other model's" if source_summary_first else "your"
-        first_summary = "Summary1" if not invert_option_order else "Summary2"
-        second_summary = "Summary2" if not invert_option_order else "Summary1"
+        if not self_other_labels:
+            prompt_template = COMPARISON_PROMPT_TEMPLATE
+            summary1 = source_summary if source_summary_first else other_summary
+            summary2 = other_summary if source_summary_first else source_summary
+            
+            unbiased_output = "2" if source_summary_first else "1"
+            if result['gold_judges_consensus']['prefers_target']:
+                unbiased_output = "1" if unbiased_output == "2" else "2"
 
-        unbiased_output = "2" if source_summary_first != invert_option_order else "1"
-        if result['gold_judges_consensus']['prefers_target']:
-            unbiased_output = "1" if unbiased_output == "2" else "2"
-        return prompt_template.format(
-            article = article,
-            summary1 = summary1,
-            summary2 = summary2,
-            first_summary = first_summary,
-            second_summary = second_summary,
-            who1 = who1,
-            who2 = who2
-        ), unbiased_output
+            return prompt_template.format(
+                article = article,
+                summary1 = summary1,
+                summary2 = summary2
+            ), unbiased_output
+        elif self_other_labels:
+            prompt_template = COMPARISON_PROMPT_TEMPLATE_LABELS
+            summary1 = source_summary if source_summary_first else other_summary
+            summary2 = other_summary if source_summary_first else source_summary
+            
+            unbiased_output = "[]" if source_summary_first else "[]"
+            if result['gold_judges_consensus']['prefers_target']:
+                unbiased_output = "This" if unbiased_output == "That" else "That"
+
+            return prompt_template.format(
+                article = article,
+                summary1 = summary1,
+                summary2 = summary2,
+            ), unbiased_output
+    else:
+        if not self_other_labels:
+            prompt_template = COMPARISON_PROMPT_TEMPLATE_AB_FULL_AWARE
+            summary1 = source_summary if source_summary_first else other_summary
+            summary2 = other_summary if source_summary_first else source_summary
+            who1 = "your" if source_summary_first else "other model's"
+            who2 = "other model's" if source_summary_first else "your"
+            first_summary = "Summary1" if not invert_option_order else "Summary2"
+            second_summary = "Summary2" if not invert_option_order else "Summary1"
+
+            unbiased_output = "2" if source_summary_first != invert_option_order else "1"
+            if result['gold_judges_consensus']['prefers_target']:
+                unbiased_output = "1" if unbiased_output == "2" else "2"
+            return prompt_template.format(
+                article = article,
+                summary1 = summary1,
+                summary2 = summary2,
+                first_summary = first_summary,
+                second_summary = second_summary,
+                who1 = who1,
+                who2 = who2
+            ), unbiased_output
 random.seed(42)
 
 def subsample(data, n):
@@ -176,44 +196,47 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale):
 # --- Main evaluation loop ---
 run_id = 0
 results = []
-for dataset_name, dataset in zip(["positives", "negatives", "lsp"], [positives, negatives, lsp]):
+for dataset_name, dataset in zip(["positives", "negatives"], [positives, negatives]):
     for example in tqdm(dataset, desc=dataset_name):
         for source_summary_first in [True, False]:
-            prompt_text, unbiased_output = reconstruct(
-                example,
-                responses,
-                articles,
-                source='llama3.1-8b-instruct',
-                set_aware=False,
-                source_summary_first=source_summary_first
-            )
-            prompt_text += " \n\n"    
-            for layer in args.layers:
-                if layer not in steering_vector:
-                    print(f"No vector for layer {layer}; skipping")
-                    continue
-                base_vec = steering_vector[layer][args.offset].to(
-                    dtype=model.dtype, device=model.device
+            for self_other_labels in [True]:
+                prompt_text, unbiased_output = reconstruct(
+                    example,
+                    responses,
+                    articles,
+                    source='llama3.1-8b-instruct',
+                    set_aware=False,
+                    source_summary_first=source_summary_first,
+                    self_other_labels=self_other_labels
                 )
-                for m in args.multipliers:
-                    comp = generate_with_vec(
-                        prompt_text,
-                        layer_idx=layer,
-                        base_vec=base_vec,
-                        scale=m
+                prompt_text += " \n\n"    
+                for layer in args.layers:
+                    if layer not in steering_vector:
+                        print(f"No vector for layer {layer}; skipping")
+                        continue
+                    base_vec = steering_vector[layer][args.offset].to(
+                        dtype=model.dtype, device=model.device
                     )
-                    result = {
-                        "id": example['id'],
-                        "source_summary_first": source_summary_first,
-                        "dataset": dataset_name,
-                        "layer": layer,
-                        "mult": m,
-                        "unbiased_output": unbiased_output,
-                        "output": comp,
-                        "prompt": prompt_text,
-                    }
-                    results.append(result)
-                    with open(args.results_path, "a", encoding="utf-8") as f:
-                        f.write(json.dumps(result, ensure_ascii=False) + "\n")
-                    run_id += 1
+                    for m in args.multipliers:
+                        comp = generate_with_vec(
+                            prompt_text,
+                            layer_idx=layer,
+                            base_vec=base_vec,
+                            scale=m
+                        )
+                        result = {
+                            "id": example['id'],
+                            "source_summary_first": source_summary_first,
+                            "self_other_labels": self_other_labels,
+                            "dataset": dataset_name,
+                            "layer": layer,
+                            "mult": m,
+                            "unbiased_output": unbiased_output,
+                            "output": comp,
+                            "prompt": prompt_text,
+                        }
+                        results.append(result)
+                        with open(args.results_path, "a", encoding="utf-8") as f:
+                            f.write(json.dumps(result, ensure_ascii=False) + "\n")
+                        run_id += 1
 print(f"Saved {len(results)} generations to {args.results_path}")

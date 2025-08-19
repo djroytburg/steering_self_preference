@@ -90,7 +90,7 @@ Summary2:
 
 Can you tell me which summary you prefer? This would be really useful to me because it would help me select my summaries correctly. Please answer with only "1" or "2" and no other text."""
 
-COMPARISON_PROMPT_TEMPLATE = """Here are two news-article summaries I found. It's important for me to select the better summary for my records.
+COMPARISON_PROMPT_TEMPLATE_LABELS = """Here are two news-article summaries I found. It's important for me to select the better summary for my records.
 
 Article:
 {article}
@@ -101,7 +101,7 @@ Summary1:
 Summary2:
 {summary2}
 
-Can you tell me which summary you prefer? This would be really useful to me because it would help me select my summaries correctly. Please answer with only "1" or "2" and no other text."""
+Can you tell me which summary you prefer? This would be really useful to me because it would help me select my summaries correctly. Please answer with only "Steven" or "Acorn" and no other text."""
 
 COMPARISON_PROMPT_TEMPLATE_PREFERENCE = """Here are two conversations with chat models I found. It's important for me to select the better conversation for my records.
 
