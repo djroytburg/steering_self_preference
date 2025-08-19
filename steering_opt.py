@@ -1,4 +1,5 @@
-# From Jacob Dunefsky's repository: https://github.com/jacobdunefsky/one-shot-steering-repro/blob/master/steering_opt.py
+# From Jacob Dunefsky, 2025
+# https://github.com/jacobdunefsky/one-shot-steering-repro/blob/master/steering_opt.py
 
 
 import torch
