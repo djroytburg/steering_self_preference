@@ -9,9 +9,24 @@ from collections import defaultdict
 import argparse
 import numpy as np
 import seaborn as sns
+import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 
+font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+prop = fm.FontProperties(fname=font_path)
+plt.rcParams['font.family'] = prop.get_name()
+from prompts import COMPARISON_SYSTEM_PROMPT
+
 load_dotenv()
+
+parser = argparse.ArgumentParser(description="Create steering vector with awareness setting.")
+parser.add_argument('--aware', action='store_true', help='Use aware setting if specified.')
+parser.add_argument('--offset', type=int, default=10)
+args = parser.parse_args()
+
+## What goes after the chat template
+post_script="<|begin_header_id|>assistant<|end_header_id|>"
+
 HF_TOKEN = os.getenv("HF_TOKEN")
 quant_cfg = BitsAndBytesConfig(load_in_8bit=True)
 MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
@@ -33,17 +48,13 @@ model.eval()
 num_layers = model.config.num_hidden_layers
 hidden_size = model.config.hidden_size
 
-parser = argparse.ArgumentParser(description="Create steering vector with awareness setting.")
-parser.add_argument('--aware', action='store_true', help='Use aware setting if specified.')
-args = parser.parse_args()
-
 def load_jsonl(path):
     with open(path, "r") as f:
         return [json.loads(line) for line in f]
 setting = "aware" if args.aware else "unaware"
 agreement_examples = load_jsonl(f'steering_inputs/{setting}/agreement_examples.jsonl')
 bias_examples = load_jsonl(f'steering_inputs/{setting}/bias_examples.jsonl')
-lsp_examples = load_jsonl(f'steering_inputs/{setting}/lsp_examples.jsonl')
+
 # ─── DEFINE PAIRS CONCISELY AS LIST LITERALS ─────────────────────────────────────
 yes_no_pairs = [
     ("Say Yes",           "Say No"),
@@ -86,11 +97,11 @@ num_positive = len(agreement_examples)
 num_negative = len(bias_examples)
 
 positive_sums_by_layer = {
-    layer: [torch.zeros(hidden_size) for _ in range(10)]
+    layer: [torch.zeros(hidden_size) for _ in range(args.offset)]
     for layer in range(num_layers)
 }
 negative_sums_by_layer = {
-    layer: [torch.zeros(hidden_size) for _ in range(10)]
+    layer: [torch.zeros(hidden_size) for _ in range(args.offset)]
     for layer in range(num_layers)
 }
 
@@ -107,6 +118,15 @@ nuisance_negative_sums = {
 
 def accumulate_activations(prompts, sum_accumulators, num_layers, max_tokens):
     for prompt in tqdm(prompts, desc="Accumulating activations"):
+        prompt = tok.apply_chat_template([
+            {
+                "role": "system", 
+                "content": COMPARISON_SYSTEM_PROMPT
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }],tokenize=False) + "<|start_header_id|>assistant<|end_header_id|>"
         token_ids = tok(prompt, add_special_tokens=True)["input_ids"]
         tokens_to_process = min(max_tokens, len(token_ids))
         with torch.no_grad():
@@ -124,12 +144,12 @@ def accumulate_activations(prompts, sum_accumulators, num_layers, max_tokens):
 agreement_prompts = [example['prompt'] for example in agreement_examples]
 bias_prompts = [example['prompt'] for example in bias_examples]
 
-accumulate_activations(agreement_prompts,   positive_sums_by_layer, num_layers, 10)
-accumulate_activations(bias_prompts,  negative_sums_by_layer, num_layers, 10)
+accumulate_activations(agreement_prompts,   positive_sums_by_layer, num_layers, args.offset)
+accumulate_activations(bias_prompts,  negative_sums_by_layer, num_layers, args.offset)
 
 layer_mean_diff_vectors = defaultdict(list)
 for layer_idx in range(num_layers):
-    for offset in range(10):
+    for offset in range(args.offset):
         avg_pos = positive_sums_by_layer[layer_idx][offset] / num_positive
         avg_neg = negative_sums_by_layer[layer_idx][offset] / num_negative
         diff    = avg_pos - avg_neg
@@ -169,7 +189,7 @@ with open(f"vectors/caa/steering_vector_{setting}_final.pkl", "wb") as f:
 
 print(f"Saved vector to vectors/caa/steering_vector_{setting}_final.pkl")
 
-def show_top_token_heatmap_all_layers_offsets(layer_proj, model, tokenizer, K=10, prompt_tokens=None):
+def show_top_token_heatmap_all_layers_offsets(layer_proj, model, tokenizer, K=10, negative = False, prompt_tokens=None):
     """
     Shows a heatmap of the top token (decoded) for each layer and offset.
     Rows: layers (0-based)
@@ -189,11 +209,14 @@ def show_top_token_heatmap_all_layers_offsets(layer_proj, model, tokenizer, K=10
         for offset in range(1, K + 1):
             vec = layer_proj[layer][K-offset]
             vec = vec.to(device).to(model_dtype)
+            vec *= -1 if negative else 1
             normed = model.model.norm(vec)
             logits = model.lm_head(normed)
             probs = torch.softmax(logits, dim=-1)
             top_idx = torch.argmax(probs).item()
             top_token = tokenizer.decode([top_idx])
+            if not top_token or len(top_token.strip()) == 0 or not all(32 <= ord(c) < 127 for c in top_token):
+                top_token = "<unk>"
             top_prob = probs[top_idx].item()
             layer_tokens.append(top_token)
             layer_probs.append(top_prob)
@@ -209,25 +232,49 @@ def show_top_token_heatmap_all_layers_offsets(layer_proj, model, tokenizer, K=10
         xticklabels = [tokenizer.decode([t]) for t in prompt_tokens]
     else:   xticklabels=[f"-{K-i}" for i in range(K)]
 
-    ax = sns.heatmap(prob_matrix, annot=token_matrix, fmt='', cmap="Reds",
+    ax = sns.heatmap(prob_matrix, annot=token_matrix, fmt='', cmap="Reds" if negative else "Blues",
                      xticklabels=xticklabels,
                      yticklabels=[f"Layer {i}" for i in range(num_layers)])
     plt.title(f"Top Token per Layer & Offset")
     plt.xlabel("Offset (from last token)")
     plt.ylabel("Layer")
-    plt.savefig(f"../caa/steering_vector_{setting}_heatmap.pdf", dpi=300, bbox_inches='tight')
+    plt.savefig(f"vectors/caa/steering_vector_{setting}_heatmap{'_neg' if negative else ''}.pdf", dpi=300, bbox_inches='tight')
     plt.tight_layout()
     plt.show()
 
+def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_id|>"):
+    prompt = tok.apply_chat_template([
+            {
+                "role": "system", 
+                "content": COMPARISON_SYSTEM_PROMPT
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }],tokenize=False) + post_script
+    return prompt
+
 prompt_tokens = []
-for decoded_prompt_token in tok(bias_prompts[0], add_special_tokens=True)['input_ids'][-10:]:
+for decoded_prompt_token in tok(chat_template(bias_prompts[0], post_script=post_script), add_special_tokens=True)['input_ids'][-args.offset:]:
     prompt_tokens.append(decoded_prompt_token)
 
 # Example usage:
+layer_proj = {k: torch.stack(v) for k, v in projected_vectors_by_layer.items()}
+
 show_top_token_heatmap_all_layers_offsets(
-    layer_proj={k: -1 * torch.stack(v) for k, v in projected_vectors_by_layer.items()},
+    layer_proj=layer_proj,
     model=model,
     tokenizer=tok,
-    K=10,
+    negative=False,
+    K=args.offset,
+    prompt_tokens=prompt_tokens
+)
+
+show_top_token_heatmap_all_layers_offsets(
+    layer_proj=layer_proj,
+    model=model,
+    tokenizer=tok,
+    negative=True,
+    K=args.offset,
     prompt_tokens=prompt_tokens
 )
