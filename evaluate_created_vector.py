@@ -5,7 +5,6 @@ import pickle
 import argparse
 from tqdm import tqdm
 import torch
-import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import transformers
 from prompts import (
@@ -30,12 +29,18 @@ from data import load_data
 
 # --- Argparse ---
 parser = argparse.ArgumentParser(description="Evaluate created steering vector.")
-parser.add_argument('--vector_path', type=str, default="vectors/caa/steering_vector_unaware_final.pkl")
+parser.add_argument('--steering_type', type=str, default="caa", choices = ["caa", "optimization"])
+parser.add_argument('--setting', type=str, default="unaware", choices=["aware", "unaware"])
+parser.add_argument('--vector_path', type=str, default="vectors/")
+parser.add_argument('--prompt_template', type=str, default='classic', choices = ['classic', 'self-other'])
 parser.add_argument('--layers', type=int, nargs='+', default=[14,15,16])
+parser.add_argument('--cases', type=str, default="bias,agreement,lsp")
 parser.add_argument('--multipliers', type=float, nargs='+', default=[-0.5,-0.3,-0.1,0.1,0.3,0.5])
 parser.add_argument('--num_samples', type=int, default=30)
 parser.add_argument('--offset', type=int, default=0)
-parser.add_argument('--results_path', type=str, default="steering_evals/caa/unaware/classic/results.jsonl")
+parser.add_argument('--results_path', type=str, default="steering_evals")
+parser.add_argument('--seed', type=int, default=42)
+
 args = parser.parse_args()
 
 MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
@@ -63,7 +68,8 @@ sampling_kwargs={"use_cache": True, "pad_token_id": tokenizer.eos_token_id, "max
 tokenizer.padding_side = "left"
 
 # --- Load steering vector ---
-with open(args.vector_path, "rb") as f:
+vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}.pkl")
+with open(vector_path, "rb") as f:
     steering_vector = pickle.load(f)
 
 # --- Load datasets ---
@@ -71,20 +77,36 @@ def load_jsonl(path):
     with open(path, "r") as f:
         return [json.loads(line) for line in f]
 
-positives = load_jsonl("preference_extraction/unaware/xsum_llama3.1-8b-instruct_agreement_examples.jsonl")
-negatives = load_jsonl("preference_extraction/unaware/xsum_llama3.1-8b-instruct_bias_examples.jsonl")
-test_lsp = load_jsonl("preference_extraction/unaware/xsum_llama3.1-8b-instruct_legit_self_pref_examples.jsonl")
+if any([case not in ["bias", "agreement", "lsp"] for case in args.cases.split(",")]):
+    raise ValueError("Invalid case specified. Choose from 'bias', 'agreement', 'lsp'.")
 
-positives_steering = load_jsonl("steering_inputs/unaware/agreement_examples.jsonl")
-negatives_steering = load_jsonl("steering_inputs/unaware/bias_examples.jsonl")
+
+def subsample(data, n, seed = args.seed):
+    random.seed(seed)
+    return random.sample(data, min(n, len(data)))
+
+cases = args.cases.split(",")
+case_to_dataset = {}
+if "agreement" in cases:
+    positives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_agreement_examples.jsonl")
+    positives_steering = load_jsonl(f"steering_inputs/{args.setting}/agreement_examples.jsonl")
+    vector_positive_ids = [ex['id'] for ex in positives_steering]
+    test_positives = [ex for ex in positives if ex['id'] not in vector_positive_ids]
+    case_to_dataset['agreement'] = subsample(test_positives, args.num_samples)
+
+if "bias" in cases:
+    negatives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_bias_examples.jsonl")
+    negatives_steering = load_jsonl(f"steering_inputs/{args.setting}/bias_examples.jsonl")
+    vector_negative_ids = [ex['id'] for ex in negatives_steering]
+    test_negatives = [ex for ex in negatives if ex['id'] not in vector_negative_ids]
+    case_to_dataset['bias'] = subsample(test_negatives, args.num_samples)
+
+if "lsp" in cases:
+    test_lsp = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_legit_self_pref_examples.jsonl")
+    case_to_dataset['lsp'] = subsample(test_lsp, args.num_samples)
 
 responses, articles, keys = load_data("xsum", sources= ['gpt35','llama3.1-8b-instruct'],target_model='llama3.1-8b-instruct',num_samples=1000, extras=False)
 
-vector_positive_ids = [ex['id'] for ex in positives_steering]
-test_positives = [ex for ex in positives if ex not in vector_positive_ids]
-
-vector_negative_ids = [ex['id'] for ex in negatives_steering]
-test_negatives = [ex for ex in negatives if ex not in vector_negative_ids]
 
 
 def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_aware = False, self_other_labels = False, source_summary_first = True, invert_option_order = False):
@@ -125,7 +147,7 @@ def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_
             summary1 = source_summary if source_summary_first else other_summary
             summary2 = other_summary if source_summary_first else source_summary
             
-            unbiased_output = "[]" if source_summary_first else "[]"
+            unbiased_output = "That" if source_summary_first else "This"
             if result['gold_judges_consensus']['prefers_target']:
                 unbiased_output = "This" if unbiased_output == "That" else "That"
 
@@ -156,18 +178,8 @@ def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_
                 who1 = who1,
                 who2 = who2
             ), unbiased_output
-random.seed(42)
 
-def subsample(data, n):
-    return random.sample(data, min(n, len(data)))
 
-positives = subsample(test_positives, args.num_samples)
-negatives = subsample(test_negatives, args.num_samples)
-lsp = subsample(test_lsp, args.num_samples)
-
-print(positives[0].items())
-print(negatives[0].items())
-print(lsp[0].items())
 # --- Steering layer initialization ---
 for layer_idx, vec_list in steering_vector.items():
     
@@ -193,50 +205,54 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale):
     txt_list = [(tokenizer.decode(token), prob.item()) for token, prob in zip(ids_pos[0], scores[0])]
     return txt_list
 
+self_other_labels = args.prompt_template == 'self-other'
+set_aware = args.setting == 'aware'
+
+results_path = os.path.join(args.results_path, args.steering_type, args.setting, args.prompt_template, "results.jsonl")
+
 # --- Main evaluation loop ---
 run_id = 0
 results = []
-for dataset_name, dataset in zip(["positives", "negatives"], [positives, negatives]):
+for dataset_name, dataset in case_to_dataset.items():
     for example in tqdm(dataset, desc=dataset_name):
         for source_summary_first in [True, False]:
-            for self_other_labels in [True]:
-                prompt_text, unbiased_output = reconstruct(
-                    example,
-                    responses,
-                    articles,
-                    source='llama3.1-8b-instruct',
-                    set_aware=False,
-                    source_summary_first=source_summary_first,
-                    self_other_labels=self_other_labels
+            prompt_text, unbiased_output = reconstruct(
+                example,
+                responses,
+                articles,
+                source='llama3.1-8b-instruct',
+                set_aware=set_aware,
+                source_summary_first=source_summary_first,
+                self_other_labels=self_other_labels
+            )
+            prompt_text += " \n\n"    
+            for layer in args.layers:
+                if layer not in steering_vector:
+                    print(f"No vector for layer {layer}; skipping")
+                    continue
+                base_vec = steering_vector[layer][args.offset].to(
+                    dtype=model.dtype, device=model.device
                 )
-                prompt_text += " \n\n"    
-                for layer in args.layers:
-                    if layer not in steering_vector:
-                        print(f"No vector for layer {layer}; skipping")
-                        continue
-                    base_vec = steering_vector[layer][args.offset].to(
-                        dtype=model.dtype, device=model.device
+                for m in args.multipliers:
+                    comp = generate_with_vec(
+                        prompt_text,
+                        layer_idx=layer,
+                        base_vec=base_vec,
+                        scale=m
                     )
-                    for m in args.multipliers:
-                        comp = generate_with_vec(
-                            prompt_text,
-                            layer_idx=layer,
-                            base_vec=base_vec,
-                            scale=m
-                        )
-                        result = {
-                            "id": example['id'],
-                            "source_summary_first": source_summary_first,
-                            "self_other_labels": self_other_labels,
-                            "dataset": dataset_name,
-                            "layer": layer,
-                            "mult": m,
-                            "unbiased_output": unbiased_output,
-                            "output": comp,
-                            "prompt": prompt_text,
-                        }
-                        results.append(result)
-                        with open(args.results_path, "a", encoding="utf-8") as f:
-                            f.write(json.dumps(result, ensure_ascii=False) + "\n")
-                        run_id += 1
-print(f"Saved {len(results)} generations to {args.results_path}")
+                    result = {
+                        "id": example['id'],
+                        "source_summary_first": source_summary_first,
+                        "self_other_labels": self_other_labels,
+                        "dataset": dataset_name,
+                        "layer": layer,
+                        "mult": m,
+                        "unbiased_output": unbiased_output,
+                        "output": comp,
+                        "prompt": prompt_text,
+                    }
+                    results.append(result)
+                    with open(results_path, "a", encoding="utf-8") as f:
+                        f.write(json.dumps(result, ensure_ascii=False) + "\n")
+                    run_id += 1
+print(f"Saved {len(results)} generations to {results_path}")

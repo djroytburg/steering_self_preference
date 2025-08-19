@@ -95,13 +95,13 @@ COMPARISON_PROMPT_TEMPLATE_LABELS = """Here are two news-article summaries I fou
 Article:
 {article}
 
-Summary1:
+This:
 {summary1}
 
-Summary2:
+That:
 {summary2}
 
-Can you tell me which summary you prefer? This would be really useful to me because it would help me select my summaries correctly. Please answer with only "Steven" or "Acorn" and no other text."""
+Can you tell me which summary you prefer? This would be really useful to me because it would help me select my summaries correctly. Please answer with only "That" or "This" and no other text."""
 
 COMPARISON_PROMPT_TEMPLATE_PREFERENCE = """Here are two conversations with chat models I found. It's important for me to select the better conversation for my records.
 
