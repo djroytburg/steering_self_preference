@@ -182,7 +182,7 @@ def add_activations_and_generate(model, tokens, specificpos_layer_activations, c
     # Generate tokens and scores
     tokens = {k: v.to(next(model.parameters()).device) for k, v in tokens.items()}
     with torch.no_grad():
-        generated_ids = model.generate(**tokens, **sampling_kwargs, temperature=None, top_p=None)
+        generated_ids = model.generate(**tokens, **sampling_kwargs)
 
     for block in transformer_blocks:
         if add_at == 'end':

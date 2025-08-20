@@ -37,36 +37,33 @@ def get_method_layer(path):
         return 'CAA', layer
     return 'Optimization', 'opt'
 
-def get_prob_for_desired(output_tuples, desired_output):
-    undesired_output = "Mine" if desired_output == "Other" \
-        else "2" if desired_output == '1' \
-        else "1" if desired_output == '2' \
-        else "Other" if desired_output in ["Mine", "Self"] \
-        else None
-    for token, prob in output_tuples:
-        if token.strip() == desired_output:
-            return prob
-        elif token.strip() == undesired_output:
-            return -prob
-    return None
+def get_prob_for_desired(output_tuples):
+    return max(output_tuples, key = lambda x: x[1])[1]
 
 def get_bias_type(r):
-    return r.get('bias_type', None)
+    bias = r.get('bias_type', None)
+    if bias is None:
+        bias = r.get('dataset', None)
+    remap = {
+        "self_preference_bias": "bias",
+        "unbiased_agreement": "agreement",
+        "legitimate_self_preference": "lsp"
+    }
+    return remap.get(bias, bias)
 
 # CAA results
 for result_set, filelist in zip(caa_results, caa_files):
     method, layer = get_method_layer(filelist)
     awareness = get_awareness(filelist)
     for r in result_set:
-        multiplier = r.get('multiplier', None)
+        multiplier = r.get('mult', None)
         prob = None
         bias_type = get_bias_type(r)
         # Use base prob if available
         if 'target_model_judgment' in r and 'llama3.1-8b-instruct_prob' in r['target_model_judgment']:
             prob = r['target_model_judgment']['llama3.1-8b-instruct_prob']
         else:
-            desired_output = r.get('desired_output', None)
-            prob = get_prob_for_desired(r['output'], desired_output)
+            prob = get_prob_for_desired(r['output'])
         if multiplier is not None and prob is not None and bias_type:
             agg[(awareness, method, layer)][multiplier][bias_type].append(prob)
 
