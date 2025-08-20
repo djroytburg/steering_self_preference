@@ -38,7 +38,7 @@ parser.add_argument('--layers', type=int, nargs='+', default=[14,15,16])
 parser.add_argument('--cases', type=str, default="bias,agreement,lsp")
 parser.add_argument('--multipliers', type=float, nargs='+', default=[-0.5,-0.3,-0.1,0.1,0.3,0.5])
 parser.add_argument('--num_samples', type=int, default=30)
-parser.add_argument('--offset', type=int, default=0)
+parser.add_argument('--offset', type=int, default=10)
 parser.add_argument('--results_path', type=str, default="steering_evals")
 parser.add_argument('--seed', type=int, default=42)
 
@@ -207,7 +207,7 @@ if args.steering_type == "caa":
 
 # --- Generate Function ---
 
-def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= args.steering_type):
+def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= args.steering_type, score_on_token=None):
     if steering_type == "caa":
         clear_hooks(model)
         tokens = tokenizer(prompt_str, return_tensors="pt").to(model.device)
@@ -218,7 +218,8 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
             specificpos_layer_activations={layer_idx: {-1: vec}},
             continuouspos_layer_activations={},
             sampling_kwargs=sampling_kwargs,
-            add_at="end"
+            add_at="end",
+            score_on_token=score_on_token
         )
         
     elif steering_type == "optimization":
@@ -231,17 +232,22 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
             stacked_scores = torch.stack(output.scores, dim=0)
             stacked_scores = stacked_scores.permute(1, 0, 2)   # -> Tensor(batch_size, new_tokens, vocab_size)
             probabilities = stacked_scores.softmax(dim=-1)  # -> Softmax over vocab_size for probabilities
-            highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
-            generated_sequences = output.sequences
-            start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
-            generated_tokens_ids = generated_sequences[:, start_pos:]
-            
-            assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
-            ids_pos, scores = generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
-        
-        txt_list = [(tokenizer.decode(token), prob.item()) for token, prob in zip(ids_pos[0], scores[0])]
-        return txt_list
-
+            if score_on_token is None:
+                highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
+                generated_sequences = output.sequences
+                start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
+                generated_tokens_ids = generated_sequences[:, start_pos:]
+                
+                assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
+                ids_pos, scores = generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
+            else:
+                score_on_token = tokenizer.convert_tokens_to_ids(score_on_token)
+                if score_on_token < 0 or score_on_token >= probabilities.shape[-1]:
+                    raise ValueError(f"score_on_token {score_on_token} is out of bounds for the model's vocabulary size {probabilities.shape[-1]}.")
+                scores = probabilities[:, :, score_on_token].detach().cpu()      
+                ids_pos = torch.full(scores.shape, score_on_token)  
+    txt_list = [(tokenizer.decode(token), prob.item()) for token, prob in zip(ids_pos[0], scores[0])]
+    return txt_list
 
 self_other_labels = args.prompt_template == 'self-other'
 set_aware = args.setting == 'aware'
@@ -279,7 +285,8 @@ for dataset_name, dataset in case_to_dataset.items():
                         prompt_text,
                         layer_idx=layer,
                         base_vec=base_vec,
-                        scale=m
+                        scale=m,
+                        score_on_token=unbiased_output
                     )
                     result = {
                         "id": example['id'],
