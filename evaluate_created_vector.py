@@ -26,6 +26,7 @@ from enhanced_hooking import (
 )
 
 from data import load_data
+import steering_opt
 
 # --- Argparse ---
 parser = argparse.ArgumentParser(description="Evaluate created steering vector.")
@@ -42,6 +43,9 @@ parser.add_argument('--results_path', type=str, default="steering_evals")
 parser.add_argument('--seed', type=int, default=42)
 
 args = parser.parse_args()
+
+if args.steering_type == "optimization" and len(args.layers) > 1:
+    raise ValueError("Optimization steering only supports a single layer. Please specify one layer.")
 
 MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
 HF_TOKEN = os.getenv("HF_TOKEN")
@@ -64,7 +68,7 @@ if tokenizer.pad_token is None:
 model.config.pad_token_id = tokenizer.pad_token_id
 model.eval()
 transformers.logging.set_verbosity_info()
-sampling_kwargs={"use_cache": True, "pad_token_id": tokenizer.eos_token_id, "max_new_tokens": 10,"return_dict_in_generate": True, "output_scores": True, "do_sample": False}
+sampling_kwargs={"use_cache": True, "pad_token_id": tokenizer.eos_token_id, "max_new_tokens": 10,"return_dict_in_generate": True, "temperature": None, "top_p": None, "output_scores": True, "do_sample": False}
 tokenizer.padding_side = "left"
 
 # --- Load steering vector ---
@@ -107,6 +111,18 @@ if "lsp" in cases:
 
 responses, articles, keys = load_data("xsum", sources= ['gpt35','llama3.1-8b-instruct'],target_model='llama3.1-8b-instruct',num_samples=1000, extras=False)
 
+
+def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_id|>\n\n"):
+    prompt = tokenizer.apply_chat_template([
+            {
+                "role": "system", 
+                "content": COMPARISON_SYSTEM_PROMPT
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }],tokenize=False) + post_script
+    return prompt
 
 
 def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_aware = False, self_other_labels = False, source_summary_first = True, invert_option_order = False):
@@ -180,30 +196,52 @@ def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_
             ), unbiased_output
 
 
+
 # --- Steering layer initialization ---
-for layer_idx, vec_list in steering_vector.items():
-    
-    vec = vec_list[0]
-    # Make sure dtype/device matches the model you’ll run on
-    vec = vec.to(dtype=model.dtype, device=next(model.parameters()).device)
+if args.steering_type == "caa":
+    for layer_idx, vec_list in steering_vector.items():
+        
+        vec = vec_list[0]
+        # Make sure dtype/device matches the model you’ll run on
+        vec = vec.to(dtype=model.dtype, device=next(model.parameters()).device)
 
 # --- Generate Function ---
 
-def generate_with_vec(prompt_str, layer_idx, base_vec, scale):
-    clear_hooks(model)
-    tokens = tokenizer(prompt_str, return_tensors="pt").to(model.device)
-    vec = (base_vec * scale).to(model.dtype)
-    ids_pos, scores = add_activations_and_generate(
-        model,
-        tokens,
-        specificpos_layer_activations={layer_idx: {-1: vec}},
-        continuouspos_layer_activations={},
-        sampling_kwargs=sampling_kwargs,
-        add_at="end"
-    )
-    
-    txt_list = [(tokenizer.decode(token), prob.item()) for token, prob in zip(ids_pos[0], scores[0])]
-    return txt_list
+def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= args.steering_type):
+    if steering_type == "caa":
+        clear_hooks(model)
+        tokens = tokenizer(prompt_str, return_tensors="pt").to(model.device)
+        vec = (base_vec * scale).to(model.dtype)
+        ids_pos, scores = add_activations_and_generate(
+            model,
+            tokens,
+            specificpos_layer_activations={layer_idx: {-1: vec}},
+            continuouspos_layer_activations={},
+            sampling_kwargs=sampling_kwargs,
+            add_at="end"
+        )
+        
+    elif steering_type == "optimization":
+        with steering_opt.hf_hooks_contextmanager(model, [
+            (layer_idx, steering_opt.make_steering_hook_hf(scale * base_vec, steering_opt.make_abl_mat(scale * base_vec)))]):
+            # print("tokenizing")
+            tokens = tokenizer(chat_template(prompt_str), return_tensors='pt').to(model.device)
+            # print("generating")
+            output = model.generate(**tokens, **sampling_kwargs)
+            stacked_scores = torch.stack(output.scores, dim=0)
+            stacked_scores = stacked_scores.permute(1, 0, 2)   # -> Tensor(batch_size, new_tokens, vocab_size)
+            probabilities = stacked_scores.softmax(dim=-1)  # -> Softmax over vocab_size for probabilities
+            highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
+            generated_sequences = output.sequences
+            start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
+            generated_tokens_ids = generated_sequences[:, start_pos:]
+            
+            assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
+            ids_pos, scores = generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
+        
+        txt_list = [(tokenizer.decode(token), prob.item()) for token, prob in zip(ids_pos[0], scores[0])]
+        return txt_list
+
 
 self_other_labels = args.prompt_template == 'self-other'
 set_aware = args.setting == 'aware'
@@ -227,12 +265,15 @@ for dataset_name, dataset in case_to_dataset.items():
             )
             prompt_text += " \n\n"    
             for layer in args.layers:
-                if layer not in steering_vector:
-                    print(f"No vector for layer {layer}; skipping")
-                    continue
-                base_vec = steering_vector[layer][args.offset].to(
-                    dtype=model.dtype, device=model.device
-                )
+                if args.steering_type == "caa":
+                    if layer not in steering_vector:
+                        print(f"No vector for layer {layer}; skipping")
+                        continue
+                    base_vec = steering_vector[layer][args.offset].to(
+                        dtype=model.dtype, device=model.device
+                    )
+                else:
+                    base_vec = steering_vector
                 for m in args.multipliers:
                     comp = generate_with_vec(
                         prompt_text,

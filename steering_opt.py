@@ -1,5 +1,6 @@
 # From Jacob Dunefsky, 2025
 # https://github.com/jacobdunefsky/one-shot-steering-repro/blob/master/steering_opt.py
+# Modified by Dani Roytburg, 2025 to move tokens on/off GPUs.
 
 
 import torch
@@ -7,6 +8,8 @@ from typing import List, Tuple, Callable, Optional, Union
 import dataclasses
 from contextlib import contextmanager
 import mdmm
+import gc
+import numpy as np
 
 # utility function
 def _nested_list_max(l):
@@ -72,49 +75,55 @@ def make_activs_hook_hf(outlist):
 
 ## sampling-related functions
 
-def get_completion_logprob(model, prompt, completion, tokenizer=None, temperature=1, return_all_probs=False, do_one_minus=False, do_log=True, eps=0, use_transformer_lens=True, **kwargs):
-	if use_transformer_lens:
-		get_tokens = lambda prompt: model.to_tokens(prompt).tolist()[0]
-		get_logits = lambda prompt: model(prompt, **kwargs)[0]
-	else:
-		if tokenizer is None:
-			raise Exception("Not using TransformerLens -- but tokenizer is None!")
-		get_tokens = lambda prompt: tokenizer(prompt).input_ids
-		get_logits = lambda prompt: model(tokenizer(prompt, return_tensors='pt').input_ids, **kwargs).logits[0]
+def get_completion_logprob(model, prompt, completion, tokenizer=None, temperature=1, return_all_probs=False, do_one_minus=False, do_log=True, eps=0, use_transformer_lens=True, device='cuda:0', **kwargs):
+    if use_transformer_lens:
+        get_tokens = lambda prompt: torch.tensor(model.to_tokens(prompt).tolist()[0], device=device)
+        get_logits = lambda prompt: model(prompt, **kwargs)[0].to(device)
+    else:
+        if tokenizer is None:
+            raise Exception("Not using TransformerLens -- but tokenizer is None!")
+        get_tokens = lambda prompt: torch.tensor(tokenizer(prompt).input_ids, device=device)
+        def get_logits(prompt):
+            input_ids = tokenizer(prompt, return_tensors='pt').input_ids.to(device, non_blocking=True)
+            logits = model(input_ids, **kwargs).logits[0].to(device)
+            del input_ids
+            torch.cuda.empty_cache()
+            return logits
 
-	prompt_tokens = get_tokens(prompt)
-	prompt_len = len(prompt_tokens)
-	all_tokens = get_tokens(prompt + completion)
-	completion_tokens = all_tokens[prompt_len:]
-	completion_len = len(completion_tokens)
+    prompt_tokens = get_tokens(prompt)
+    prompt_len = len(prompt_tokens)
+    all_tokens = get_tokens(prompt + completion)
+    completion_tokens = all_tokens[prompt_len:]
+    completion_len = len(completion_tokens)
 
-	logits = get_logits(prompt + completion).float()
+    logits = get_logits(prompt + completion).float()
+    probs = torch.nn.functional.softmax(logits * temperature, dim=-1)
+    if do_one_minus: probs = 1 - probs
 
-	probs = torch.nn.functional.softmax(logits*temperature, dim=-1)
-	if do_one_minus: probs = 1 - probs
-
-	cur_loss = 0 if do_log else 1
-	if return_all_probs:
-		all_probs = []
-	for completion_token_idx in range(0, completion_len):
-		completion_token = completion_tokens[completion_token_idx]
-		prompt_token_idx = prompt_len+completion_token_idx-1
-		target_prob = probs[prompt_token_idx, completion_token]
-		if do_log: target_prob = torch.log(target_prob+eps)
-		if do_log:
-			cur_loss += target_prob
-		else:
-			cur_loss *= target_prob
-		if return_all_probs: all_probs.append(target_prob.item())
-	return cur_loss if not return_all_probs else (cur_loss, all_probs)
+    cur_loss = 0 if do_log else 1
+    if return_all_probs:
+        all_probs = []
+    for completion_token_idx in range(0, completion_len):
+        completion_token = completion_tokens[completion_token_idx]
+        prompt_token_idx = prompt_len + completion_token_idx - 1
+        target_prob = probs[prompt_token_idx, completion_token]
+        if do_log: target_prob = torch.log(target_prob + eps)
+        if do_log:
+            cur_loss += target_prob
+        else:
+            cur_loss *= target_prob
+        if return_all_probs: all_probs.append(target_prob.item())
+    del logits, probs, all_tokens, completion_tokens
+    torch.cuda.empty_cache()
+    return cur_loss if not return_all_probs else (cur_loss, all_probs)
 
 def get_completion_logprob_hf(model, prompt, completion, tokenizer, **kwargs):
 	return get_completion_logprob(model, prompt, completion, tokenizer=tokenizer, use_transformer_lens=False, **kwargs)
 
 @torch.no_grad()
-def sample_most_likely_completions_hf(model, tokenizer, dst_prompt, src_prompt=None, k=5, iters=5, temperature=1, do_one_minus=False, gc_interval=3, use_total_probs=False, reverse=False, return_log_probs=False, return_token_probs=True, **kwargs):
-    src_logits = model(tokenizer(src_prompt, return_tensors='pt').input_ids).logits[:,-1].float() if src_prompt is not None else None
-    dst_logits = model(tokenizer(dst_prompt, return_tensors='pt').input_ids).logits[:,-1].float()
+def sample_most_likely_completions_hf(model, tokenizer, dst_prompt, src_prompt=None, k=5, iters=5, temperature=1, do_one_minus=False, gc_interval=3, use_total_probs=False, reverse=False, return_log_probs=False, return_token_probs=True, device='cuda:0', **kwargs):
+    src_logits = model(tokenizer(src_prompt, return_tensors='pt').input_ids.to(device)).logits[:,-1].float() if src_prompt is not None else None
+    dst_logits = model(tokenizer(dst_prompt, return_tensors='pt').input_ids.to(device)).logits[:,-1].float()
     src_probs = torch.nn.functional.softmax(src_logits*temperature, dim=-1) if src_prompt is not None else 0
     dst_probs = torch.nn.functional.softmax(dst_logits*temperature, dim=-1)
     prob_diffs = dst_probs - src_probs
@@ -126,11 +135,11 @@ def sample_most_likely_completions_hf(model, tokenizer, dst_prompt, src_prompt=N
     i = 0
     for i in range(iters):
         if src_prompt is not None:
-            src_logits = model(tokenizer([src_prompt + x for x in cur_completions], return_tensors='pt').input_ids).logits[:,-1].float()
+            src_logits = model(tokenizer([src_prompt + x for x in cur_completions], return_tensors='pt').input_ids.to(device)).logits[:,-1].float()
             src_probs = torch.nn.functional.softmax(src_logits, dim=-1)
         else:
             src_probs = 0
-        dst_logits = model(tokenizer([dst_prompt + x for x in cur_completions], return_tensors='pt').input_ids).logits[:,-1].float()
+        dst_logits = model(tokenizer([dst_prompt + x for x in cur_completions], return_tensors='pt').input_ids.to(device)).logits[:,-1].float()
         dst_probs = torch.nn.functional.softmax(dst_logits, dim=-1)
         prob_diffs = dst_probs - src_probs
         prob_diffs = prob_diffs * (-1 if reverse else 1)
@@ -191,6 +200,7 @@ def optimize_completion(model, datapoints, layer,
 	custom_output_constr_loss_func=None, custom_output_constr_pre_loss_func=None,
 	output_constr_norm_initial_scale=1, output_constr_lr=None, debug=True,
 	noise_scale=None, do_tangent_space_noise=True, do_noise_abl_relu=False, noise_iters=1,
+	device='cuda:0',
 ):
 	if use_transformer_lens:
 		if output_constr_lr is None: output_constr_lr = lr
@@ -208,24 +218,23 @@ def optimize_completion(model, datapoints, layer,
 		d_model = model.config.hidden_size
 		get_tokens = lambda prompt: tokenizer(prompt).input_ids
 		def get_hooked_logits(prompt, hook_infos):
-			cur_tokens = tokenizer(prompt, return_tensors='pt').input_ids
+			cur_tokens = tokenizer(prompt, return_tensors='pt').input_ids.to(device)
 			with hf_hooks_contextmanager(model, hook_infos):
-				logits = model(cur_tokens, use_cache=False).logits[0]
+				logits = model(cur_tokens, use_cache=False).logits[0].to(device)
 			return logits 
 		make_steering_hook = make_steering_hook_hf
 	if starting_vec is None:
 		with torch.no_grad():
-			vector = torch.randn(d_model)
+			vector = torch.randn(d_model, device=device)
 			vector = starting_norm * vector / vector.norm()
-			vector = vector.cuda()
 	else:
-		vector = starting_vec.detach().clone()
+		vector = starting_vec.detach().clone().to(device)
 	vector.requires_grad_(True)
 
 	if affine_rank is not None:
 		with torch.no_grad():
-			matrix_left = torch.randn(affine_rank, d_model)
-			matrix_right = torch.randn(affine_rank, d_model)
+			matrix_left = torch.randn(affine_rank, d_model, device=device)
+			matrix_right = torch.randn(affine_rank, d_model, device=device)
 
 			matrix_left = torch.einsum('rm, r -> rm', matrix_left, starting_affine_norm/matrix_left.norm(dim=1))
 			matrix_right = torch.einsum('rm, r -> rm', matrix_right, starting_affine_norm/matrix_right.norm(dim=1))
@@ -300,7 +309,7 @@ def optimize_completion(model, datapoints, layer,
 	if affine_rank is not None:
 		params = params + [matrix_left, matrix_right]
 
-	def get_completion_loss(datapoint_idx, completion_idx, vector, matrix, is_src_completion=True, do_one_minus=True):
+	def get_completion_loss(datapoint_idx, completion_idx, vector, matrix, is_src_completion=True, do_one_minus=True, vector_clamp=vector_clamp):
 		datapoint = datapoints[datapoint_idx]
 		prompt = datapoint.prompt
 		prompt_len = all_prompt_lens[datapoint_idx]
@@ -323,7 +332,7 @@ def optimize_completion(model, datapoints, layer,
 		
 		cur_loss = 0
 
-		logits = get_hooked_logits(prompt + completion, hook_infos)
+		logits = get_hooked_logits(prompt + completion, hook_infos).to(device)
 		probs = torch.nn.functional.softmax(logits*temperature, dim=-1)
 
 		for completion_token_idx in range(0, completion_len):
@@ -337,14 +346,16 @@ def optimize_completion(model, datapoints, layer,
 		if normalize_token_length:
 			cur_loss = cur_loss / completion_len
 
+		del logits, probs
+		torch.cuda.empty_cache()
 		return cur_loss
 	
-	def get_completion_loss_with_noise(datapoint_idx, completion_idx, vector, matrix, is_src_completion=True, do_one_minus=True):
+	def get_completion_loss_with_noise(datapoint_idx, completion_idx, vector, matrix, is_src_completion=True, do_one_minus=True, vector_clamp=vector_clamp):
 		if noise_scale is None: return get_completion_loss(datapoint_idx, completion_idx, vector, matrix, is_src_completion=is_src_completion)
 
 		noise = 0
 		if noise_scale is not None:
-			noise = torch.randn(vector.shape) * noise_scale
+			noise = torch.randn(vector.shape, device=device) * noise_scale
 			noise = noise.detach()
 
 		#if debug:
@@ -359,7 +370,7 @@ def optimize_completion(model, datapoints, layer,
 		#	1. get gradient of loss at point
 		#	2. remove gradient component from noise
 		#	3. get loss at point+noise when adding steering vector
-		zero_vec = torch.zeros_like(vector).requires_grad_(True)
+		zero_vec = torch.zeros_like(vector, device=device).requires_grad_(True)
 		unsteered_loss = get_completion_loss(datapoint_idx, completion_idx, zero_vec, None, is_src_completion=is_src_completion)
 		grad = torch.autograd.grad(outputs=unsteered_loss, inputs=zero_vec)[0]
 		with torch.no_grad():
@@ -500,12 +511,12 @@ def optimize_completion(model, datapoints, layer,
 	
 	# now, make our constraints
 	output_constraints = []
-	def make_output_constraint_func(datapoint_idx, completion_idx, vector, matrix_left=None, matrix_right=None, is_src_completion=True, do_one_minus=True):
+	def make_output_constraint_func(datapoint_idx, completion_idx, vector, matrix_left=matrix_left, matrix_right=matrix_right, is_src_completion=True, do_one_minus=True, vector_clamp=vector_clamp):
 		def constraint():
 			matrix = None
 			if matrix_left is not None and matrix_right is not None:
 				matrix = matrix_left.T @ matrix_right
-			return get_completion_loss_with_noise(datapoint_idx, completion_idx, vector, matrix, is_src_completion=is_src_completion, do_one_minus=do_one_minus)
+			return get_completion_loss_with_noise(datapoint_idx, completion_idx, vector, matrix, is_src_completion=is_src_completion, do_one_minus=do_one_minus, vector_clamp=vector_clamp)
 		return constraint 
 
 	for datapoint_idx, datapoint in enumerate(datapoints):
@@ -666,26 +677,26 @@ def optimize_minibatch_completion_hf(model, tokenizer, prompts, layer,
 	starting_norm=1, max_norm=None,
 	affine_rank=None, max_affine_norm=None,
 	debug=True, return_loss=True,
-	do_abl_hook=False, abl_hook_coeff=2
+	do_abl_hook=False, abl_hook_coeff=2,
+	device='cuda:0',
 ):
 	if src_completions is None: src_completions = []
 	if dst_completions is None: dst_completions = []
 	d_model = model.config.hidden_size
 	get_tokens = lambda prompt: tokenizer(prompt).input_ids
 	def get_hooked_logits(prompt, hook_infos):
-		cur_tokens = tokenizer(prompt, return_tensors='pt', padding=True, padding_side='left').input_ids
+		cur_tokens = tokenizer(prompt, return_tensors='pt', padding=True, padding_side='left').input_ids.to(device)
 		with hf_hooks_contextmanager(model, hook_infos):
-			logits = model(cur_tokens, use_cache=False).logits
+			logits = model(cur_tokens, use_cache=False).logits.to(device)
 		return logits 
 	make_steering_hook = make_steering_hook_hf
 
 	with torch.no_grad():
-		vector = torch.randn(d_model)
+		vector = torch.randn(d_model, device=device)
 		vector = starting_norm * vector / vector.norm()
-		vector = vector.cuda()
 	vector.requires_grad_(True)
 
-	def get_completion_minibatch_loss(prompts, completion, vector, matrix=None, is_src_completion=True):
+	def get_completion_minibatch_loss(prompts, completion, vector, matrix=None, is_src_completion=True, vector_clamp=None):
 		prompt_lens = []
 		for prompt in prompts:
 			prompt_lens.append(len(get_tokens(prompt)))
@@ -704,8 +715,9 @@ def optimize_minibatch_completion_hf(model, tokenizer, prompts, layer,
 		cur_loss = 0
 
 		all_tokens = tokenizer([prompt + completion for prompt in prompts], padding=True, padding_side='left', return_tensors='pt')
+		all_tokens.input_ids = all_tokens.input_ids.to(device, non_blocking=True)
 		with hf_hooks_contextmanager(model, hook_infos):
-			logits = model(**all_tokens, use_cache=False).logits
+			logits = model(**all_tokens, use_cache=False).logits.to(device)
 		probs = torch.nn.functional.softmax(logits*temperature, dim=-1)
 
 		max_loss = 0
@@ -720,6 +732,8 @@ def optimize_minibatch_completion_hf(model, tokenizer, prompts, layer,
 				#if debug: print(target_logprob)
 				cur_loss -= target_logprob
 				token_idx += 1
+		del logits, probs, all_tokens
+		torch.cuda.empty_cache()
 		return cur_loss
 
 	

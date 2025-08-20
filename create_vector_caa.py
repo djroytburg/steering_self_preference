@@ -27,6 +27,20 @@ args = parser.parse_args()
 ## What goes after the chat template
 post_script="<|begin_header_id|>assistant<|end_header_id|>"
 
+
+def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_id|>"):
+    prompt = tok.apply_chat_template([
+            {
+                "role": "system", 
+                "content": COMPARISON_SYSTEM_PROMPT
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }],tokenize=False) + post_script
+    return prompt
+
+
 HF_TOKEN = os.getenv("HF_TOKEN")
 quant_cfg = BitsAndBytesConfig(load_in_8bit=True)
 MODEL_ID = "meta-llama/Llama-3.1-8B-Instruct"
@@ -118,15 +132,7 @@ nuisance_negative_sums = {
 
 def accumulate_activations(prompts, sum_accumulators, num_layers, max_tokens):
     for prompt in tqdm(prompts, desc="Accumulating activations"):
-        prompt = tok.apply_chat_template([
-            {
-                "role": "system", 
-                "content": COMPARISON_SYSTEM_PROMPT
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }],tokenize=False) + "<|start_header_id|>assistant<|end_header_id|>"
+        prompt = chat_template(prompt, post_script=post_script)
         token_ids = tok(prompt, add_special_tokens=True)["input_ids"]
         tokens_to_process = min(max_tokens, len(token_ids))
         with torch.no_grad():
@@ -241,18 +247,6 @@ def show_top_token_heatmap_all_layers_offsets(layer_proj, model, tokenizer, K=10
     plt.savefig(f"vectors/caa/steering_vector_{setting}_heatmap{'_neg' if negative else ''}.pdf", dpi=300, bbox_inches='tight')
     plt.tight_layout()
     plt.show()
-
-def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_id|>"):
-    prompt = tok.apply_chat_template([
-            {
-                "role": "system", 
-                "content": COMPARISON_SYSTEM_PROMPT
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }],tokenize=False) + post_script
-    return prompt
 
 prompt_tokens = []
 for decoded_prompt_token in tok(chat_template(bias_prompts[0], post_script=post_script), add_special_tokens=True)['input_ids'][-args.offset:]:
