@@ -219,7 +219,7 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
             continuouspos_layer_activations={},
             sampling_kwargs=sampling_kwargs,
             add_at="end",
-            score_on_token=score_on_token
+            score_on_token=tokenizer.convert_tokens_to_ids(score_on_token)
         )
         
     elif steering_type == "optimization":
