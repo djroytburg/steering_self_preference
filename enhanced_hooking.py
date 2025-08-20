@@ -154,7 +154,7 @@ def create_continuous_activation_pre_hook(continuous_layers_activations):
     return pre_hook
 
 
-def add_activations_and_generate(model, tokens, specificpos_layer_activations, continuouspos_layer_activations, sampling_kwargs, add_at='end'):
+def add_activations_and_generate(model, tokens, specificpos_layer_activations, continuouspos_layer_activations, sampling_kwargs, add_at='end', score_on_token = None):
     transformer_blocks = get_blocks(model)
     
     # Attach hooks for specific initial positions
@@ -194,13 +194,18 @@ def add_activations_and_generate(model, tokens, specificpos_layer_activations, c
     stacked_scores = torch.stack(generated_ids.scores, dim=0)
     stacked_scores = stacked_scores.permute(1, 0, 2)   # -> Tensor(batch_size, new_tokens, vocab_size)
     probabilities = F.softmax(stacked_scores, dim=-1)  # -> Softmax over vocab_size for probabilities
-    highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
-    generated_sequences = generated_ids.sequences
-    start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
-    generated_tokens_ids = generated_sequences[:, start_pos:]
-    
-    assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
-    return generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
+    if score_on_token is None:
+        highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
+        generated_sequences = generated_ids.sequences
+        start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
+        generated_tokens_ids = generated_sequences[:, start_pos:]
+        
+        assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
+        return generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
+    else:
+        token_probs = probabilities[:, :, score_on_token].detach().cpu()
+        return torch.full(token_probs.shape, score_on_token), token_probs
+
 
 ########################
 
