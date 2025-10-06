@@ -2,6 +2,7 @@ import os
 import json
 import re
 import torch
+import torch.nn as nn
 import time
 from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
@@ -17,7 +18,7 @@ parser.add_argument('--setting', type=str, default="unaware", choices=["aware", 
 parser.add_argument('--layer', type=str, default="14")
 parser.add_argument('--lr', type=float, default=0.1)
 parser.add_argument('--max_iters', type=int, default=20)
-parser.add_argument('--batch_size', type=int, default=4, help="Mini-batch size for processing (lower = less memory)")
+parser.add_argument('--batch_size', type=int, default=16, help="Mini-batch size for processing (lower = less memory)")
 args = parser.parse_args()
 
 TARGET = "llama3.1-8b-instruct"
@@ -28,20 +29,53 @@ def load_jsonl(path):
 
 MODEL_ID = "meta-llama/Meta-Llama-3.1-8B-Instruct"
 HF_TOKEN = os.getenv("HFTOKEN")
-quant_cfg = BitsAndBytesConfig(load_in_8bit=True)
+
+# Load tokenizer
 tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, token=HF_TOKEN)
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_ID,
-    device_map="auto",
-    quantization_config=quant_cfg,
-    token=HF_TOKEN
-)
 if tokenizer.pad_token is None:
     tokenizer.pad_token = tokenizer.eos_token
-    model.resize_token_embeddings(len(tokenizer))
-model.config.pad_token_id = tokenizer.pad_token_id
-model.eval()
 tokenizer.pad_token_id = tokenizer.eos_token_id
+
+# Use DataParallel for parallel processing
+print(f"Detected {torch.cuda.device_count()} GPUs")
+
+if torch.cuda.device_count() > 1:
+    print(f"Using DataParallel with {torch.cuda.device_count()} GPUs (fp16 mode)")
+    # DataParallel requires fp16
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_ID,
+        device_map=None,  # Important
+        torch_dtype=torch.float16,
+        token=HF_TOKEN
+    )
+    print("Successfully loaded fp16 model")
+    
+    # Resize embeddings before wrapping
+    if tokenizer.pad_token is not None:
+        model.resize_token_embeddings(len(tokenizer))
+    model.config.pad_token_id = tokenizer.pad_token_id
+    model.eval()
+    
+    # Wrap
+    model = nn.DataParallel(model)
+    model = model.cuda()
+    print("Model wrapped with DataParallel")
+else:
+    print("Single GPU detected, using 8-bit quantization")
+    quant_cfg = BitsAndBytesConfig(load_in_8bit=True)
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_ID,
+        device_map="auto",
+        quantization_config=quant_cfg,
+        token=HF_TOKEN
+    )
+    print("Successfully loaded 8-bit model")
+    
+    # Resize embeddings if needed
+    if tokenizer.pad_token is not None:
+        model.resize_token_embeddings(len(tokenizer))
+    model.config.pad_token_id = tokenizer.pad_token_id
+    model.eval()
 
 # Remove chat template logic, use plain prompts
 flip_output = lambda a: "1" if a == "2" else "2"
@@ -81,7 +115,12 @@ for bias_example in tqdm(bias_examples):
         )
     )
 
-layer = min(int(args.layer), model.config.num_hidden_layers)
+# Handle DataParallel wrapped models
+if hasattr(model, 'module'):
+    num_layers = model.module.config.num_hidden_layers
+else:
+    num_layers = model.config.num_hidden_layers
+layer = min(int(args.layer), num_layers)
 print(f"Starting optimization (batched) with batch_size={args.batch_size}...")
 start_time = time.time()
 

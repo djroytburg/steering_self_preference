@@ -38,8 +38,10 @@ def _log1mexp(log_p: torch.Tensor):
 # context manager for running a HuggingFace Llama model with hooks
 @contextmanager
 def hf_hooks_contextmanager(model, hook_infos : List[Tuple[int, Callable]]):
+    # Handle DataParallel models
+    base_model = model.module if hasattr(model, 'module') else model
     # set up hooks
-    hooks = [ model.model.layers[cur_layer].register_forward_pre_hook(hook_fn) for cur_layer, hook_fn in hook_infos]
+    hooks = [ base_model.model.layers[cur_layer].register_forward_pre_hook(hook_fn) for cur_layer, hook_fn in hook_infos]
     try:
         yield
     finally:
@@ -87,6 +89,9 @@ def make_activs_hook_hf(outlist):
 # NEW: Batched steering hook + helpers (HF path)
 # ---------------------------
 
+# Global storage for DataParallel mask handling
+_STEERING_CONTEXT = {}
+
 def make_steering_hook_hf_mask(vector_getter, matrix_getter=None, token_mask_getter=None, use_pre_add=True):
     """
     vector_getter(): returns (d_model,)
@@ -94,10 +99,35 @@ def make_steering_hook_hf_mask(vector_getter, matrix_getter=None, token_mask_get
     token_mask_getter(): returns (B, T, 1) mask; can contain -1 to flip direction per-example
     """
     def hook_fn(module, args):
-        x = args[0]  # (B, T, d_model)
+        x = args[0] # (B, T, d_model)
         base = x if use_pre_add else x.detach()
-        v = vector_getter().to(x)                      # (d_model,)
-        mask = token_mask_getter().to(x) if token_mask_getter is not None else 1.0  # (B,T,1)
+        v = vector_getter().to(x) # (d_model,)
+        
+        # Handle mask for DataParallel
+        if token_mask_getter is not None:
+            full_mask = token_mask_getter()
+            
+            # Check if this is a DataParallel forward pass (smaller batch than full mask)
+            if x.shape[0] < full_mask.shape[0]:
+                # Get the batch indices being processed on this GPU
+                batch_size = x.shape[0]
+                device_idx = x.device.index if x.is_cuda else 0
+                
+                # Calculate the starting index for this GPU's batch
+                start_idx = 0
+                if device_idx > 0 and 'batch_offsets' in _STEERING_CONTEXT:
+                    start_idx = _STEERING_CONTEXT['batch_offsets'][device_idx]
+                else:
+                    # Estimate based on device index and batch size
+                    start_idx = device_idx * batch_size
+                
+                end_idx = min(start_idx + batch_size, full_mask.shape[0])
+                mask = full_mask[start_idx:end_idx].to(x)
+            else:
+                mask = full_mask.to(x)
+        else:
+            mask = 1.0
+            
         x = x + mask * v                               # broadcast add
 
         if matrix_getter is not None:
@@ -176,6 +206,24 @@ def _batched_losses_hf_with_hook(
     """
     input_ids, attn_mask, prompt_lens = _tokenize_pairs(tokenizer, pairs, device, padding_side)
     steer_mask = _build_steer_mask(attn_mask, prompt_lens, token_specs, signs)  # (B,T,1)
+
+    # Store batch offsets for DataParallel handling
+    global _STEERING_CONTEXT
+    if hasattr(model, 'module') and torch.cuda.device_count() > 1:
+        # Calculate how DataParallel will split the batch
+        batch_size = input_ids.shape[0]
+        num_gpus = torch.cuda.device_count()
+        # DataParallel splits as evenly as possible
+        base_size = batch_size // num_gpus
+        extra = batch_size % num_gpus
+        
+        offsets = {}
+        current_offset = 0
+        for i in range(num_gpus):
+            offsets[i] = current_offset
+            current_offset += base_size + (1 if i < extra else 0)
+        
+        _STEERING_CONTEXT['batch_offsets'] = offsets
 
     hook = make_steering_hook_hf_mask(
         vector_getter=vector_ref,
@@ -351,7 +399,11 @@ def optimize_completion(model, datapoints, layer,
     else:
         if tokenizer is None:
             raise Exception("Not using TransformerLens -- but tokenizer is None!")
-        d_model = model.config.hidden_size
+        # Handle both DataParallel and regular models
+        if hasattr(model, 'module'):
+            d_model = model.module.config.hidden_size
+        else:
+            d_model = model.config.hidden_size
         get_tokens = lambda prompt: tokenizer(prompt).input_ids
         def get_hooked_logits(prompt, hook_infos):
             cur_tokens = tokenizer(prompt, return_tensors='pt').input_ids.to(device)
@@ -931,7 +983,11 @@ def optimize_minibatch_completion_hf(model, tokenizer, prompts, layer,
 ):
     if src_completions is None: src_completions = []
     if dst_completions is None: dst_completions = []
-    d_model = model.config.hidden_size
+    # Handle both DataParallel and regular models
+    if hasattr(model, 'module'):
+        d_model = model.module.config.hidden_size
+    else:
+        d_model = model.config.hidden_size
     get_tokens = lambda prompt: tokenizer(prompt).input_ids
     def get_hooked_logits(prompt, hook_infos):
         cur_tokens = tokenizer(prompt, return_tensors='pt', padding=True, padding_side='left').input_ids.to(device)
