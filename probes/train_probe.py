@@ -153,7 +153,7 @@ def evaluate(model, loader, device):
         x = batch["x"]
         y = batch["y"].float()
         mask = batch.get("mask")
-        logits = model(x) if mask is None else model(x, attn_mask=mask)
+        logits = model(x) if mask is None else model(x)
         loss = loss_fn(logits, y)
         preds = (logits.sigmoid() >= 0.5).long()
         total += y.numel()
@@ -199,7 +199,7 @@ def train(args):
             x = batch["x"]
             yb = batch["y"].float()
             mask = batch.get("mask")
-            logits = model(x) if mask is None else model(x, attn_mask=mask)
+            logits = model(x) if mask is None else model(x)
             loss = loss_fn(logits, yb)
 
             optim.zero_grad(set_to_none=True)
