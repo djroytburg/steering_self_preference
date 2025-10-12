@@ -1,34 +1,45 @@
 #!/usr/bin/env python3
 """
-collect_last5_local_llama31_bf16safe.py
----------------------------------------
-Local XSum-style loader + Llama 3.1 8B Instruct feature extractor
-that ALWAYS outputs float32 arrays (no bfloat16 leaks).
+collect_last5_local_llama31_multi.py
+------------------------------------
+Local XSum-style loader + Llama 3.1 8B Instruct feature extractor that
+supports MULTIPLE input datasets:
 
-What it does:
-  • Reads a bias JSONL (must have: id, bias_type)
-  • Loads article text from your local JSON store
-  • Builds a prompt with {text}
-  • Runs Llama 3.1 8B (float32) with output_hidden_states=True
-  • Aggregates across layers (mean by default)
-  • Takes the last 5 token positions (right-aligned; padded if <5)
-  • Saves: x:(N,5,D) float32, y:(N,) int64, mask:(N,5) int64, ids:(N,)
+  • --pos-jsonl  path  (repeatable): rows are treated as y=1 (self-preference)
+  • --neg-jsonl  path  (repeatable): rows are treated as y=0 (non self-preference)
+  • --bias-jsonl path  (optional): legacy file with a 'bias_type' field
+      - rows are treated as positive iff bias_type == --positive-bias-type
 
-Run:
-  python collect_last5_local_llama31_bf16safe.py \
-    --bias-jsonl path/to/bias.jsonl \
-    --dataset xsum \
-    --data-type sources \
-    --prompt-template "Summarize the following article:\n{text}\nSummary:" \
-    --out xsum_last5_llama31_local.npz
+All JSONLs must have an 'id' field corresponding to keys in your local store.
+
+Dedup policy if the same id appears in multiple sources:
+  --dedup pos_wins | neg_wins | drop_conflicts   (default: pos_wins)
+
+Outputs:
+  x: (N, 5, D) float32
+  y: (N,)      int64
+  mask: (N, 5) int64
+  ids: (N,)    object
+
+Example:
+  python collect_last5_local_llama31_multi.py \
+    --dataset xsum --data-type sources \
+    --pos-jsonl sp_train.jsonl \
+    --neg-jsonl nonsp_train.jsonl \
+    --prompt-template "Summarize the following article:\\n{text}\\nSummary:" \
+    --out xsum_last5_llama31_multi.npz
+
+Requirements:
+  pip install -U "transformers>=4.41" torch accelerate safetensors sentencepiece
 """
 
 import argparse
 import json
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Iterable
 import numpy as np
 import torch
 from transformers import AutoConfig, AutoTokenizer, AutoModel, AutoModelForCausalLM
+
 
 # ------------------------ Local data loaders ------------------------
 
@@ -43,14 +54,35 @@ def load_sources(dataset: str, extras: bool = False, data_type: str = "sources")
     keys = list(articles.keys())
     return articles, keys
 
-def read_bias_jsonl(path: str) -> List[dict]:
-    rows = []
+
+# ------------------------ JSONL readers ------------------------
+
+def read_ids_from_jsonl(path: str, id_field: str = "id") -> List[str]:
+    ids = []
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
+            if not line:
+                continue
+            obj = json.loads(line)
+            if id_field not in obj:
+                continue
+            ids.append(str(obj[id_field]))
+    return ids
+
+def read_pos_from_bias_jsonl(path: str, positive_bias_type: str = "self_preference_bias",
+                             id_field: str = "id", bias_field: str = "bias_type") -> List[str]:
+    pos_ids = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            obj = json.loads(line)
+            if id_field in obj and obj.get(bias_field) == positive_bias_type:
+                pos_ids.append(str(obj[id_field]))
+    return pos_ids
+
 
 # ------------------------ Prompt + encoding ------------------------
 
@@ -94,10 +126,10 @@ def encode_batch(
     else:
         raise ValueError("layer_agg must be mean|last|concat")
 
-    # ---- HARD CAST to float32 here ----
+    # ---- HARD CAST to float32 ----
     H = H.to(torch.float32)
 
-    # Ensure mask is int64 (not bf16/bool)
+    # Ensure mask is int64
     mask = tok["attention_mask"].to(torch.int64)
     return H, mask
 
@@ -110,16 +142,17 @@ def last_k(H: torch.Tensor, mask: torch.Tensor, k: int) -> Tuple[torch.Tensor, t
     """
     B, T, D = H.shape
     lengths = mask.sum(dim=1)  # (B,)
-    out = torch.zeros(B, k, D, dtype=torch.float32, device=H.device)   # float32 sink
+    out = torch.zeros(B, k, D, dtype=torch.float32, device=H.device)
     out_mask = torch.zeros(B, k, dtype=torch.int64, device=mask.device)
     for i in range(B):
         L = int(lengths[i].item())
         take = min(k, L)
         if take > 0:
-            h_i = H[i, L - take : L, :].to(torch.float32)  # enforce float32
-            out[i, k - take :, :] = h_i                    # right-align
+            h_i = H[i, L - take : L, :].to(torch.float32)
+            out[i, k - take :, :] = h_i
             out_mask[i, k - take :] = 1
     return out, out_mask
+
 
 # ------------------------ Llama 3.1 loader (float32) ------------------------
 
@@ -140,7 +173,7 @@ def load_llama31_model(model_id: str, device: torch.device):
             model_id,
             config=cfg,
             trust_remote_code=trust,
-            dtype=torch.float32,   # use 'dtype', not deprecated 'torch_dtype'
+            dtype=torch.float32,   # use 'dtype' (not deprecated 'torch_dtype')
         )
     except Exception:
         mdl = AutoModelForCausalLM.from_pretrained(
@@ -153,15 +186,54 @@ def load_llama31_model(model_id: str, device: torch.device):
     mdl.to(device).eval()
     return tok, mdl
 
+
+# ------------------------ Utilities ------------------------
+
+def _add_with_label(id_list: Iterable[str], label: int, dest: Dict[str, int], dedup: str):
+    """
+    Merge ids into dest dict with a label, respecting dedup policy:
+      - pos_wins:  if conflicts, label 1 overrides 0
+      - neg_wins:  if conflicts, label 0 overrides 1
+      - drop_conflicts: remove ids that appear with opposite labels
+    """
+    for _id in id_list:
+        if _id not in dest:
+            dest[_id] = label
+        else:
+            if dest[_id] == label:
+                continue
+            # conflict
+            if dedup == "pos_wins":
+                dest[_id] = max(dest[_id], label)
+            elif dedup == "neg_wins":
+                dest[_id] = min(dest[_id], label)
+            elif dedup == "drop_conflicts":
+                dest.pop(_id, None)
+            else:
+                raise ValueError(f"Unknown dedup policy: {dedup}")
+
+
 # ------------------------ Main ------------------------
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bias-jsonl", required=True, help="JSONL with fields: id, bias_type")
-    ap.add_argument("--dataset", required=True, help="Dataset name used in your local JSON files (e.g., xsum)")
+    ap.add_argument("--dataset", required=True, help="Dataset name in your local store (e.g., xsum)")
     ap.add_argument("--data-type", default="sources", choices=["sources", "code"],
-                    help="Top-level folder and filename suffix to load from (default: sources)")
+                    help="Folder/suffix used by your local JSON files (default: sources)")
     ap.add_argument("--extras", action="store_true", help="If set, reads *_extra.json variant")
+
+    # Sources: multiple JSONLs for positives / negatives
+    ap.add_argument("--pos-jsonl", action="append", default=[],
+                    help="JSONL of positive (self-preference) examples. Repeatable.")
+    ap.add_argument("--neg-jsonl", action="append", default=[],
+                    help="JSONL of negative (non self-preference) examples. Repeatable.")
+
+    # Legacy bias-jsonl (optional)
+    ap.add_argument("--bias-jsonl", default=None,
+                    help="Legacy bias JSONL with 'bias_type' field; positives picked via --positive-bias-type")
+    ap.add_argument("--positive-bias-type", default="self_preference_bias",
+                    help="Label=1 when bias_type equals this string (for --bias-jsonl)")
+
     ap.add_argument("--out", required=True, help="Output .npz path")
     ap.add_argument("--model", default="meta-llama/Meta-Llama-3.1-8B-Instruct",
                     help="HF model id (default: Llama 3.1 8B Instruct)")
@@ -171,13 +243,13 @@ def main():
     ap.add_argument("--layer-agg", choices=["mean", "last", "concat"], default="mean")
     ap.add_argument("--prompt-template", required=True,
                     help="Template with {text} placeholder for the article text")
-    ap.add_argument("--positive-bias-type", default="self_preference_bias",
-                    help="Label=1 when bias_type equals this string")
-    ap.add_argument("--limit", type=int, default=0, help="Process at most N rows (0 = all)")
+    ap.add_argument("--dedup", choices=["pos_wins", "neg_wins", "drop_conflicts"], default="pos_wins",
+                    help="How to resolve id conflicts across sources (default: pos_wins)")
+    ap.add_argument("--limit", type=int, default=0, help="Process at most N rows after merging (0 = all)")
     args = ap.parse_args()
 
-    # harden defaults
-    torch.set_float32_matmul_precision("high")  # optional; keeps fp32 compute
+    # Device
+    torch.set_float32_matmul_precision("high")
     device = torch.device(
         "cuda"
         if (args.device == "cuda" or (args.device == "auto" and torch.cuda.is_available()))
@@ -188,10 +260,28 @@ def main():
     # Load local article dict
     articles, _ = load_sources(args.dataset, extras=args.extras, data_type=args.data_type)
 
-    # Read bias JSONL
-    rows = read_bias_jsonl(args.bias_jsonl)
+    # Build merged id->label map
+    id2label: Dict[str, int] = {}
+
+    # Positives from explicit files
+    for p in args.pos_jsonl:
+        pos_ids = read_ids_from_jsonl(p, id_field="id")
+        _add_with_label(pos_ids, 1, id2label, dedup=args.dedup)
+
+    # Negatives from explicit files
+    for n in args.neg_jsonl:
+        neg_ids = read_ids_from_jsonl(n, id_field="id")
+        _add_with_label(neg_ids, 0, id2label, dedup=args.dedup)
+
+    # Legacy bias-jsonl (optional)
+    if args.bias_jsonl:
+        pos_from_bias = read_pos_from_bias_jsonl(args.bias_jsonl, positive_bias_type=args.positive_bias_type)
+        _add_with_label(pos_from_bias, 1, id2label, dedup=args.dedup)
+
+    # Turn map into ordered lists (stable order by insertion)
+    merged_items = list(id2label.items())
     if args.limit and args.limit > 0:
-        rows = rows[: args.limit]
+        merged_items = merged_items[: args.limit]
 
     # Build prompts + labels
     prompts: List[str] = []
@@ -199,17 +289,19 @@ def main():
     ids: List[str] = []
     missing = 0
 
-    for r in rows:
-        rid = str(r.get("id"))
-        text = articles.get(rid) or articles.get(r.get("id"))
+    for rid, lab in merged_items:
+        text = articles.get(rid)
+        if text is None:
+            # try non-str key just in case
+            text = articles.get(rid if not rid.isdigit() else int(rid))
         if text is None:
             missing += 1
             continue
         prompts.append(make_prompt(args.prompt_template, text))
-        labels.append(1 if r.get("bias_type") == args.positive_bias_type else 0)
-        ids.append(rid)
+        labels.append(int(lab))
+        ids.append(str(rid))
 
-    print(f"[INFO] Collected {len(prompts)} prompts from local store (missing: {missing})")
+    print(f"[INFO] Prepared {len(prompts)} prompts from local store (missing articles: {missing})")
 
     # Encode in batches
     X_chunks, M_chunks = [], []
@@ -223,9 +315,9 @@ def main():
     if not X_chunks:
         raise SystemExit("[ERROR] No examples processed. Check paths, ids, and template.")
 
-    # ---- FINAL hard cast during concatenation ----
-    X = torch.cat([t.to(torch.float32) for t in X_chunks], dim=0).cpu().numpy()   # (N,5,D) float32
-    M = torch.cat([m.to(torch.int64) for m in M_chunks], dim=0).cpu().numpy()     # (N,5) int64
+    # Final concatenation and save
+    X = torch.cat([t.to(torch.float32) for t in X_chunks], dim=0).cpu().numpy()   # (N,5,D)
+    M = torch.cat([m.to(torch.int64) for m in M_chunks], dim=0).cpu().numpy()     # (N,5)
     Y = np.array(labels, dtype="int64")
     np.savez(args.out, x=X, y=Y, mask=M, ids=np.array(ids, dtype=object))
     print(f"[OK] Saved {args.out} with x {X.shape}, y {Y.shape}, mask {M.shape}, ids {len(ids)}")
