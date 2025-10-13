@@ -1,47 +1,36 @@
-
 #!/usr/bin/env python3
 """
-train_probe.py
----------------
-Train a probe (linear, MLP, or transformer) from probes.py on latent states.
-
-Expected data formats
----------------------
-The script expects a file containing arrays for inputs and labels.
-  - .npz (NumPy): keys: x (N,T,D) or (N,D), y (N,), optional mask (N,T) with 1 for real tokens, 0 for padding
-  - .pt  (PyTorch): a dict with the same keys
-
-Minimal example to create a dummy dataset:
-    import numpy as np
-    N, T, D = 2000, 1, 512
-    x = np.random.randn(N, T, D).astype('float32')
-    y = (x.mean(axis=(1,2)) > 0).astype('int64')
-    np.savez('toy.npz', x=x, y=y)
-
-Usage
------
-    python train_probe.py --data toy.npz --probe mlp --hidden-dims 512 128 --epochs 10
-
-Outputs
--------
-  - Best checkpoint saved to --save-path (default: best_probe.pt)
-  - A JSON log with final metrics next to the checkpoint
+train_probe.py (stratified, mask-aware) + ROC plotting
+------------------------------------------------------
+- Stratified train/val split to avoid single-class validation (keeps AUC defined).
+- Ensures non-empty splits even for tiny datasets.
+- Passes attn_mask to TransformerProbe.
+- Prints class balance for train/val.
+- (NEW) Optional Recall-vs-FPR (ROC) plot from the validation set:
+    --plot-roc --roc-out roc_val.png --roc-xlim 0.02
+    Also saves raw ROC arrays next to the image as <basename>_roc.npz.
 """
+
 from __future__ import annotations
 import argparse
 import json
 import os
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader, Subset
+
+# For plotting (only used if --plot-roc)
+import matplotlib
+matplotlib.use("Agg")  # safe in headless; no effect if you open later
+import matplotlib.pyplot as plt
 
 # Local import
 import sys
 sys.path.append(os.path.dirname(__file__))
-from probes import LinearProbe, MLPProbe, TransformerProbe
+from probes import LinearProbe, MLPProbe, TransformerProbe  # type: ignore
 
 # ---------------------- Utils ----------------------
 def set_seed(seed: int = 42):
@@ -55,25 +44,89 @@ def roc_auc_score(y_true: np.ndarray, y_score: np.ndarray) -> float:
     """Compute ROC-AUC for binary labels using the Mann–Whitney U statistic.
     Returns NaN if labels are all the same."""
     y_true = y_true.astype(np.int32)
-    if y_true.min() == y_true.max():
+    if y_true.size == 0 or y_true.min() == y_true.max():
         return float('nan')
     # Rank scores (average ranks for ties)
     order = np.argsort(y_score, kind='mergesort')
     ranks = np.empty_like(order, dtype=float)
     ranks[order] = np.arange(1, len(y_score) + 1)
     # average ranks for ties
-    unique_vals, inv, counts = np.unique(y_score[order], return_inverse=True, return_counts=True)
+    _, inv, counts = np.unique(y_score[order], return_inverse=True, return_counts=True)
     cum = np.cumsum(counts)
     start = cum - counts + 1
     avg = (start + cum) / 2.0
     ranks[order] = avg[inv]
     # Compute AUC
-    n1 = (y_true == 1).sum()
-    n0 = (y_true == 0).sum()
+    n1 = int((y_true == 1).sum())
+    n0 = int((y_true == 0).sum())
+    if n0 == 0 or n1 == 0:
+        return float('nan')
     sum_ranks_pos = ranks[y_true == 1].sum()
     U1 = sum_ranks_pos - n1 * (n1 + 1) / 2.0
     auc = U1 / (n0 * n1)
     return float(auc)
+
+def roc_curve_points(y_true: np.ndarray, y_score: np.ndarray):
+    """Return (fpr, tpr, thresholds) for binary ROC without sklearn.
+    thresholds are unique sorted score values (descending), with an extra +inf row to start at (0,0)."""
+    y = y_true.astype(np.int32)
+    s = y_score.astype(np.float64)
+
+    if y.size == 0 or y.min() == y.max():
+        # Degenerate: no curve possible
+        return np.array([0.0, 1.0]), np.array([0.0, 1.0]), np.array([np.inf, -np.inf])
+
+    # Sort by score descending; keep ties stable
+    order = np.argsort(-s, kind='mergesort')
+    s_sorted = s[order]
+    y_sorted = y[order]
+
+    # Unique thresholds (descending)
+    thresh, idx = np.unique(s_sorted, return_index=True)
+    thresh = thresh[::-1]
+    idx = idx[::-1]
+
+    # Prepend +inf to start at (0,0)
+    thresholds = np.concatenate([[np.inf], thresh])
+
+    P = float((y == 1).sum())
+    N = float((y == 0).sum())
+
+    # Cumulative TP/FP when threshold moves down across unique indices
+    tp = np.cumsum(y_sorted == 1)
+    fp = np.cumsum(y_sorted == 0)
+
+    # At each threshold index-1, compute rates; prepend zeros for +inf
+    tpr = np.concatenate([[0.0], tp[idx - 1] / max(P, 1.0)])
+    fpr = np.concatenate([[0.0], fp[idx - 1] / max(N, 1.0)])
+
+    # Ensure final point (1,1)
+    if tpr[-1] < 1.0 or fpr[-1] < 1.0:
+        tpr = np.concatenate([tpr, [1.0]])
+        fpr = np.concatenate([fpr, [1.0]])
+        thresholds = np.concatenate([thresholds, [-np.inf]])
+
+    return fpr, tpr, thresholds
+
+def plot_recall_vs_fpr(fpr: np.ndarray, tpr: np.ndarray, out_path: str, xlim: Optional[float] = None, label: Optional[str] = None):
+    plt.figure(figsize=(6,5))
+    if label is None:
+        plt.plot(fpr, tpr, linewidth=2)
+    else:
+        plt.plot(fpr, tpr, linewidth=2, label=label)
+        plt.legend(loc="lower right", frameon=True)
+    # Chance line
+    plt.plot([0,1],[0,1], "--", linewidth=1, color="black", alpha=0.5, label=None)
+    plt.xlabel("False Positive Rate (FPR)")
+    plt.ylabel("Recall (TPR)")
+    plt.title("Recall vs FPR (ROC)")
+    plt.grid(True, alpha=0.3)
+    if xlim is not None:
+        plt.xlim(0.0, float(xlim))
+        plt.ylim(0.0, 1.0)
+    plt.tight_layout()
+    plt.savefig(out_path, dpi=220)
+    plt.close()
 
 # ---------------------- Dataset ----------------------
 class ProbeDataset(Dataset):
@@ -95,7 +148,7 @@ class ProbeDataset(Dataset):
 
 def load_data(path: str, x_key: str = "x", y_key: str = "y", mask_key: Optional[str] = "mask"):
     if path.endswith(".npz"):
-        data = np.load(path)
+        data = np.load(path, allow_pickle=True)
         x = data[x_key]
         y = data[y_key]
         m = data[mask_key] if (mask_key is not None and mask_key in data) else None
@@ -116,7 +169,55 @@ def load_data(path: str, x_key: str = "x", y_key: str = "y", mask_key: Optional[
         m = m.astype(np.int64)
     return x, y, m
 
-# ---------------------- Training ----------------------
+# ---------------------- Stratified split ----------------------
+def stratified_indices(y: np.ndarray, val_frac: float, seed: int) -> Tuple[List[int], List[int]]:
+    """
+    Create stratified train/val indices so that both splits contain both classes when possible.
+    Ensures both splits are non-empty if len(y) >= 2.
+    """
+    rng = np.random.default_rng(seed)
+    n = len(y)
+    # Compute desired val size with sanity bounds
+    val_size = int(round(n * val_frac))
+    val_size = max(1 if n >= 2 else 0, min(val_size, n - 1 if n >= 2 else n))
+
+    # If only one class exists, just do a simple split (AUC will be NaN by definition)
+    classes = np.unique(y)
+    if len(classes) < 2:
+        all_idx = np.arange(n)
+        rng.shuffle(all_idx)
+        val_idx = list(all_idx[:val_size]) if val_size > 0 else []
+        train_idx = list(all_idx[val_size:]) if val_size < n else []
+        return train_idx, val_idx
+
+    # Stratify
+    idx0 = np.where(y == 0)[0]
+    idx1 = np.where(y == 1)[0]
+    rng.shuffle(idx0); rng.shuffle(idx1)
+
+    # target per-class in val, at least 1 if possible
+    n0, n1 = len(idx0), len(idx1)
+    val0 = max(1, int(round(val_size * n0 / (n0 + n1)))) if val_size > 1 else 1
+    val0 = min(val0, n0)  # can't exceed available
+    val1 = val_size - val0
+    if val1 < 1 and n1 > 0 and val_size > 0:
+        val1 = 1
+        if val0 > 1:
+            val0 -= 1
+    val1 = min(val1, n1)
+
+    val_idx = list(idx0[:val0]) + list(idx1[:val1])
+    train_idx = list(np.setdiff1d(np.arange(n), val_idx, assume_unique=False))
+
+    # Final sanity: non-empty splits
+    if len(train_idx) == 0 and len(val_idx) > 1:
+        train_idx = [val_idx.pop()]  # move one back to train
+    if len(val_idx) == 0 and len(train_idx) > 1:
+        val_idx = [train_idx.pop()]
+
+    return train_idx, val_idx
+
+# ---------------------- Build probe ----------------------
 def build_probe(args, input_dim: int):
     if args.probe == "linear":
         return LinearProbe(input_dim=input_dim, pooling=args.pooling, bias=True)
@@ -142,8 +243,9 @@ def build_probe(args, input_dim: int):
     else:
         raise ValueError(f"Unknown probe: {args.probe}")
 
+# ---------------------- Eval ----------------------
 @torch.no_grad()
-def evaluate(model, loader, device):
+def evaluate(model, loader, device, return_arrays: bool = False):
     model.eval()
     total, correct, loss_sum = 0, 0, 0.0
     logits_all, labels_all = [], []
@@ -153,7 +255,11 @@ def evaluate(model, loader, device):
         x = batch["x"]
         y = batch["y"].float()
         mask = batch.get("mask")
-        logits = model(x) if mask is None else model(x)
+        # Pass mask only when the model accepts it (TransformerProbe)
+        if isinstance(model, TransformerProbe) and mask is not None:
+            logits = model(x, attn_mask=mask)
+        else:
+            logits = model(x)
         loss = loss_fn(logits, y)
         preds = (logits.sigmoid() >= 0.5).long()
         total += y.numel()
@@ -165,8 +271,13 @@ def evaluate(model, loader, device):
     labels_all = torch.cat(labels_all).numpy() if labels_all else np.array([])
     acc = correct / total if total > 0 else 0.0
     auc = roc_auc_score(labels_all, logits_all) if total > 0 else float('nan')
-    return {"loss": loss_sum / max(total, 1), "acc": acc, "auc": auc}
+    out = {"loss": loss_sum / max(total, 1), "acc": acc, "auc": auc}
+    if return_arrays:
+        out["logits"] = logits_all
+        out["labels"] = labels_all
+    return out
 
+# ---------------------- Train ----------------------
 def train(args):
     set_seed(args.seed)
     device = torch.device("cuda" if torch.cuda.is_available() and not args.cpu else "cpu")
@@ -174,10 +285,24 @@ def train(args):
     N = len(x)
     input_dim = x.shape[-1]
     dataset = ProbeDataset(x, y, m)
-    # Train/val split
-    val_size = int(round(N * args.val_frac))
-    train_size = N - val_size
-    train_ds, val_ds = random_split(dataset, [train_size, val_size], generator=torch.Generator().manual_seed(args.seed))
+
+    # Stratified split
+    train_idx, val_idx = stratified_indices(y, args.val_frac, args.seed)
+    train_ds = Subset(dataset, train_idx)
+    val_ds = Subset(dataset, val_idx)
+
+    def _counts(ds: Subset) -> Dict[int, int]:
+        if len(ds) == 0:
+            return {0: 0, 1: 0}
+        ys = torch.stack([dataset[i]["y"] for i in ds.indices]).numpy()
+        return {0: int((ys == 0).sum()), 1: int((ys == 1).sum())}
+
+    train_counts = _counts(train_ds)
+    val_counts = _counts(val_ds)
+
+    print(f"[split] N={N}  train={len(train_ds)} (y0={train_counts[0]}, y1={train_counts[1]}), "
+          f"val={len(val_ds)} (y0={val_counts[0]}, y1={val_counts[1]})")
+
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_loader = DataLoader(val_ds, batch_size=args.batch_size, shuffle=False)
 
@@ -199,7 +324,10 @@ def train(args):
             x = batch["x"]
             yb = batch["y"].float()
             mask = batch.get("mask")
-            logits = model(x) if mask is None else model(x)
+            if isinstance(model, TransformerProbe) and mask is not None:
+                logits = model(x, attn_mask=mask)
+            else:
+                logits = model(x)
             loss = loss_fn(logits, yb)
 
             optim.zero_grad(set_to_none=True)
@@ -218,7 +346,8 @@ def train(args):
         # Early stopping on val loss
         if val_metrics["loss"] + 1e-6 < best_val:
             best_val = val_metrics["loss"]
-            best_metrics = {"epoch": epoch, **val_metrics}
+            best_metrics = {"epoch": epoch, **val_metrics,
+                            "train_counts": train_counts, "val_counts": val_counts}
             torch.save({"state_dict": model.state_dict(),
                         "config": vars(args),
                         "input_dim": input_dim,
@@ -234,6 +363,35 @@ def train(args):
     print(f"Best checkpoint metrics: {best_metrics}")
     with open(os.path.splitext(args.save_path)[0] + "_metrics.json", "w") as f:
         json.dump(best_metrics, f, indent=2)
+
+    # ------- NEW: create ROC plot from the best model on validation set -------
+    if args.plot_roc and len(val_ds) > 0:
+        # Reload best (in case we early-stopped)
+        ckpt = torch.load(args.save_path, map_location=device)
+        model.load_state_dict(ckpt["state_dict"])
+        model.to(device)
+        model.eval()
+
+        val_metrics_arrays = evaluate(model, val_loader, device, return_arrays=True)
+        y_val = val_metrics_arrays.get("labels", np.array([]))
+        s_val = val_metrics_arrays.get("logits", np.array([]))
+
+        if y_val.size > 0 and y_val.min() != y_val.max():
+            fpr, tpr, thresholds = roc_curve_points(y_val, s_val)
+            # Save arrays
+            base = os.path.splitext(args.roc_out)[0]
+            np.savez_compressed(base + "_roc.npz", fpr=fpr, tpr=tpr, thresholds=thresholds)
+            # Plot
+            plt.axvline(0.01, linestyle=":", linewidth=1)
+            plot_recall_vs_fpr(
+                fpr, tpr,
+                out_path=args.roc_out,
+                xlim=args.roc_xlim,
+                label="Validation"
+            )
+            print(f"[ROC] Saved ROC curve to {args.roc_out} and raw arrays to {base}_roc.npz")
+        else:
+            print("[ROC] Skipped ROC: validation set has a single class or is empty.")
 
 def parse_args():
     p = argparse.ArgumentParser(description="Train a probe on latent states.")
@@ -268,8 +426,17 @@ def parse_args():
     p.add_argument("--cpu", action="store_true")
 
     p.add_argument("--save-path", type=str, default="best_probe.pt")
+
+    # -------- NEW: ROC plot options --------
+    p.add_argument("--plot-roc", action="store_true",
+                   help="If set, saves a Recall (TPR) vs FPR (ROC) plot from the validation set.")
+    p.add_argument("--roc-out", type=str, default="roc_val.png",
+                   help="Path to save the ROC figure (PNG). Raw arrays saved as <basename>_roc.npz.")
+    p.add_argument("--roc-xlim", type=float, default=None,
+                   help="Optional max x-axis (FPR) to zoom, e.g., 0.015 for 1.5%%.")
     return p.parse_args()
 
 if __name__ == "__main__":
     args = parse_args()
     train(args)
+

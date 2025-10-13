@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 collect_last5_local_llama31_multi.py
 ------------------------------------
@@ -15,6 +14,10 @@ All JSONLs must have an 'id' field corresponding to keys in your local store.
 Dedup policy if the same id appears in multiple sources:
   --dedup pos_wins | neg_wins | drop_conflicts   (default: pos_wins)
 
+NEW:
+  --keep-duplicates  If set, disables id-level dedup completely and keeps
+                     every JSONL line as its own training row.
+
 Outputs:
   x: (N, 5, D) float32
   y: (N,)      int64
@@ -27,6 +30,7 @@ Example:
     --pos-jsonl sp_train.jsonl \
     --neg-jsonl nonsp_train.jsonl \
     --prompt-template "Summarize the following article:\\n{text}\\nSummary:" \
+    --keep-duplicates \
     --out xsum_last5_llama31_multi.npz
 
 Requirements:
@@ -119,14 +123,14 @@ def encode_batch(
     if layer_agg == "mean":
         H = hs.mean(dim=0)      # (B, T, D)
     elif layer_agg == "last":
-        H = hs[-1]              # (B, T, D)
+        H = hs[0]              # (B, T, D)
     elif layer_agg == "concat":
         L, B, T, D = hs.shape
         H = hs.permute(1, 2, 3, 0).reshape(B, T, D * L)  # (B, T, L*D)
     else:
         raise ValueError("layer_agg must be mean|last|concat")
 
-    # ---- HARD CAST to float32 ----
+    # Force float32 for output features
     H = H.to(torch.float32)
 
     # Ensure mask is int64
@@ -173,7 +177,7 @@ def load_llama31_model(model_id: str, device: torch.device):
             model_id,
             config=cfg,
             trust_remote_code=trust,
-            dtype=torch.float32,   # use 'dtype' (not deprecated 'torch_dtype')
+            dtype=torch.float32,
         )
     except Exception:
         mdl = AutoModelForCausalLM.from_pretrained(
@@ -243,8 +247,12 @@ def main():
     ap.add_argument("--layer-agg", choices=["mean", "last", "concat"], default="mean")
     ap.add_argument("--prompt-template", required=True,
                     help="Template with {text} placeholder for the article text")
+
     ap.add_argument("--dedup", choices=["pos_wins", "neg_wins", "drop_conflicts"], default="pos_wins",
                     help="How to resolve id conflicts across sources (default: pos_wins)")
+    ap.add_argument("--keep-duplicates", action="store_true",
+                    help="If set, do NOT deduplicate by id; keep every JSONL line as a separate row.")
+
     ap.add_argument("--limit", type=int, default=0, help="Process at most N rows after merging (0 = all)")
     args = ap.parse_args()
 
@@ -260,26 +268,39 @@ def main():
     # Load local article dict
     articles, _ = load_sources(args.dataset, extras=args.extras, data_type=args.data_type)
 
-    # Build merged id->label map
-    id2label: Dict[str, int] = {}
+    # ------------------------ Build merged ids (+labels) ------------------------
+    merged_items: List[Tuple[str, int]] = []
 
-    # Positives from explicit files
-    for p in args.pos_jsonl:
-        pos_ids = read_ids_from_jsonl(p, id_field="id")
-        _add_with_label(pos_ids, 1, id2label, dedup=args.dedup)
+    if args.keep_duplicates:
+        # Keep order and duplicates exactly as they appear across files
+        for p in args.pos_jsonl:
+            for _id in read_ids_from_jsonl(p, id_field="id"):
+                merged_items.append((str(_id), 1))
+        for n in args.neg_jsonl:
+            for _id in read_ids_from_jsonl(n, id_field="id"):
+                merged_items.append((str(_id), 0))
+        if args.bias_jsonl:
+            for _id in read_pos_from_bias_jsonl(args.bias_jsonl,
+                                                positive_bias_type=args.positive_bias_type):
+                merged_items.append((str(_id), 1))
+    else:
+        # Original behavior: deduplicate by id with a policy
+        id2label: Dict[str, int] = {}
+        for p in args.pos_jsonl:
+            pos_ids = read_ids_from_jsonl(p, id_field="id")
+            _add_with_label(pos_ids, 1, id2label, dedup=args.dedup)
+        for n in args.neg_jsonl:
+            neg_ids = read_ids_from_jsonl(n, id_field="id")
+            _add_with_label(neg_ids, 0, id2label, dedup=args.dedup)
+        if args.bias_jsonl:
+            pos_from_bias = read_pos_from_bias_jsonl(args.bias_jsonl,
+                                                     positive_bias_type=args.positive_bias_type)
+            _add_with_label(pos_from_bias, 1, id2label, dedup=args.dedup)
+        merged_items = list(id2label.items())
 
-    # Negatives from explicit files
-    for n in args.neg_jsonl:
-        neg_ids = read_ids_from_jsonl(n, id_field="id")
-        _add_with_label(neg_ids, 0, id2label, dedup=args.dedup)
+    total_merged = len(merged_items)
 
-    # Legacy bias-jsonl (optional)
-    if args.bias_jsonl:
-        pos_from_bias = read_pos_from_bias_jsonl(args.bias_jsonl, positive_bias_type=args.positive_bias_type)
-        _add_with_label(pos_from_bias, 1, id2label, dedup=args.dedup)
-
-    # Turn map into ordered lists (stable order by insertion)
-    merged_items = list(id2label.items())
+    # Respect --limit
     if args.limit and args.limit > 0:
         merged_items = merged_items[: args.limit]
 
@@ -291,9 +312,8 @@ def main():
 
     for rid, lab in merged_items:
         text = articles.get(rid)
-        if text is None:
-            # try non-str key just in case
-            text = articles.get(rid if not rid.isdigit() else int(rid))
+        if text is None and rid.isdigit():
+            text = articles.get(int(rid))
         if text is None:
             missing += 1
             continue
@@ -301,7 +321,7 @@ def main():
         labels.append(int(lab))
         ids.append(str(rid))
 
-    print(f"[INFO] Prepared {len(prompts)} prompts from local store (missing articles: {missing})")
+    print(f"[INFO] Merged rows: {total_merged} | After limit: {len(merged_items)} | Prepared prompts: {len(prompts)} | Missing articles dropped: {missing}")
 
     # Encode in batches
     X_chunks, M_chunks = [], []
@@ -325,3 +345,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
