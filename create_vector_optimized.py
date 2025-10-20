@@ -49,6 +49,19 @@ with open(bias_examples_path, "r") as f:
     for line in f:
         bias_examples.append(json.loads(line))
 
+agreement_examples_path = os.path.join("steering_inputs", args.setting, "agreement_examples.jsonl")
+agreement_examples = []
+with open(agreement_examples_path, "r") as f:
+    for line in f:
+        agreement_examples.append(json.loads(line))
+
+lsp_examples_path = os.path.join("steering_inputs", args.setting, "lsp_examples.jsonl")
+lsp_examples = []
+with open(lsp_examples_path, "r") as f:
+    for line in f:
+        lsp_examples.append(json.loads(line))
+
+examples = bias_examples # + agreement_examples + lsp_examples
 
 def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_id|>\n\n"):
     prompt = tokenizer.apply_chat_template([
@@ -63,12 +76,12 @@ def chat_template(prompt, post_script="<|start_header_id|>assistant<|end_header_
     return prompt
 
 # Optimization process
-print(f"Loaded {len(bias_examples)} bias examples for setting: {args.setting}")
+print(f"Loaded {len(examples)} examples for setting: {args.setting}")
 datapoints = []
-for bias_example in tqdm(bias_examples):
-    text = chat_template(bias_example['prompt'])
-    src_completion = flip_output(bias_example['unbiased_output'])
-    dst_completion = bias_example['unbiased_output']
+for example in tqdm(examples):
+    text = chat_template(example['prompt'])
+    src_completion = flip_output(example['unbiased_output'])
+    dst_completion = example['unbiased_output']
     datapoints.append(
         steering_opt.TrainingDatapoint(
             text,
@@ -78,10 +91,10 @@ for bias_example in tqdm(bias_examples):
     )
 
 layer = min(int(args.layer), model.config.num_hidden_layers)
-vector, losses = steering_opt.optimize_completion(
+vec_data = steering_opt.optimize_completion(
     model, datapoints, layer, tokenizer=tokenizer,
     lr=args.lr, max_iters=args.max_iters, use_transformer_lens=False,
-    do_target_loss_avg=False, return_loss=True,
+    do_target_loss_avg=False, affine_rank=8, return_loss=True,
     target_loss=None, target_loss_target_iters=5,
     debug=True
 )
@@ -89,9 +102,9 @@ vector, losses = steering_opt.optimize_completion(
 print("Steering vector optimized.")
 
 # Save the vector to workspace-relative path
-out_path = os.path.join("vectors", "optimization", f"steering_vector_{args.setting}_final.pkl")
+out_path = os.path.join("vectors", "optimization", f"steering_vector_{args.setting}_affine.pkl")
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 import pickle
 with open(out_path, "wb") as f:
-    pickle.dump(vector, f)
+    pickle.dump(vec_data, f)
 print(f"Optimized steering vector saved to {out_path}")
