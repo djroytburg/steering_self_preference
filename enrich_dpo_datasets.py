@@ -1,117 +1,85 @@
 import json
 import os.path as osp
-import os
 import glob
 
-if __name__ == "__main__":
+
+def load_aware_records():
+    """Load all records from preference_extraction/aware/*.jsonl"""
     jsons = []
-    for file in glob.glob(osp.join("preference_extraction", "aware", "*.jsonl")):
-        with open(file, "r") as f:
+    aware_folder = osp.join("preference_extraction", "aware")
+    for path in glob.glob(osp.join(aware_folder, "*.jsonl")):
+        with open(path, "r") as f:
             for line in f:
                 di = json.loads(line)
-                di['file'] = file
                 jsons.append(di)
-    j = 0
-    for item in open("train_dataset.jsonl","r").readlines():
-        data = json.loads(item)
-        your_response = data['prompt'].index("(your response)")
-        other_response = data['prompt'].index("(other model's response)")
-        self_first = your_response < other_response
-        if self_first:
-            self_summary = data['prompt'][your_response + len("your response):\n"):other_response - len('\nSummary2')].replace("\n","")
-            for i, file in enumerate(jsons):
-                found = False
-                if self_summary in file['target_model_response']:
-                    import json
-                    import os.path as osp
-                    import glob
+    return jsons
 
 
-                    def extract_between(prompt: str, start_marker: str, end_marker: str) -> str:
-                        """Return the substring of prompt between start_marker and end_marker.
-                        If either marker is missing, returns an empty string.
-                        Trims surrounding whitespace and stray label text like 'Summary2'.
-                        """
-                        s = prompt.find(start_marker)
-                        e = prompt.find(end_marker)
-                        if s == -1 or e == -1:
-                            return ""
-                        # move past the start marker and any following separators like ':\n'
-                        start = s + len(start_marker)
-                        # strip common separators
-                        while start < len(prompt) and prompt[start] in ": \n":
-                            start += 1
-                        substring = prompt[start:e].strip()
-                        # remove a trailing 'Summary2' token if present
-                        if substring.endswith('Summary2'):
-                            substring = substring[: -len('Summary2')].strip()
-                        return substring
+if __name__ == "__main__":
+    # Load aware records
+    aware_records = load_aware_records()
 
+    # Read test dataset
+    input_file = "test_dataset_annotated.jsonl"
+    output_file = "test_dataset_enriched.jsonl"
 
-                    if __name__ == "__main__":
-                        # load jsonl records from the aware folder
-                        jsons = []
-                        aware_folder = osp.join("preference_extraction", "aware")
-                        for path in glob.glob(osp.join(aware_folder, "*.jsonl")):
-                            with open(path, "r") as f:
-                                for line in f:
-                                    di = json.loads(line)
-                                    di["file"] = path
-                                    jsons.append(di)
+    with open(input_file, "r") as f_in, open(output_file, "w") as f_out:
+        for line in f_in:
+            data = json.loads(line.strip())
+            prompt = data.get("prompt", "")
 
-                        # read train dataset into memory once
-                        train_path = "train_dataset.jsonl"
-                        train_lines = []
-                        with open(train_path, "r") as f:
-                            train_lines = f.readlines()
-                        total = len(train_lines)
+            # Find markers
+            your_marker = "(your response)"
+            other_marker = "(other model's response)"
+            your_idx = prompt.find(your_marker)
+            other_idx = prompt.find(other_marker)
 
-                        j = 0
-                        for item in train_lines:
-                            data = json.loads(item)
-                            prompt = data.get("prompt", "")
-                            # find markers safely
-                            your_marker = "(your response)"
-                            other_marker = "(other model's response)"
-                            your_idx = prompt.find(your_marker)
-                            other_idx = prompt.find(other_marker)
-                            if your_idx == -1 or other_idx == -1:
-                                # skip malformed prompts but print a warning
-                                print("WARN: markers not found in prompt; skipping")
-                                continue
+            if your_idx == -1 or other_idx == -1:
+                print("WARN: markers not found in prompt; skipping")
+                continue
 
-                            self_first = your_idx < other_idx
-                            if self_first:
-                                self_summary = extract_between(prompt, your_marker, other_marker)
-                                found = False
-                                for rec in jsons:
-                                    if self_summary and self_summary in rec.get("target_model_response", ""):
-                                        print(self_summary)
-                                        print(rec.get("id"))
-                                        print(rec.get("file"))
-                                        if found:
-                                            raise Exception("ANOMALOUS SELF: multiple aware records matched the same summary")
-                                        found = True
-                                        break
-                                if found:
-                                    j += 1
-                            else:
-                                other_summary = extract_between(prompt, other_marker, your_marker)
-                                found = False
-                                for rec in jsons:
-                                    if other_summary and other_summary in rec.get("comparison_model_response", ""):
-                                        print(other_summary)
-                                        print(rec.get("id"))
-                                        print(rec.get("file"))
-                                        if found:
-                                            raise Exception("ANOMALOUS OTHER: multiple aware records matched the same summary")
-                                        found = True
-                                        break
-                                if found:
-                                    j += 1
+            # Extract summaries
+            self_marker = "(your response)"
+            other_marker = "(other model's response)"
+            self_start = prompt.find(self_marker)
+            self_summary = ""
+            other_summary = ""
+            if self_start != -1:
+                self_start += len(self_marker)
+                while self_start < len(prompt) and prompt[self_start] in ":\n ":
+                    self_start += 1
+                # find end as \n\nSummary2 or other_marker
+                end_marker = "\n\nSummary2"
+                other_start = prompt.find(end_marker, self_start)
+                if other_start == -1:
+                    other_start = prompt.find(other_marker, self_start)
+                if other_start != -1:
+                    self_summary = prompt[self_start:other_start].strip()
+                else:
+                    self_summary = prompt[self_start:].strip()
 
-                            print(j, total)
-                            self_pick = 1 if self_first else 2
-                            type = "self_win" if data.get("chosen") == self_pick else "other_win"
+                # now for other
+                other_pos = prompt.find(other_marker)
+                if other_pos != -1:
+                    other_pos += len(other_marker)
+                    while other_pos < len(prompt) and prompt[other_pos] in ":\n ":
+                        other_pos += 1
+                    other_summary = prompt[other_pos:].strip()
+                    # Fix: if other_summary has extra text after \n\n, take only the first part
+                    other_summary = other_summary.split('\n\n')[0].strip()
 
+            # Find id where both summaries match the same record
+            matching_id = None
+            for rec in aware_records:
+                target = rec.get("target_model_response", "")
+                comp = rec.get("comparison_model_response", "")
+                if self_summary == target and other_summary == comp:
+                    matching_id = rec.get("id")
+                    break
 
+            # Add id to data if found
+            if matching_id:
+                data["id"] = matching_id
+
+            # Write enriched data
+            f_out.write(json.dumps(data) + "\n")
