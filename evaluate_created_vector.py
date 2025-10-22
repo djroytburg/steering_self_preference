@@ -33,6 +33,7 @@ parser = argparse.ArgumentParser(description="Evaluate created steering vector."
 parser.add_argument('--steering_type', type=str, default="caa", choices = ["caa", "optimization"])
 parser.add_argument('--setting', type=str, default="unaware", choices=["aware", "unaware"])
 parser.add_argument('--vector_path', type=str, default="vectors/")
+parser.add_argument('--matrix', action='store_true')
 parser.add_argument('--prompt_template', type=str, default='classic', choices = ['classic', 'self-other'])
 parser.add_argument('--layers', type=int, nargs='+', default=[14,15,16])
 parser.add_argument('--cases', type=str, default="bias,agreement,lsp")
@@ -72,16 +73,22 @@ sampling_kwargs={"use_cache": True, "pad_token_id": tokenizer.eos_token_id, "max
 tokenizer.padding_side = "left"
 
 # --- Load steering vector ---
-vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}_final.pkl")
-with open(vector_path, "rb") as f:
-    steering_vector = pickle.load(f)
+if args.matrix:
+    vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}_affine_rank_64.pkl")
+    with open(vector_path, "rb") as f:
+        steering_vector, matrix, _ = pickle.load(f)
+        matrix = matrix / torch.linalg.norm(matrix)
+else:
+    vector_path = os.path.join(args.vector_path, args.steering_type, f"steering_vector_{args.setting}_mixed_final.pkl")
+    with open(vector_path, "rb") as f:
+        steering_vector = pickle.load(f)
 
 # --- Load datasets ---
 def load_jsonl(path):
     with open(path, "r") as f:
         return [json.loads(line) for line in f]
 
-if any([case not in ["bias", "agreement", "lsp"] for case in args.cases.split(",")]):
+if args.cases != 'holdout' and any([case not in ["bias", "agreement", "lsp"] for case in args.cases.split(",")]):
     raise ValueError("Invalid case specified. Choose from 'bias', 'agreement', 'lsp'.")
 
 
@@ -89,25 +96,34 @@ def subsample(data, n, seed = args.seed):
     random.seed(seed)
     return random.sample(data, min(n, len(data)))
 
-cases = args.cases.split(",")
-case_to_dataset = {}
-if "agreement" in cases:
-    positives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_agreement_examples.jsonl")
-    positives_steering = load_jsonl(f"steering_inputs/{args.setting}/agreement_examples.jsonl")
-    vector_positive_ids = [ex['id'] for ex in positives_steering]
-    test_positives = [ex for ex in positives if ex['id'] not in vector_positive_ids]
-    case_to_dataset['agreement'] = subsample(test_positives, args.num_samples)
+if args.cases == "holdout":
+    print("Using holdout dataset")
+    test_dataset = load_jsonl(f"test_dataset_enriched.jsonl")
+    case_to_dataset = {'agreement': [], 'bias': [], 'lsp': []}
+    for item in test_dataset:
+        assert item['data_type'] in case_to_dataset
+        case_to_dataset[item['data_type']].append(item)
+    
+else:
+    cases = args.cases.split(",")
+    case_to_dataset = {}
+    if "agreement" in cases:
+        positives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_agreement_examples.jsonl")
+        positives_steering = load_jsonl(f"steering_inputs/{args.setting}/agreement_examples.jsonl")
+        vector_positive_ids = [ex['id'] for ex in positives_steering]
+        test_positives = [ex for ex in positives if ex['id'] not in vector_positive_ids]
+        case_to_dataset['agreement'] = subsample(test_positives, args.num_samples)
 
-if "bias" in cases:
-    negatives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_bias_examples.jsonl")
-    negatives_steering = load_jsonl(f"steering_inputs/{args.setting}/bias_examples.jsonl")
-    vector_negative_ids = [ex['id'] for ex in negatives_steering]
-    test_negatives = [ex for ex in negatives if ex['id'] not in vector_negative_ids]
-    case_to_dataset['bias'] = subsample(test_negatives, args.num_samples)
+    if "bias" in cases:
+        negatives = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_bias_examples.jsonl")
+        negatives_steering = load_jsonl(f"steering_inputs/{args.setting}/bias_examples.jsonl")
+        vector_negative_ids = [ex['id'] for ex in negatives_steering]
+        test_negatives = [ex for ex in negatives if ex['id'] not in vector_negative_ids]
+        case_to_dataset['bias'] = subsample(test_negatives, args.num_samples)
 
-if "lsp" in cases:
-    test_lsp = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_legit_self_pref_examples.jsonl")
-    case_to_dataset['lsp'] = subsample(test_lsp, args.num_samples)
+    if "lsp" in cases:
+        test_lsp = load_jsonl(f"preference_extraction/{args.setting}/xsum_llama3.1-8b-instruct_legit_self_pref_examples.jsonl")
+        case_to_dataset['lsp'] = subsample(test_lsp, args.num_samples)
 
 responses, articles, keys = load_data("xsum", sources= ['gpt35','llama3.1-8b-instruct'],target_model='llama3.1-8b-instruct',num_samples=1000, extras=False)
 
@@ -195,6 +211,9 @@ def reconstruct(result, responses, articles, source='llama3.1-8b-instruct', set_
                 who2 = who2
             ), unbiased_output
 
+if matrix is not None:
+    print("MATRIX NORM: \n\n", torch.linalg.norm(matrix))
+    print("MATRIX SHAPE: \n\n", matrix.shape)
 
 
 # --- Steering layer initialization ---
@@ -207,7 +226,7 @@ if args.steering_type == "caa":
 
 # --- Generate Function ---
 
-def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= args.steering_type, score_on_token=None):
+def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= args.steering_type, score_on_token=None, matrix = None):
     if steering_type == "caa":
         clear_hooks(model)
         tokens = tokenizer(prompt_str, return_tensors="pt").to(model.device)
@@ -223,8 +242,10 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
         )
         
     elif steering_type == "optimization":
+        if matrix is None:
+            matrix = steering_opt.make_abl_mat(scale * base_vec)
         with steering_opt.hf_hooks_contextmanager(model, [
-            (layer_idx, steering_opt.make_steering_hook_hf(scale * base_vec, steering_opt.make_abl_mat(scale * base_vec)))]):
+            (layer_idx, steering_opt.make_steering_hook_hf(scale * base_vec, matrix=matrix))]):
             # print("tokenizing")
             tokens = tokenizer(chat_template(prompt_str), return_tensors='pt').to(model.device)
             # print("generating")
@@ -232,12 +253,14 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
             stacked_scores = torch.stack(output.scores, dim=0)
             stacked_scores = stacked_scores.permute(1, 0, 2)   # -> Tensor(batch_size, new_tokens, vocab_size)
             probabilities = stacked_scores.softmax(dim=-1)  # -> Softmax over vocab_size for probabilities
+            print("Printing sequences: ")
+            for seq in output.sequences.detach().cpu():
+                print(tokenizer.decode(seq[len(tokens['input_ids'][0]):]))
             if score_on_token is None:
                 highest_probabilities, highest_score_indices = torch.max(probabilities, dim=-1) # -> Get probabilities of tokens
                 generated_sequences = output.sequences
                 start_pos = generated_sequences.shape[1] - highest_score_indices.shape[1] # New tokens only
                 generated_tokens_ids = generated_sequences[:, start_pos:]
-                
                 assert torch.equal(generated_tokens_ids, highest_score_indices), (generated_tokens_ids, highest_score_indices)
                 ids_pos, scores = generated_tokens_ids.detach().cpu(), highest_probabilities.detach().cpu()
             else:
@@ -252,7 +275,7 @@ def generate_with_vec(prompt_str, layer_idx, base_vec, scale, steering_type= arg
 self_other_labels = args.prompt_template == 'self-other'
 set_aware = args.setting == 'aware'
 
-results_path = os.path.join(args.results_path, args.steering_type, args.setting, args.prompt_template, "results.jsonl")
+results_path = os.path.join(args.results_path, args.steering_type, args.setting, args.prompt_template, f"_mixed_{'affine_r64_' if args.matrix else ''}{'holdout_' if args.cases == 'holdout' else ''}results.jsonl")
 
 # --- Main evaluation loop ---
 run_id = 0
@@ -260,15 +283,19 @@ results = []
 for dataset_name, dataset in case_to_dataset.items():
     for example in tqdm(dataset, desc=dataset_name):
         for source_summary_first in [True, False]:
-            prompt_text, unbiased_output = reconstruct(
-                example,
-                responses,
-                articles,
-                source='llama3.1-8b-instruct',
-                set_aware=set_aware,
-                source_summary_first=source_summary_first,
-                self_other_labels=self_other_labels
-            )
+            if args.cases == 'holdout':
+                prompt_text = example['prompt']
+                unbiased_output = example['chosen']
+            else:
+                prompt_text, unbiased_output = reconstruct(
+                    example,
+                    responses,
+                    articles,
+                    source='llama3.1-8b-instruct',
+                    set_aware=set_aware,
+                    source_summary_first=source_summary_first,
+                    self_other_labels=self_other_labels
+                )
             prompt_text += " \n\n"    
             for layer in args.layers:
                 if args.steering_type == "caa":
@@ -286,7 +313,8 @@ for dataset_name, dataset in case_to_dataset.items():
                         layer_idx=layer,
                         base_vec=base_vec,
                         scale=m,
-                        score_on_token=unbiased_output
+                        score_on_token=unbiased_output,
+                        matrix = matrix if args.matrix else None
                     )
                     result = {
                         "id": example['id'],

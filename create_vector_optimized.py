@@ -16,7 +16,10 @@ parser.add_argument('--setting', type=str, default="unaware", choices=["aware", 
 parser.add_argument('--layer', type=str, default="14")
 parser.add_argument('--lr', type=float, default=0.1)
 parser.add_argument('--max_iters', type=int, default=20)
+parser.add_argument('--affine_rank', type=int, default=-1)
 args = parser.parse_args()
+
+args.affine_rank = args.affine_rank if args.affine_rank > 0 else None    
 
 TARGET = "llama3.1-8b-instruct"
 
@@ -94,7 +97,7 @@ layer = min(int(args.layer), model.config.num_hidden_layers)
 vec_data = steering_opt.optimize_completion(
     model, datapoints, layer, tokenizer=tokenizer,
     lr=args.lr, max_iters=args.max_iters, use_transformer_lens=False,
-    do_target_loss_avg=False, affine_rank=8, return_loss=True,
+    do_target_loss_avg=False, affine_rank=args.affine_rank, return_loss=True,
     target_loss=None, target_loss_target_iters=5,
     debug=True
 )
@@ -102,7 +105,7 @@ vec_data = steering_opt.optimize_completion(
 print("Steering vector optimized.")
 
 # Save the vector to workspace-relative path
-out_path = os.path.join("vectors", "optimization", f"steering_vector_{args.setting}_affine.pkl")
+out_path = os.path.join("vectors", "optimization", f"steering_vector_{args.setting}_affine_r1.pkl")
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 import pickle
 with open(out_path, "wb") as f:
