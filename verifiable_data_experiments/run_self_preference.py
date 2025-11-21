@@ -215,7 +215,7 @@ def parse_args():
     p.add_argument("--judge", type=str, default="google/gemma-3-12b-it")
     p.add_argument("--ref", type=str, default='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B')
     p.add_argument("--data_jsonl", type=str,
-                   default="data_verifiable_preference/diffs.jsonl",
+                   default="diffs.jsonl",
                    help="JSONL fields: question, judge_completion, ref_completion; optional: judge_correct, ref_correct.")
     p.add_argument("--limit", type=int, default=0, help="Max rows; 0 = all.")
     # Model

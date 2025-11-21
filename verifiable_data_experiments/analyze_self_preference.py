@@ -126,21 +126,22 @@ def extract_probabilities(scores, logger: logging.Logger):
         # Skip examples with zero probabilities (failed to extract)
         if s['probabilities']['RJ_order'] == {'A': 0.0, 'B': 0.0, 'T': 0.0}:
             skipped += 1
+            print(f"Skipping example with zero probabilities: {s}")
             continue
         
-        # Calculate P(self) = P(B) / (P(A) + P(B))
-        # In RJ order: A=ref, B=judge, so P(B) is self-preference
-        AB_normalized = s['probabilities']['RJ_order']["B"] / (
-            s['probabilities']['RJ_order']["A"] + s['probabilities']['RJ_order']["B"]
-        )
+        # Calculate self-preference: average of JR(A) and RJ(B)
+        # JR(A) = probability of choosing A when judge is in position A
+        # RJ(B) = probability of choosing B when reference is in position B
+        # These represent the model's preference for its own output regardless of position
+        self_pref = (s['probabilities']['JR_order']["A"] + s['probabilities']['RJ_order']["B"]) / 2.0
         
-        examples['all'].append(AB_normalized)
+        examples['all'].append(self_pref)
         
         # Categorize as legitimate or illegitimate based on judge correctness
         if s['judge_correct'] == 1:
-            examples['lsp'].append(AB_normalized)
+            examples['lsp'].append(self_pref)
         else:
-            examples['ilsp'].append(AB_normalized)
+            examples['ilsp'].append(self_pref)
     
     lsp_proportion = len(examples['lsp']) / (len(examples['lsp']) + len(examples['ilsp']))
     
@@ -151,7 +152,7 @@ def extract_probabilities(scores, logger: logging.Logger):
     logger.info(f"  Skipped (zero probs): {skipped}")
     logger.info(f"  LSP proportion: {lsp_proportion:.3f}")
     
-    return examples, lsp_proportion
+    return examples, lsp_proportion, skipped
 
 def plot_histogram_with_stats(ax, data, objective, title=None, xlabel=None, 
                                color='cornflowerblue', no_spine=False, **hist_kwargs):
@@ -193,7 +194,11 @@ def plot_histogram_with_stats(ax, data, objective, title=None, xlabel=None,
     if no_spine:
         ax.spines['left'].set_visible(False)
     
-    ax.set_ylabel('Count')
+    # Set ylabel based on whether density is used
+    if hist_kwargs.get('density', False):
+        ax.set_ylabel('Density')
+    else:
+        ax.set_ylabel('Count')
     ax.grid(axis='y', linestyle='--', alpha=0.5)
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
@@ -205,7 +210,6 @@ def create_visualization(prob_data, lsp_proportion, output_path: Path, logger: l
     # Set up matplotlib style
     plt.rcParams.update({
         "font.family": "sans-serif",
-        "font.sans-serif": ['Liberation Sans'],
         "font.size": 10,
         "axes.titlesize": 11,
         "axes.labelsize": 10,
@@ -219,38 +223,44 @@ def create_visualization(prob_data, lsp_proportion, output_path: Path, logger: l
     fig, axes = plt.subplots(ncols=3, figsize=(12, 4), sharey=True)
     
     # Plot legitimate examples (LSP)
+    # Objective = 1.0 because when judge is correct, it should always prefer its own (better) answer
     plot_histogram_with_stats(
         ax=axes[0],
         data=prob_data['lsp'],
-        objective=lsp_proportion,
+        objective=1.0,
         title="Legitimate Self-Preference (LSP)",
         xlabel="P(self)",
         color='green',
+        density=True,
         bins=20,
         alpha=0.7
     )
     
     # Plot illegitimate examples (ILSP)
+    # Objective = 0.0 because when judge is incorrect, it should not prefer its own (worse) answer
     plot_histogram_with_stats(
         ax=axes[1],
         data=prob_data['ilsp'],
-        objective=1 - lsp_proportion,
+        objective=0.0,
         title="Illegitimate Self-Preference (ILSP)",
         xlabel="P(self)",
         color='red',
+        density=True,
         bins=20,
         alpha=0.7,
         no_spine=True
     )
     
     # Plot all examples
+    # Objective = weighted average based on LSP proportion
     plot_histogram_with_stats(
         ax=axes[2],
         data=prob_data['all'],
-        objective=lsp_proportion,
+        objective=lsp_proportion * 1.0 + (1 - lsp_proportion) * 0.0,
         title="All Examples",
         xlabel="P(self)",
         color='cornflowerblue',
+        density=True,
         bins=20,
         alpha=0.7,
         no_spine=True
@@ -273,7 +283,7 @@ def create_visualization(prob_data, lsp_proportion, output_path: Path, logger: l
     
     plt.close()
 
-def save_statistics(prob_data, lsp_proportion, output_path: Path, logger: logging.Logger):
+def save_statistics(prob_data, lsp_proportion, output_path: Path, logger: logging.Logger, skipped):
     """Save detailed statistics to JSON file."""
     logger.info("Computing and saving statistics...")
     
@@ -285,7 +295,7 @@ def save_statistics(prob_data, lsp_proportion, output_path: Path, logger: loggin
         "lsp_proportion": float(lsp_proportion),
         "statistics": {}
     }
-    
+    stats['skipped'] = skipped
     for category in ['lsp', 'ilsp', 'all']:
         data = prob_data[category]
         if len(data) > 0:
@@ -357,13 +367,13 @@ def main():
     results = load_results(str(input_jsonl), logger)
     
     # Extract probabilities
-    prob_data, lsp_proportion = extract_probabilities(results, logger)
+    prob_data, lsp_proportion, skipped = extract_probabilities(results, logger)
     
     # Create visualization
     create_visualization(prob_data, lsp_proportion, input_dir, logger)
     
     # Save statistics
-    save_statistics(prob_data, lsp_proportion, input_dir, logger)
+    save_statistics(prob_data, lsp_proportion, input_dir, logger, skipped)
     
     logger.info("=" * 80)
     logger.info("ANALYSIS COMPLETED SUCCESSFULLY")
