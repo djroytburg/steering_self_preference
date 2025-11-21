@@ -317,22 +317,12 @@ def main():
         logger.debug(f"Set pad_token to eos_token: {tokenizer.eos_token}")
     
     logger.info("Loading model (this may take a while)...")
-    try:
-        quantization_config = BitsAndBytesConfig(
-            load_in_8bit=True,
-            llm_int8_enable_fp32_cpu_offload=True
-        )
-        logger.info("Using 8-bit quantization")
-    except ImportError:
-        quantization_config = None
-        logger.warning("bitsandbytes not found, skipping quantization")
-
+    
     model = AutoModelForCausalLM.from_pretrained(
         args.judge,
         torch_dtype=torch.bfloat16 if args.bf16 else torch.float32,
         trust_remote_code=args.trust_remote_code,
         device_map="auto",
-        quantization_config=quantization_config, # Add this line
     )
     
    
