@@ -1,0 +1,32 @@
+2025-11-21 18:15:23 | INFO     | setup_logging:158 | ================================================================================
+2025-11-21 18:15:23 | INFO     | setup_logging:159 | NEW RUN STARTED
+2025-11-21 18:15:23 | INFO     | setup_logging:160 | ================================================================================
+2025-11-21 18:15:23 | INFO     | setup_logging:163 | SYSTEM METADATA:
+2025-11-21 18:15:23 | INFO     | setup_logging:164 |   User: ubuntu
+2025-11-21 18:15:23 | INFO     | setup_logging:165 |   Hostname: 209-20-159-141
+2025-11-21 18:15:23 | INFO     | setup_logging:166 |   Platform: Linux-6.8.0-60-generic-x86_64-with-glibc2.35
+2025-11-21 18:15:23 | INFO     | setup_logging:167 |   Python version: 3.10.12
+2025-11-21 18:15:23 | INFO     | setup_logging:168 |   PyTorch version: 2.9.1+cu128
+2025-11-21 18:15:23 | INFO     | setup_logging:169 |   CUDA available: True
+2025-11-21 18:15:23 | INFO     | setup_logging:171 |   CUDA version: 12.8
+2025-11-21 18:15:23 | INFO     | setup_logging:172 |   GPU count: 1
+2025-11-21 18:15:23 | INFO     | setup_logging:174 |   GPU 0: NVIDIA H100 PCIe
+2025-11-21 18:15:23 | INFO     | setup_logging:176 |     Total memory: 85.03 GB
+2025-11-21 18:15:23 | INFO     | setup_logging:179 | RUN PARAMETERS:
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   bf16: True
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   data_jsonl: data_verifiable_preference/diffs/diffs.json
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   judge: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   limit: 0
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   logprobs_k: 50
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   max_tokens: 2
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   output_path: results/output_qwen_gemma.jsonl
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   ref: google/gemma-3-27b-it
+2025-11-21 18:15:23 | INFO     | setup_logging:181 |   trust_remote_code: False
+2025-11-21 18:15:23 | INFO     | setup_logging:183 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results/output_qwen_gemma.jsonl/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/google_gemma-3-27b-it/logs/run_20251121_181523.log
+2025-11-21 18:15:23 | INFO     | setup_logging:184 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results/output_qwen_gemma.jsonl/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/google_gemma-3-27b-it
+2025-11-21 18:15:23 | INFO     | setup_logging:185 |   Timestamp: 20251121_181523
+2025-11-21 18:15:23 | INFO     | setup_logging:186 | ================================================================================
+2025-11-21 18:15:23 | INFO     | main:382 | Starting data loading...
+2025-11-21 18:15:23 | INFO     | main:396 | Dataset loaded: 861 examples found
+2025-11-21 18:15:23 | INFO     | main:420 | Loading tokenizer and model from deepseek-ai/DeepSeek-R1-Distill-Qwen-32B (trust_remote_code=False)
+2025-11-21 18:15:25 | INFO     | main:423 | Loading model (this may take a while)...
