@@ -1,0 +1,16 @@
+{
+  "judge_model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+  "ref_model": "mistralai/Magistral-Small-2509",
+  "logprobs_k": 50,
+  "max_tokens": 12,
+  "n_limited_examples": "None",
+  "data_json_path": "diffs.jsonl",
+  "output_path": "/lambda/nfs/Dani/steering_self_preference/verifiable_data_experiments/results/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/mistralai_Magistral-Small-2509",
+  "date_collected": "2025-11-22 01:55:41.679226",
+  "float": "bfloat16",
+  "collected_by": "ubuntu",
+  "hostname": "192-222-53-155",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "pytorch_version": "2.9.1+cu128",
+  "cuda_available": true
+}
