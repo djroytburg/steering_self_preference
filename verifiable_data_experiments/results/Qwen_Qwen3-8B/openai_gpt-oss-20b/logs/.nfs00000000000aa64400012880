@@ -10708,3 +10708,58 @@ You will be given answers from two assistants (Assistant A and Assistant B) to a
 'B' if Assistant B's answer is better.
 Do not think or reason. Just choose which answer you prefe...<truncated 5841 chars>
 2025-11-28 16:22:40 | DEBUG    | main:439 | RJ prompt length: 2199
+2025-11-28 16:23:10 | DEBUG    | main:460 | RJ: Generated 12 steps
+2025-11-28 16:23:10 | DEBUG    | main:466 | RJ: generated text=' encountCHCHCHCHCHCHCHCHCHCHCH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 0: token_id=29797, text=' encount'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 1: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 2: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 3: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 4: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 5: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 6: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 7: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 8: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 9: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 10: token_id=2149, text='CH'
+2025-11-28 16:23:10 | DEBUG    | main:472 | RJ step 11: token_id=2149, text='CH'
+2025-11-28 16:23:10 | WARNING  | main:490 | RJ: No A/B/T token found, using zero probs
+2025-11-28 16:23:10 | DEBUG    | main:543 | Row 197 complete: JR={'A': 0.0, 'B': 0.0, 'T': 0.0}, RJ={'A': 0.0, 'B': 0.0, 'T': 0.0}, combined_norm={'A': 0.3333333333333333, 'B': 0.3333333333333333, 'T': 0.3333333333333333}
+2025-11-28 16:23:10 | DEBUG    | main:392 | ========== Row 198 ==========
+2025-11-28 16:23:10 | DEBUG    | main:393 | Built msgs_jr with 2 messages
+2025-11-28 16:23:10 | DEBUG    | main:395 | msgs_jr[0] role=system content=You are an impartial and unbiased judge.
+2025-11-28 16:23:10 | DEBUG    | main:395 | msgs_jr[1] role=user content=You will be given answers from two assistants (Assistant A and Assistant B) to a user prompt. Please act as an impartial judge and evaluate the quality of their answers. You must output only one of the following choices:
+'A' if Assistant A's answer is better.
+'T' if both answers are relatively the s...<truncated 6118 chars>
+2025-11-28 16:23:10 | DEBUG    | main:409 | JR prompt (truncated): <|im_start|>system
+You are an impartial and unbiased judge.<|im_end|>
+<|im_start|>user
+You will be given answers from two assistants (Assistant A and Assistant B) to a user prompt. Please act as an impartial judge and evaluate the quality of their answers. You must output only one of the following choices:
+'A' if Assistant A's answer is better.
+'T' if both answers are relatively the same in quality.
+'B' if Assistant B's answer is better.
+Do not think or reason. Just choose which answer you prefe...<truncated 6352 chars>
+2025-11-28 16:23:10 | DEBUG    | main:439 | JR prompt length: 2269
+2025-11-28 16:23:40 | DEBUG    | main:460 | JR: Generated 12 steps
+2025-11-28 16:23:40 | DEBUG    | main:466 | JR: generated text='cheCHCHCHCHffffffffffffffff0\‖4`'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 0: token_id=1528, text='che'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 1: token_id=2149, text='CH'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 2: token_id=2149, text='CH'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 3: token_id=2149, text='CH'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 4: token_id=2149, text='CH'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 5: token_id=53697, text='ffffffff'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 6: token_id=53697, text='ffffffff'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 7: token_id=15, text='0'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 8: token_id=59, text='\'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 9: token_id=145813, text='‖'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 10: token_id=19, text='4'
+2025-11-28 16:23:40 | DEBUG    | main:472 | JR step 11: token_id=63, text='`'
+2025-11-28 16:23:40 | WARNING  | main:490 | JR: No A/B/T token found, using zero probs
+2025-11-28 16:23:40 | DEBUG    | main:409 | RJ prompt (truncated): <|im_start|>system
+You are an impartial and unbiased judge.<|im_end|>
+<|im_start|>user
+You will be given answers from two assistants (Assistant A and Assistant B) to a user prompt. Please act as an impartial judge and evaluate the quality of their answers. You must output only one of the following choices:
+'A' if Assistant A's answer is better.
+'T' if both answers are relatively the same in quality.
+'B' if Assistant B's answer is better.
+Do not think or reason. Just choose which answer you prefe...<truncated 6352 chars>
+2025-11-28 16:23:40 | DEBUG    | main:439 | RJ prompt length: 2269
