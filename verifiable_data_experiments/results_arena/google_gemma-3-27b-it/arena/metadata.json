@@ -1,0 +1,16 @@
+{
+  "judge_model": "google/gemma-3-27b-it",
+  "data_source": "arena",
+  "logprobs_k": 50,
+  "max_tokens": 12,
+  "n_limited_examples": "None",
+  "data_jsonl_path": "arena_diffs/gemma-3-27b-it_arena.jsonl",
+  "output_path": "/data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results_arena/google_gemma-3-27b-it/arena",
+  "date_collected": "2025-11-28 15:34:04.035575",
+  "float": "bfloat16",
+  "collected_by": "droytbur",
+  "hostname": "babel-w9-26",
+  "platform": "Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34",
+  "pytorch_version": "2.9.1+cu128",
+  "cuda_available": true
+}
