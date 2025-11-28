@@ -1,0 +1,16 @@
+2025-11-28 13:14:33 | INFO     | setup_logging:69 | ================================================================================
+2025-11-28 13:14:33 | INFO     | setup_logging:70 | ANALYSIS RUN STARTED
+2025-11-28 13:14:33 | INFO     | setup_logging:71 | ================================================================================
+2025-11-28 13:14:33 | INFO     | setup_logging:74 | SYSTEM METADATA:
+2025-11-28 13:14:33 | INFO     | setup_logging:75 |   User: droytbur
+2025-11-28 13:14:33 | INFO     | setup_logging:76 |   Hostname: babel-o5-16
+2025-11-28 13:14:33 | INFO     | setup_logging:77 |   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+2025-11-28 13:14:33 | INFO     | setup_logging:78 |   Python version: 3.12.5
+2025-11-28 13:14:33 | INFO     | setup_logging:81 | RUN PARAMETERS:
+2025-11-28 13:14:33 | INFO     | setup_logging:83 |   input_dir: results/Qwen_Qwen3-4B/openai_gpt-oss-120b
+2025-11-28 13:14:33 | INFO     | setup_logging:85 |   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/openai_gpt-oss-120b/logs/analysis_20251128_131433.log
+2025-11-28 13:14:33 | INFO     | setup_logging:86 |   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/openai_gpt-oss-120b
+2025-11-28 13:14:33 | INFO     | setup_logging:87 |   Timestamp: 20251128_131433
+2025-11-28 13:14:33 | INFO     | setup_logging:88 | ================================================================================
+2025-11-28 13:14:33 | INFO     | load_results:101 | Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/openai_gpt-oss-120b/output.jsonl
+2025-11-28 13:14:33 | INFO     | load_results:106 | Loaded 229 examples

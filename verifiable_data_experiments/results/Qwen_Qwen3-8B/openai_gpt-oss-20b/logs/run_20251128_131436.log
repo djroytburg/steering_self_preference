@@ -1,0 +1,38 @@
+2025-11-28 13:14:36 | INFO     | setup_logging:67 | ================================================================================
+2025-11-28 13:14:36 | INFO     | setup_logging:68 | NEW RUN STARTED
+2025-11-28 13:14:36 | INFO     | setup_logging:69 | ================================================================================
+2025-11-28 13:14:36 | INFO     | setup_logging:72 | SYSTEM METADATA:
+2025-11-28 13:14:36 | INFO     | setup_logging:73 |   User: droytbur
+2025-11-28 13:14:36 | INFO     | setup_logging:74 |   Hostname: babel-o5-16
+2025-11-28 13:14:36 | INFO     | setup_logging:75 |   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+2025-11-28 13:14:36 | INFO     | setup_logging:76 |   Python version: 3.12.5
+2025-11-28 13:14:36 | INFO     | setup_logging:77 |   PyTorch version: 2.9.1+cu128
+2025-11-28 13:14:36 | INFO     | setup_logging:78 |   CUDA available: True
+2025-11-28 13:14:36 | INFO     | setup_logging:80 |   CUDA version: 12.8
+2025-11-28 13:14:36 | INFO     | setup_logging:81 |   GPU count: 4
+2025-11-28 13:14:36 | INFO     | setup_logging:83 |   GPU 0: NVIDIA L40S
+2025-11-28 13:14:36 | INFO     | setup_logging:85 |     Total memory: 47.67 GB
+2025-11-28 13:14:36 | INFO     | setup_logging:83 |   GPU 1: NVIDIA L40S
+2025-11-28 13:14:36 | INFO     | setup_logging:85 |     Total memory: 47.67 GB
+2025-11-28 13:14:36 | INFO     | setup_logging:83 |   GPU 2: NVIDIA L40S
+2025-11-28 13:14:36 | INFO     | setup_logging:85 |     Total memory: 47.67 GB
+2025-11-28 13:14:36 | INFO     | setup_logging:83 |   GPU 3: NVIDIA L40S
+2025-11-28 13:14:36 | INFO     | setup_logging:85 |     Total memory: 47.67 GB
+2025-11-28 13:14:36 | INFO     | setup_logging:88 | RUN PARAMETERS:
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   bf16: True
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   data_jsonl: diffs.jsonl
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   judge: Qwen/Qwen3-8B
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   limit: 0
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   logprobs_k: 50
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   max_tokens: 12
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   output_path: results
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   ref: openai/gpt-oss-20b
+2025-11-28 13:14:36 | INFO     | setup_logging:90 |   trust_remote_code: False
+2025-11-28 13:14:36 | INFO     | setup_logging:92 |   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-8B/openai_gpt-oss-20b/logs/run_20251128_131436.log
+2025-11-28 13:14:36 | INFO     | setup_logging:93 |   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-8B/openai_gpt-oss-20b
+2025-11-28 13:14:36 | INFO     | setup_logging:94 |   Timestamp: 20251128_131436
+2025-11-28 13:14:36 | INFO     | setup_logging:95 | ================================================================================
+2025-11-28 13:14:36 | INFO     | main:292 | Starting data loading...
+2025-11-28 13:14:38 | INFO     | main:306 | Dataset loaded: 251 examples found
+2025-11-28 13:14:38 | INFO     | main:309 | Loading tokenizer and model from Qwen/Qwen3-8B
+2025-11-28 13:14:39 | INFO     | main:319 | Loading model (this may take a while)...

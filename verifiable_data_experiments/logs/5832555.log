@@ -1,0 +1,91 @@
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-w5-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 8
+INFO:   GPU 0: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 1: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 2: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 3: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 4: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 5: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 6: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO:   GPU 7: NVIDIA L40
+INFO:     Total memory: 47.67 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-0.6B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/run_20251126_183801.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_183801
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 1116 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-0.6B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: Model loaded successfully on device: cuda:7
+INFO: Initial GPU memory allocated: 1.19 GB
+INFO: Initial GPU memory allocated: 1.19 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Processing row 0/1116
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Processing row 10/1116
+INFO: Processing row 20/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36314466546432567, 'B': 0.36314466546432567, 'T': 0.002298602939428274}
+INFO: Processing row 30/1116
+INFO: Processing row 40/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38877227633393757, 'B': 0.38877227633393757, 'T': 0.002171664670533088}
+INFO: Processing row 50/1116
+INFO: Processing row 60/1116
+INFO: Processing row 70/1116
+INFO: Processing row 80/1116
+INFO: Processing row 90/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37784474079517, 'B': 0.37784474079517, 'T': 0.0016437552851035608}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.34460884515652207, 'B': 0.34460884515652207, 'T': 0.015141055955681194}
+INFO: Processing row 100/1116
+INFO: Processing row 110/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33569332321769485, 'B': 0.33569332321769485, 'T': 0.0006480404098047322}
+INFO: Processing row 120/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3416202861064964, 'B': 0.3416202861064964, 'T': 0.0027765235048121187}
+INFO: Processing row 130/1116
+INFO: Processing row 140/1116
+INFO: Processing row 150/1116
+INFO: Processing row 160/1116
+INFO: Processing row 170/1116
+INFO: Processing row 180/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36036289590380666, 'B': 0.36036289590380666, 'T': 0.007961453374230432}
+INFO: Processing row 190/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4469909332820893, 'B': 0.4469909332820893, 'T': 0.0011079799469453416}
+INFO: Processing row 200/1116
+INFO: Processing row 210/1116
+INFO: Processing row 220/1116
+INFO: Processing row 230/1116
+INFO: Processing row 240/1116
+INFO: Processing row 250/1116
+INFO: Processing row 260/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.40823933139885166, 'B': 0.40823933139885166, 'T': 0.0005416439560755392}
+INFO: Processing row 270/1116
+slurmstepd: error: *** JOB 5832555 ON babel-w5-32 CANCELLED AT 2025-11-26T18:43:16 ***

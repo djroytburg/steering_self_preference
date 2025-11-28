@@ -1,0 +1,1963 @@
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-0.6B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/run_20251126_184417.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_184417
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 1116 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-0.6B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Processing row 0/1116
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Processing row 10/1116
+INFO: Processing row 20/1116
+INFO: Processing row 30/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40545242208366733, 'B': 0.40545242208366733, 'T': 0.0017638578251955716}
+INFO: Processing row 40/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.376093658386404, 'B': 0.376093658386404, 'T': 0.0028715101745852185}
+INFO: Processing row 50/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32589017545623444, 'B': 0.32589017545623444, 'T': 0.0034009691649036977}
+INFO: Processing row 60/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.39387692178725037, 'B': 0.39387692178725037, 'T': 0.005618351873970169}
+INFO: Processing row 70/1116
+INFO: Processing row 80/1116
+INFO: Processing row 90/1116
+INFO: Processing row 100/1116
+INFO: Processing row 110/1116
+INFO: Processing row 120/1116
+INFO: Processing row 130/1116
+INFO: Processing row 140/1116
+INFO: Processing row 150/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36341957577025813, 'B': 0.36341957577025813, 'T': 0.005183900599957878}
+INFO: Processing row 160/1116
+INFO: Processing row 170/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3735105007926152, 'B': 0.3735105007926152, 'T': 0.0010491143763489436}
+INFO: Processing row 180/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3696659300727961, 'B': 0.3696659300727961, 'T': 0.00869371146781934}
+INFO: Processing row 190/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33038721172925006, 'B': 0.33038721172925006, 'T': 0.003670269953849467}
+INFO: Processing row 200/1116
+INFO: Processing row 210/1116
+INFO: Processing row 220/1116
+INFO: Processing row 230/1116
+INFO: Processing row 240/1116
+INFO: Processing row 250/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.44064211588004915, 'B': 0.44064211588004915, 'T': 0.002040577585956828}
+INFO: Processing row 260/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4116169918238071, 'B': 0.4116169918238071, 'T': 0.00039955387974717705}
+INFO: Processing row 270/1116
+INFO: Processing row 280/1116
+INFO: Processing row 290/1116
+INFO: Processing row 300/1116
+INFO: Processing row 310/1116
+INFO: Processing row 320/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.39216540577241593, 'B': 0.39216540577241593, 'T': 0.0009131856148705877}
+INFO: Processing row 330/1116
+INFO: Processing row 340/1116
+INFO: Processing row 350/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.409428581719817, 'B': 0.409428581719817, 'T': 0.002758707590243458}
+INFO: Processing row 360/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.28435152541371256, 'B': 0.28435152541371256, 'T': 0.0}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39533617172920993, 'B': 0.39533617172920993, 'T': 0.0030184296389255396}
+INFO: Processing row 370/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36362242727601146, 'B': 0.36362242727601146, 'T': 0.0023016267620840584}
+INFO: Processing row 380/1116
+INFO: Processing row 390/1116
+INFO: Processing row 400/1116
+INFO: Processing row 410/1116
+INFO: Processing row 420/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4113430350731496, 'B': 0.4113430350731496, 'T': 0.0010853773129492748}
+INFO: Processing row 430/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.392405960282802, 'B': 0.392405960282802, 'T': 0.0016036737575260086}
+INFO: Processing row 440/1116
+INFO: Processing row 450/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.35637867919783084, 'B': 0.35637867919783084, 'T': 0.0009403474066523635}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4046363566638592, 'B': 0.4046363566638592, 'T': 0.0010029931900558315}
+INFO: Processing row 460/1116
+INFO: Processing row 470/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.43944883943071944, 'B': 0.43944883943071944, 'T': 0.006268399915800686}
+INFO: Processing row 480/1116
+INFO: Processing row 490/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4142246737343358, 'B': 0.4142246737343358, 'T': 0.0004556221535489614}
+INFO: Processing row 500/1116
+INFO: Processing row 510/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.41745745354051234, 'B': 0.41745745354051234, 'T': 0.0013286753289028848}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.381574812845059, 'B': 0.381574812845059, 'T': 0.0037408271665791515}
+INFO: Processing row 520/1116
+INFO: Processing row 530/1116
+INFO: Processing row 540/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.44687361407239606, 'B': 0.44687361407239606, 'T': 0.001040577401106776}
+INFO: Processing row 550/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.33103289305295786, 'B': 0.33103289305295786, 'T': 0.0}
+INFO: Processing row 560/1116
+INFO: Processing row 570/1116
+INFO: Processing row 580/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.44392400079684147, 'B': 0.44392400079684147, 'T': 0.0024797393107265685}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.326597880506845, 'B': 0.326597880506845, 'T': 0.000809555110694466}
+INFO: Processing row 590/1116
+INFO: Processing row 600/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4003395693172465, 'B': 0.4003395693172465, 'T': 0.0014438501907685056}
+INFO: Processing row 610/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.38936307078678667, 'B': 0.38936307078678667, 'T': 0.0023152374494816636}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42985780693752335, 'B': 0.42985780693752335, 'T': 0.002401166190546895}
+INFO: Processing row 620/1116
+INFO: Processing row 630/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.42842501059741867, 'B': 0.42842501059741867, 'T': 0.0011304499262296457}
+INFO: Processing row 640/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3658628508206902, 'B': 0.3658628508206902, 'T': 0.0005855277511132671}
+INFO: Processing row 650/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34995950042113366, 'B': 0.34995950042113366, 'T': 0.0009829643302804014}
+INFO: Processing row 660/1116
+INFO: Processing row 670/1116
+INFO: Processing row 680/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3236458161350508, 'B': 0.3236458161350508, 'T': 0.0028000846211695633}
+INFO: Processing row 690/1116
+INFO: Processing row 700/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41924861310070316, 'B': 0.41924861310070316, 'T': 0.009859781158009052}
+INFO: Processing row 710/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37715792556221056, 'B': 0.37715792556221056, 'T': 0.00306535633378771}
+INFO: Processing row 720/1116
+INFO: Processing row 730/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34261687621269854, 'B': 0.34261687621269854, 'T': 0.0015866312887603594}
+INFO: Processing row 740/1116
+INFO: Processing row 750/1116
+INFO: Processing row 760/1116
+INFO: Processing row 770/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4055088797700341, 'B': 0.4055088797700341, 'T': 0.0007828161542506782}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.45760119131259064, 'B': 0.45760119131259064, 'T': 0.001065557273964194}
+INFO: Processing row 780/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3826327639281932, 'B': 0.3826327639281932, 'T': 0.0016645848414804521}
+INFO: Processing row 790/1116
+INFO: Processing row 800/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42420271944816457, 'B': 0.42420271944816457, 'T': 0.01644812244589569}
+INFO: Processing row 810/1116
+INFO: Processing row 820/1116
+INFO: Processing row 830/1116
+INFO: Processing row 840/1116
+INFO: Processing row 850/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3424233753561891, 'B': 0.3424233753561891, 'T': 0.0010238274743007078}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39468803733230207, 'B': 0.39468803733230207, 'T': 0.0019456486848668465}
+INFO: Processing row 860/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35248943706377467, 'B': 0.35248943706377467, 'T': 0.0019689898722182347}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3151194472292377, 'B': 0.3151194472292377, 'T': 0.0}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4168921849217747, 'B': 0.4168921849217747, 'T': 0.0028089977811944656}
+INFO: Processing row 870/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.31840037166274415, 'B': 0.31840037166274415, 'T': 0.004834655425529421}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3748524904671793, 'B': 0.3748524904671793, 'T': 0.0018478681983466433}
+INFO: Processing row 880/1116
+INFO: Processing row 890/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3907976079432293, 'B': 0.3907976079432293, 'T': 0.004919414997132296}
+INFO: Processing row 900/1116
+INFO: Processing row 910/1116
+WARNING: JR: No A/B/T token found, using zero probs
+INFO: Processing row 920/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4235655750963657, 'B': 0.4235655750963657, 'T': 0.001961497756593543}
+INFO: Processing row 930/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3888354268884343, 'B': 0.3888354268884343, 'T': 0.0033640853970989103}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.29642455964781905, 'B': 0.29642455964781905, 'T': 0.00309346823926068}
+INFO: Processing row 940/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.33230875104499674, 'B': 0.33230875104499674, 'T': 0.0015388948205313112}
+INFO: Processing row 950/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.445502356731028, 'B': 0.445502356731028, 'T': 0.0011755105183972616}
+INFO: Processing row 960/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4011574418455862, 'B': 0.4011574418455862, 'T': 0.0009943700599678617}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4333901532201322, 'B': 0.4333901532201322, 'T': 0.008994726743320046}
+INFO: Processing row 970/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.41322395119857896, 'B': 0.41322395119857896, 'T': 0.0002756812583559662}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4100698062765566, 'B': 0.4100698062765566, 'T': 0.0010164613037215295}
+INFO: Processing row 980/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4414980597632648, 'B': 0.4414980597632648, 'T': 0.0018043016607778124}
+INFO: Processing row 990/1116
+INFO: Processing row 1000/1116
+INFO: Processing row 1010/1116
+INFO: Processing row 1020/1116
+INFO: Processing row 1030/1116
+INFO: Processing row 1040/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.40165708295281133, 'B': 0.40165708295281133, 'T': 0.0010598195916724474}
+INFO: Processing row 1050/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3964848795390699, 'B': 0.3964848795390699, 'T': 0.0005260483166606821}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38900499920086995, 'B': 0.38900499920086995, 'T': 0.0007054579987593978}
+INFO: Processing row 1060/1116
+INFO: Processing row 1070/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3763296032922777, 'B': 0.3763296032922777, 'T': 0.003255888247331748}
+INFO: Processing row 1080/1116
+INFO: Processing row 1090/1116
+INFO: Processing row 1100/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.40419359586599773, 'B': 0.40419359586599773, 'T': 0.004490184989619189}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.428929288020033, 'B': 0.428929288020033, 'T': 0.0009987928047990426}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4205365046225715, 'B': 0.4205365046225715, 'T': 0.0014248000197841328}
+INFO: Processing row 1110/1116
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 1116 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+[W1126 19:33:19.153138766 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/analysis_20251126_193332.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_193332
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Loaded 1116 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 1116
+INFO:   Legitimate (LSP): 359
+INFO:   Illegitimate (ILSP): 757
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.322
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.457
+INFO:   95% CI: [0.446, 0.469]
+INFO:   Median: 0.470
+INFO:   Std: 0.113
+INFO: ILSP statistics:
+INFO:   Mean: 0.245
+INFO:   95% CI: [0.239, 0.252]
+INFO:   Median: 0.229
+INFO:   Std: 0.096
+INFO: ALL statistics:
+INFO:   Mean: 0.314
+INFO:   95% CI: [0.305, 0.322]
+INFO:   Median: 0.288
+INFO:   Std: 0.142
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-0.6B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: google/gemma-3-12b-it
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/logs/run_20251126_193339.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it
+INFO:   Timestamp: 20251126_193339
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 1080 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-0.6B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/output.jsonl
+INFO: Processing row 0/1080
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3386301531758985, 'B': 0.3386301531758985, 'T': 0.0007407505407255282}
+INFO: Processing row 10/1080
+INFO: Processing row 20/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3900327282364055, 'B': 0.3900327282364055, 'T': 0.0016967773463416724}
+INFO: Processing row 30/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32944814780810766, 'B': 0.32944814780810766, 'T': 0.0032297959933011286}
+INFO: Processing row 40/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40392951541308586, 'B': 0.40392951541308586, 'T': 0.0014567969525100324}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3952238822649747, 'B': 0.3952238822649747, 'T': 0.0019482908753918294}
+INFO: Processing row 50/1080
+INFO: Processing row 60/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36069193711173875, 'B': 0.36069193711173875, 'T': 0.0017780624037764719}
+INFO: Processing row 70/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3806019000794152, 'B': 0.3806019000794152, 'T': 0.004791069999230177}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36091318577634557, 'B': 0.36091318577634557, 'T': 0.003538268371230769}
+INFO: Processing row 80/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3570428920041976, 'B': 0.3570428920041976, 'T': 0.0010028597631575615}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38345658330504645, 'B': 0.38345658330504645, 'T': 0.001077050496645371}
+INFO: Processing row 90/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3032883951601921, 'B': 0.3032883951601921, 'T': 0.0008002620148499183}
+INFO: Processing row 100/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3831799680333511, 'B': 0.3831799680333511, 'T': 0.0017744753980472885}
+INFO: Processing row 110/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37803619782713427, 'B': 0.37803619782713427, 'T': 0.0017506547017770405}
+INFO: Processing row 120/1080
+INFO: Processing row 130/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36744597428894377, 'B': 0.36744597428894377, 'T': 0.0015985173406369213}
+INFO: Processing row 140/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4006647030459421, 'B': 0.4006647030459421, 'T': 0.001125384624788578}
+INFO: Processing row 150/1080
+INFO: Processing row 160/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3751747919360075, 'B': 0.3751747919360075, 'T': 0.003245897560783373}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3935901151373055, 'B': 0.3935901151373055, 'T': 0.002491313869372089}
+INFO: Processing row 170/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.29992751394707673, 'B': 0.29992751394707673, 'T': 0.0014785186968821371}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38772787756975613, 'B': 0.38772787756975613, 'T': 0.004880773383288352}
+INFO: Processing row 180/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39260732292784417, 'B': 0.39260732292784417, 'T': 0.0009142147055374834}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3387890379675272, 'B': 0.3387890379675272, 'T': 0.00228274312594466}
+INFO: Processing row 190/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3573152702666335, 'B': 0.3573152702666335, 'T': 0.002124674515072898}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3701296577425288, 'B': 0.3701296577425288, 'T': 0.001512635584270943}
+INFO: Processing row 200/1080
+INFO: Processing row 210/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.321208695735615, 'B': 0.321208695735615, 'T': 0.004877297584345528}
+INFO: Processing row 220/1080
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4210560911260296, 'B': 0.4210560911260296, 'T': 0.006006042214642569}
+INFO: Processing row 230/1080
+INFO: Processing row 240/1080
+INFO: Processing row 250/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.424063879961257, 'B': 0.424063879961257, 'T': 0.004710924736069162}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42906785351473586, 'B': 0.42906785351473586, 'T': 0.0008282956644290469}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38159610147767903, 'B': 0.38159610147767903, 'T': 0.0009458819980082969}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39743130092911955, 'B': 0.39743130092911955, 'T': 0.0004371503783327715}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41119063518244475, 'B': 0.41119063518244475, 'T': 0.002949267106765657}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41166508183059153, 'B': 0.41166508183059153, 'T': 0.0019063876530203386}
+INFO: Processing row 260/1080
+INFO: Processing row 270/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.357960702739835, 'B': 0.357960702739835, 'T': 0.003096966156425563}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3989107571781503, 'B': 0.3989107571781503, 'T': 0.0008197445490835052}
+INFO: Processing row 280/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3408109546874952, 'B': 0.3408109546874952, 'T': 0.0024444687502709903}
+INFO: Processing row 290/1080
+INFO: Processing row 300/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3821261069473121, 'B': 0.3821261069473121, 'T': 0.0012946632431337765}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3583039093109133, 'B': 0.3583039093109133, 'T': 0.002130552670454671}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3784392523869361, 'B': 0.3784392523869361, 'T': 0.001985866939872895}
+INFO: Processing row 310/1080
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.42095797368573107, 'B': 0.42095797368573107, 'T': 0.003876888213055485}
+INFO: Processing row 320/1080
+INFO: Processing row 330/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.28203736459161693, 'B': 0.28203736459161693, 'T': 0.003133152480404115}
+INFO: Processing row 340/1080
+INFO: Processing row 350/1080
+INFO: Processing row 360/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32737513794024486, 'B': 0.32737513794024486, 'T': 0.001041963178079217}
+INFO: Processing row 370/1080
+INFO: Processing row 380/1080
+INFO: Processing row 390/1080
+INFO: Processing row 400/1080
+INFO: Processing row 410/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37507989893078364, 'B': 0.37507989893078364, 'T': 0.0011214687232838998}
+INFO: Processing row 420/1080
+INFO: Processing row 430/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39835685420741085, 'B': 0.39835685420741085, 'T': 0.00038668223700472244}
+INFO: Processing row 440/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3849980969610831, 'B': 0.3849980969610831, 'T': 0.0048464108076125105}
+INFO: Processing row 450/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4160967919701604, 'B': 0.4160967919701604, 'T': 0.0009102081452443774}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4041841278933191, 'B': 0.4041841278933191, 'T': 0.001651808149754924}
+INFO: Processing row 460/1080
+INFO: Processing row 470/1080
+INFO: Processing row 480/1080
+INFO: Processing row 490/1080
+INFO: Processing row 500/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40355607560912393, 'B': 0.40355607560912393, 'T': 0.0009397095604300792}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38473704096902245, 'B': 0.38473704096902245, 'T': 0.0006977180846729129}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.41121776739858024, 'B': 0.41121776739858024, 'T': 0.0035577309976975594}
+INFO: Processing row 510/1080
+INFO: Processing row 520/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4433753758693873, 'B': 0.4433753758693873, 'T': 0.0015990616672736158}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4355182661332422, 'B': 0.4355182661332422, 'T': 0.00797679386558207}
+INFO: Processing row 530/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35661088547351005, 'B': 0.35661088547351005, 'T': 0.0016514364238542354}
+INFO: Processing row 540/1080
+INFO: Processing row 550/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3730964835106966, 'B': 0.3730964835106966, 'T': 0.0009248138859782979}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3998504328868946, 'B': 0.3998504328868946, 'T': 0.0023775978674566685}
+INFO: Processing row 560/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3682445806324247, 'B': 0.3682445806324247, 'T': 0.0011720415002191345}
+INFO: Processing row 570/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37105660307222754, 'B': 0.37105660307222754, 'T': 0.002500159576140235}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41986016872549425, 'B': 0.41986016872549425, 'T': 0.0015142521165502501}
+INFO: Processing row 580/1080
+INFO: Processing row 590/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35219214483479194, 'B': 0.35219214483479194, 'T': 0.0010530356951380395}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4024246097198497, 'B': 0.4024246097198497, 'T': 0.0005015800581589895}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34672050382731456, 'B': 0.34672050382731456, 'T': 0.0049457011884916965}
+INFO: Processing row 600/1080
+INFO: Processing row 610/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36813750660481753, 'B': 0.36813750660481753, 'T': 0.0}
+INFO: Processing row 620/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3428266289419726, 'B': 0.3428266289419726, 'T': 0.0017989890431023303}
+INFO: Processing row 630/1080
+INFO: Processing row 640/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3996244413105869, 'B': 0.3996244413105869, 'T': 0.001194855371159079}
+INFO: Processing row 650/1080
+INFO: Processing row 660/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4093671374486996, 'B': 0.4093671374486996, 'T': 0.0008954871373705466}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.392768262694345, 'B': 0.392768262694345, 'T': 0.006348507688463358}
+INFO: Processing row 670/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3656722625902965, 'B': 0.3656722625902965, 'T': 0.0013188202593372442}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3848411439191156, 'B': 0.3848411439191156, 'T': 0.0007429182223506353}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3997778443321034, 'B': 0.3997778443321034, 'T': 0.002233140752199992}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38677652909898974, 'B': 0.38677652909898974, 'T': 0.0016826114523476204}
+INFO: Processing row 680/1080
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4304361403047718, 'B': 0.4304361403047718, 'T': 0.001552394745912291}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3800912262349237, 'B': 0.3800912262349237, 'T': 0.002260105450619176}
+INFO: Processing row 690/1080
+INFO: Processing row 700/1080
+INFO: Processing row 710/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4200244439736299, 'B': 0.4200244439736299, 'T': 0.003868292317153534}
+INFO: Processing row 720/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34030721719399015, 'B': 0.34030721719399015, 'T': 0.004560118775293661}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3700086484311064, 'B': 0.3700086484311064, 'T': 0.0008093906803373416}
+INFO: Processing row 730/1080
+INFO: Processing row 740/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3105486710053186, 'B': 0.3105486710053186, 'T': 0.0036723829580141572}
+INFO: Processing row 750/1080
+INFO: Processing row 760/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34946940213350997, 'B': 0.34946940213350997, 'T': 0.0032185023076540817}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3963836515174306, 'B': 0.3963836515174306, 'T': 0.0018356206963014094}
+INFO: Processing row 770/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3502250972022418, 'B': 0.3502250972022418, 'T': 0.001263109075451458}
+INFO: Processing row 780/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3969348817879156, 'B': 0.3969348817879156, 'T': 0.002217259961309118}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39881891745577036, 'B': 0.39881891745577036, 'T': 0.0030450205555305975}
+INFO: Processing row 790/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3955671887112654, 'B': 0.3955671887112654, 'T': 0.0023521289037591844}
+INFO: Processing row 800/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3746047443767049, 'B': 0.3746047443767049, 'T': 0.0012691803219295954}
+INFO: Processing row 810/1080
+INFO: Processing row 820/1080
+INFO: Processing row 830/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3766811488817195, 'B': 0.3766811488817195, 'T': 0.0011262564416404674}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40413524969996634, 'B': 0.40413524969996634, 'T': 0.0012862736819340137}
+INFO: Processing row 840/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.352349580185397, 'B': 0.352349580185397, 'T': 0.001532842611323652}
+INFO: Processing row 850/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40698007588552426, 'B': 0.40698007588552426, 'T': 0.00512312277972164}
+INFO: Processing row 860/1080
+INFO: Processing row 870/1080
+INFO: Processing row 880/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.421005624287322, 'B': 0.421005624287322, 'T': 0.0008127321456658056}
+INFO: Processing row 890/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3808549744498018, 'B': 0.3808549744498018, 'T': 0.0019985431284776996}
+INFO: Processing row 900/1080
+INFO: Processing row 910/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.43707666140073603, 'B': 0.43707666140073603, 'T': 0.00101776449108298}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3519041644806553, 'B': 0.3519041644806553, 'T': 0.001965720566339884}
+INFO: Processing row 920/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.397416400983728, 'B': 0.397416400983728, 'T': 0.001433307597731307}
+INFO: Processing row 930/1080
+INFO: Processing row 940/1080
+INFO: Processing row 950/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41295559527586956, 'B': 0.41295559527586956, 'T': 0.0013143472167964523}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39408594506361894, 'B': 0.39408594506361894, 'T': 0.0026553303691931904}
+INFO: Processing row 960/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40243492399366837, 'B': 0.40243492399366837, 'T': 0.00047120276694120335}
+INFO: Processing row 970/1080
+INFO: Processing row 980/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41344910669783763, 'B': 0.41344910669783763, 'T': 0.001161293658280115}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37590535850375784, 'B': 0.37590535850375784, 'T': 0.0018530582931400258}
+INFO: Processing row 990/1080
+INFO: Processing row 1000/1080
+INFO: Processing row 1010/1080
+INFO: Processing row 1020/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35203364675357646, 'B': 0.35203364675357646, 'T': 0.0016302395982645246}
+INFO: Processing row 1030/1080
+INFO: Processing row 1040/1080
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4408909354490234, 'B': 0.4408909354490234, 'T': 0.00048495337501699065}
+INFO: Processing row 1050/1080
+INFO: Processing row 1060/1080
+INFO: Processing row 1070/1080
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 1080 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it
+INFO: ================================================================================
+[W1126 19:52:50.784997398 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/logs/analysis_20251126_195251.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it
+INFO:   Timestamp: 20251126_195251
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/output.jsonl
+INFO: Loaded 1080 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 1080
+INFO:   Legitimate (LSP): 357
+INFO:   Illegitimate (ILSP): 723
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.331
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.378
+INFO:   95% CI: [0.367, 0.389]
+INFO:   Median: 0.359
+INFO:   Std: 0.107
+INFO: ILSP statistics:
+INFO:   Mean: 0.294
+INFO:   95% CI: [0.287, 0.301]
+INFO:   Median: 0.274
+INFO:   Std: 0.092
+INFO: ALL statistics:
+INFO:   Mean: 0.321
+INFO:   95% CI: [0.315, 0.328]
+INFO:   Median: 0.298
+INFO:   Std: 0.105
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-12b-it
+INFO: ================================================================================
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-0.6B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: google/gemma-3-27b-it
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/logs/run_20251126_195257.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+INFO:   Timestamp: 20251126_195257
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 1014 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-0.6B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/output.jsonl
+INFO: Processing row 0/1014
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3026199798726961, 'B': 0.3026199798726961, 'T': 0.003158123635272816}
+INFO: Processing row 10/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3779222445415433, 'B': 0.3779222445415433, 'T': 0.0011299670490755183}
+INFO: Processing row 20/1014
+INFO: Processing row 30/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35827571973792766, 'B': 0.35827571973792766, 'T': 0.0022677830801778945}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3035300053714064, 'B': 0.3035300053714064, 'T': 0.005559344644827016}
+INFO: Processing row 40/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.26682736510822336, 'B': 0.26682736510822336, 'T': 0.0071107067294475116}
+INFO: Processing row 50/1014
+INFO: Processing row 60/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35695756372881926, 'B': 0.35695756372881926, 'T': 0.0015528885641835403}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3231088206037613, 'B': 0.3231088206037613, 'T': 0.0035894151974543483}
+INFO: Processing row 70/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3582825533701402, 'B': 0.3582825533701402, 'T': 0.004236857382746234}
+INFO: Processing row 80/1014
+INFO: Processing row 90/1014
+INFO: Processing row 100/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.390017175793565, 'B': 0.390017175793565, 'T': 0.0043326991974967505}
+INFO: Processing row 110/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4018065242044005, 'B': 0.4018065242044005, 'T': 0.0023892287857587937}
+INFO: Processing row 120/1014
+INFO: Processing row 130/1014
+INFO: Processing row 140/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40868067770100774, 'B': 0.40868067770100774, 'T': 0.0018925670063986595}
+INFO: Processing row 150/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40099629120409297, 'B': 0.40099629120409297, 'T': 0.002384411106638716}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3584375837003728, 'B': 0.3584375837003728, 'T': 0.001464852130290752}
+INFO: Processing row 160/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3669121851205395, 'B': 0.3669121851205395, 'T': 0.0028014094373971163}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3903312041641174, 'B': 0.3903312041641174, 'T': 0.005567775598178314}
+INFO: Processing row 170/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.357312288608108, 'B': 0.357312288608108, 'T': 0.0016546839737832126}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35319195449623914, 'B': 0.35319195449623914, 'T': 0.0028705723964637}
+INFO: Processing row 180/1014
+INFO: Processing row 190/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3157521153955677, 'B': 0.3157521153955677, 'T': 0.007425778888591995}
+INFO: Processing row 200/1014
+INFO: Processing row 210/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3841716298446714, 'B': 0.3841716298446714, 'T': 0.002145964896098118}
+INFO: Processing row 220/1014
+INFO: Processing row 230/1014
+INFO: Processing row 240/1014
+INFO: Processing row 250/1014
+INFO: Processing row 260/1014
+INFO: Processing row 270/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3452944215642339, 'B': 0.3452944215642339, 'T': 0.002987382090711597}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3438493640026609, 'B': 0.3438493640026609, 'T': 0.003819821394382379}
+INFO: Processing row 280/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36772729701682716, 'B': 0.36772729701682716, 'T': 0.00298870858977608}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40745187426005947, 'B': 0.40745187426005947, 'T': 0.002579054568185508}
+INFO: Processing row 290/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.412475334241544, 'B': 0.412475334241544, 'T': 0.0023040678007055803}
+INFO: Processing row 300/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40213491065103457, 'B': 0.40213491065103457, 'T': 0.0018622537581446431}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34603791228943853, 'B': 0.34603791228943853, 'T': 0.002481959728816321}
+INFO: Processing row 310/1014
+INFO: Processing row 320/1014
+INFO: Processing row 330/1014
+INFO: Processing row 340/1014
+INFO: Processing row 350/1014
+INFO: Processing row 360/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32879070233300806, 'B': 0.32879070233300806, 'T': 0.00221537459020511}
+INFO: Processing row 370/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.2846499446196035, 'B': 0.2846499446196035, 'T': 0.004897673419694374}
+INFO: Processing row 380/1014
+INFO: Processing row 390/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36890825991317555, 'B': 0.36890825991317555, 'T': 0.0009144322612587964}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3553748475261934, 'B': 0.3553748475261934, 'T': 0.006508917377428728}
+INFO: Processing row 400/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3880504014726831, 'B': 0.3880504014726831, 'T': 0.0024562487592475106}
+INFO: Processing row 410/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.404672294387057, 'B': 0.404672294387057, 'T': 0.001459475918128611}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37918205195761995, 'B': 0.37918205195761995, 'T': 0.012974894768818057}
+INFO: Processing row 420/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4137300639390514, 'B': 0.4137300639390514, 'T': 0.002039518238743737}
+INFO: Processing row 430/1014
+INFO: Processing row 440/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3977554240802921, 'B': 0.3977554240802921, 'T': 0.0017303736427153834}
+INFO: Processing row 450/1014
+INFO: Processing row 460/1014
+INFO: Processing row 470/1014
+INFO: Processing row 480/1014
+INFO: Processing row 490/1014
+INFO: Processing row 500/1014
+INFO: Processing row 510/1014
+INFO: Processing row 520/1014
+INFO: Processing row 530/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3720087077745516, 'B': 0.3720087077745516, 'T': 0.0014282031035512158}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.43970649878697077, 'B': 0.43970649878697077, 'T': 0.004884698846319244}
+INFO: Processing row 540/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3980284924980753, 'B': 0.3980284924980753, 'T': 0.0010502450651401628}
+INFO: Processing row 550/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3536559477373821, 'B': 0.3536559477373821, 'T': 0.0018558163139623738}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35543399256780706, 'B': 0.35543399256780706, 'T': 0.0037092865631479003}
+INFO: Processing row 560/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4160014170969378, 'B': 0.4160014170969378, 'T': 0.0007087082492482665}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4045163381538581, 'B': 0.4045163381538581, 'T': 0.0034997520623896586}
+INFO: Processing row 570/1014
+INFO: Processing row 580/1014
+INFO: Processing row 590/1014
+INFO: Processing row 600/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.36945913456137963, 'B': 0.36945913456137963, 'T': 0.0018212810692573756}
+INFO: Processing row 610/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33737764035042284, 'B': 0.33737764035042284, 'T': 0.0021355039458709323}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3670471458023581, 'B': 0.3670471458023581, 'T': 0.0010974510926632962}
+INFO: Processing row 620/1014
+INFO: Processing row 630/1014
+INFO: Processing row 640/1014
+INFO: Processing row 650/1014
+INFO: Processing row 660/1014
+INFO: Processing row 670/1014
+INFO: Processing row 680/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37542045357295173, 'B': 0.37542045357295173, 'T': 0.004170544519127277}
+INFO: Processing row 690/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3192109712882803, 'B': 0.3192109712882803, 'T': 0.0015735785477380675}
+INFO: Processing row 700/1014
+INFO: Processing row 710/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32403781077496296, 'B': 0.32403781077496296, 'T': 0.0024740595106708166}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3634273306681058, 'B': 0.3634273306681058, 'T': 0.0066564029573084995}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3627220094797967, 'B': 0.3627220094797967, 'T': 0.0029480283989218523}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37370098671488255, 'B': 0.37370098671488255, 'T': 0.002853242583382064}
+INFO: Processing row 720/1014
+INFO: Processing row 730/1014
+INFO: Processing row 740/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33221820511578043, 'B': 0.33221820511578043, 'T': 0.003928635779695744}
+INFO: Processing row 750/1014
+INFO: Processing row 760/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3193398444596555, 'B': 0.3193398444596555, 'T': 0.002941017940337456}
+INFO: Processing row 770/1014
+INFO: Processing row 780/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.28320526442980004, 'B': 0.28320526442980004, 'T': 0.002776446716798462}
+INFO: Processing row 790/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3436120316439789, 'B': 0.3436120316439789, 'T': 0.0026235102363356697}
+INFO: Processing row 800/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3867193602039246, 'B': 0.3867193602039246, 'T': 0.004868078023990002}
+INFO: Processing row 810/1014
+INFO: Processing row 820/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3753533291661903, 'B': 0.3753533291661903, 'T': 0.0011946673679761224}
+INFO: Processing row 830/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.2788899328848673, 'B': 0.2788899328848673, 'T': 0.002129351168105918}
+INFO: Processing row 840/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3068182154592132, 'B': 0.3068182154592132, 'T': 0.0049592539739365255}
+INFO: Processing row 850/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.29747708583201654, 'B': 0.29747708583201654, 'T': 0.003104451966874243}
+INFO: Processing row 860/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33407491694516384, 'B': 0.33407491694516384, 'T': 0.0027151997094098075}
+INFO: Processing row 870/1014
+INFO: Processing row 880/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4219660827264694, 'B': 0.4219660827264694, 'T': 0.0006753157747432617}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.446379208751173, 'B': 0.446379208751173, 'T': 0.002200465685998778}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3395536138133136, 'B': 0.3395536138133136, 'T': 0.001150425477578287}
+INFO: Processing row 890/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39962758549337435, 'B': 0.39962758549337435, 'T': 0.003247979971829873}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3165341243286694, 'B': 0.3165341243286694, 'T': 0.004241559186649523}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4277401945635525, 'B': 0.4277401945635525, 'T': 0.00036641669935331755}
+INFO: Processing row 900/1014
+INFO: Processing row 910/1014
+INFO: Processing row 920/1014
+INFO: Processing row 930/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4352953361584396, 'B': 0.4352953361584396, 'T': 0.0027552960974799607}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42662490586274027, 'B': 0.42662490586274027, 'T': 0.004182483656063712}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4402882675696506, 'B': 0.4402882675696506, 'T': 0.0010913652413971503}
+INFO: Processing row 940/1014
+INFO: Processing row 950/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3875171912553947, 'B': 0.3875171912553947, 'T': 0.0037990844106323}
+INFO: Processing row 960/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.43046785228053563, 'B': 0.43046785228053563, 'T': 0.006140294135234098}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39671819936290026, 'B': 0.39671819936290026, 'T': 0.00221604971535325}
+INFO: Processing row 970/1014
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4160004004778956, 'B': 0.4160004004778956, 'T': 0.0009099972354459802}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3496584646725139, 'B': 0.3496584646725139, 'T': 0.00468542610679306}
+INFO: Processing row 980/1014
+INFO: Processing row 990/1014
+INFO: Processing row 1000/1014
+INFO: Processing row 1010/1014
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 1014 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+INFO: ================================================================================
+[W1126 20:09:28.482568069 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/logs/analysis_20251126_200930.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+INFO:   Timestamp: 20251126_200930
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/output.jsonl
+INFO: Loaded 1014 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 1014
+INFO:   Legitimate (LSP): 110
+INFO:   Illegitimate (ILSP): 904
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.108
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.376
+INFO:   95% CI: [0.355, 0.399]
+INFO:   Median: 0.359
+INFO:   Std: 0.117
+INFO: ILSP statistics:
+INFO:   Mean: 0.306
+INFO:   95% CI: [0.300, 0.313]
+INFO:   Median: 0.283
+INFO:   Std: 0.097
+INFO: ALL statistics:
+INFO:   Mean: 0.314
+INFO:   95% CI: [0.308, 0.320]
+INFO:   Median: 0.288
+INFO:   Std: 0.102
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+INFO: ================================================================================
+usage: run_self_preference.py [-h] --output_path OUTPUT_PATH [--judge JUDGE]
+                              [--ref REF] [--data_jsonl DATA_JSONL]
+                              [--limit LIMIT] [--bf16] [--trust_remote_code]
+                              [--logprobs_k LOGPROBS_K]
+                              [--max_tokens MAX_TOKENS]
+run_self_preference.py: error: the following arguments are required: --output_path
+[W1126 20:09:35.162886880 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+Error: Input directory does not exist: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/mistralai_Magistral-Small-2509
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-0.6B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/run_20251126_200939.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_200939
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 1116 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-0.6B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Initial GPU memory allocated: 0.59 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Processing row 0/1116
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Processing row 10/1116
+INFO: Processing row 20/1116
+INFO: Processing row 30/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.40545242208366733, 'B': 0.40545242208366733, 'T': 0.0017638578251955716}
+INFO: Processing row 40/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.376093658386404, 'B': 0.376093658386404, 'T': 0.0028715101745852185}
+INFO: Processing row 50/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.32589017545623444, 'B': 0.32589017545623444, 'T': 0.0034009691649036977}
+INFO: Processing row 60/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.39387692178725037, 'B': 0.39387692178725037, 'T': 0.005618351873970169}
+INFO: Processing row 70/1116
+INFO: Processing row 80/1116
+INFO: Processing row 90/1116
+INFO: Processing row 100/1116
+INFO: Processing row 110/1116
+INFO: Processing row 120/1116
+INFO: Processing row 130/1116
+INFO: Processing row 140/1116
+INFO: Processing row 150/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36341957577025813, 'B': 0.36341957577025813, 'T': 0.005183900599957878}
+INFO: Processing row 160/1116
+INFO: Processing row 170/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3735105007926152, 'B': 0.3735105007926152, 'T': 0.0010491143763489436}
+INFO: Processing row 180/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3696659300727961, 'B': 0.3696659300727961, 'T': 0.00869371146781934}
+INFO: Processing row 190/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.33038721172925006, 'B': 0.33038721172925006, 'T': 0.003670269953849467}
+INFO: Processing row 200/1116
+INFO: Processing row 210/1116
+INFO: Processing row 220/1116
+INFO: Processing row 230/1116
+INFO: Processing row 240/1116
+INFO: Processing row 250/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.44064211588004915, 'B': 0.44064211588004915, 'T': 0.002040577585956828}
+INFO: Processing row 260/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4116169918238071, 'B': 0.4116169918238071, 'T': 0.00039955387974717705}
+INFO: Processing row 270/1116
+INFO: Processing row 280/1116
+INFO: Processing row 290/1116
+INFO: Processing row 300/1116
+INFO: Processing row 310/1116
+INFO: Processing row 320/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.39216540577241593, 'B': 0.39216540577241593, 'T': 0.0009131856148705877}
+INFO: Processing row 330/1116
+INFO: Processing row 340/1116
+INFO: Processing row 350/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.409428581719817, 'B': 0.409428581719817, 'T': 0.002758707590243458}
+INFO: Processing row 360/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.28435152541371256, 'B': 0.28435152541371256, 'T': 0.0}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39533617172920993, 'B': 0.39533617172920993, 'T': 0.0030184296389255396}
+INFO: Processing row 370/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.36362242727601146, 'B': 0.36362242727601146, 'T': 0.0023016267620840584}
+INFO: Processing row 380/1116
+INFO: Processing row 390/1116
+INFO: Processing row 400/1116
+INFO: Processing row 410/1116
+INFO: Processing row 420/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4113430350731496, 'B': 0.4113430350731496, 'T': 0.0010853773129492748}
+INFO: Processing row 430/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.392405960282802, 'B': 0.392405960282802, 'T': 0.0016036737575260086}
+INFO: Processing row 440/1116
+INFO: Processing row 450/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.35637867919783084, 'B': 0.35637867919783084, 'T': 0.0009403474066523635}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4046363566638592, 'B': 0.4046363566638592, 'T': 0.0010029931900558315}
+INFO: Processing row 460/1116
+INFO: Processing row 470/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.43944883943071944, 'B': 0.43944883943071944, 'T': 0.006268399915800686}
+INFO: Processing row 480/1116
+INFO: Processing row 490/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4142246737343358, 'B': 0.4142246737343358, 'T': 0.0004556221535489614}
+INFO: Processing row 500/1116
+INFO: Processing row 510/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.41745745354051234, 'B': 0.41745745354051234, 'T': 0.0013286753289028848}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.381574812845059, 'B': 0.381574812845059, 'T': 0.0037408271665791515}
+INFO: Processing row 520/1116
+INFO: Processing row 530/1116
+INFO: Processing row 540/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.44687361407239606, 'B': 0.44687361407239606, 'T': 0.001040577401106776}
+INFO: Processing row 550/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.33103289305295786, 'B': 0.33103289305295786, 'T': 0.0}
+INFO: Processing row 560/1116
+INFO: Processing row 570/1116
+INFO: Processing row 580/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.44392400079684147, 'B': 0.44392400079684147, 'T': 0.0024797393107265685}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.326597880506845, 'B': 0.326597880506845, 'T': 0.000809555110694466}
+INFO: Processing row 590/1116
+INFO: Processing row 600/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4003395693172465, 'B': 0.4003395693172465, 'T': 0.0014438501907685056}
+INFO: Processing row 610/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.38936307078678667, 'B': 0.38936307078678667, 'T': 0.0023152374494816636}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42985780693752335, 'B': 0.42985780693752335, 'T': 0.002401166190546895}
+INFO: Processing row 620/1116
+INFO: Processing row 630/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.42842501059741867, 'B': 0.42842501059741867, 'T': 0.0011304499262296457}
+INFO: Processing row 640/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3658628508206902, 'B': 0.3658628508206902, 'T': 0.0005855277511132671}
+INFO: Processing row 650/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34995950042113366, 'B': 0.34995950042113366, 'T': 0.0009829643302804014}
+INFO: Processing row 660/1116
+INFO: Processing row 670/1116
+INFO: Processing row 680/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3236458161350508, 'B': 0.3236458161350508, 'T': 0.0028000846211695633}
+INFO: Processing row 690/1116
+INFO: Processing row 700/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.41924861310070316, 'B': 0.41924861310070316, 'T': 0.009859781158009052}
+INFO: Processing row 710/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.37715792556221056, 'B': 0.37715792556221056, 'T': 0.00306535633378771}
+INFO: Processing row 720/1116
+INFO: Processing row 730/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.34261687621269854, 'B': 0.34261687621269854, 'T': 0.0015866312887603594}
+INFO: Processing row 740/1116
+INFO: Processing row 750/1116
+INFO: Processing row 760/1116
+INFO: Processing row 770/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4055088797700341, 'B': 0.4055088797700341, 'T': 0.0007828161542506782}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.45760119131259064, 'B': 0.45760119131259064, 'T': 0.001065557273964194}
+INFO: Processing row 780/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3826327639281932, 'B': 0.3826327639281932, 'T': 0.0016645848414804521}
+INFO: Processing row 790/1116
+INFO: Processing row 800/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.42420271944816457, 'B': 0.42420271944816457, 'T': 0.01644812244589569}
+INFO: Processing row 810/1116
+INFO: Processing row 820/1116
+INFO: Processing row 830/1116
+INFO: Processing row 840/1116
+INFO: Processing row 850/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3424233753561891, 'B': 0.3424233753561891, 'T': 0.0010238274743007078}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.39468803733230207, 'B': 0.39468803733230207, 'T': 0.0019456486848668465}
+INFO: Processing row 860/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.35248943706377467, 'B': 0.35248943706377467, 'T': 0.0019689898722182347}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3151194472292377, 'B': 0.3151194472292377, 'T': 0.0}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4168921849217747, 'B': 0.4168921849217747, 'T': 0.0028089977811944656}
+INFO: Processing row 870/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.31840037166274415, 'B': 0.31840037166274415, 'T': 0.004834655425529421}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3748524904671793, 'B': 0.3748524904671793, 'T': 0.0018478681983466433}
+INFO: Processing row 880/1116
+INFO: Processing row 890/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3907976079432293, 'B': 0.3907976079432293, 'T': 0.004919414997132296}
+INFO: Processing row 900/1116
+INFO: Processing row 910/1116
+WARNING: JR: No A/B/T token found, using zero probs
+INFO: Processing row 920/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4235655750963657, 'B': 0.4235655750963657, 'T': 0.001961497756593543}
+INFO: Processing row 930/1116
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.3888354268884343, 'B': 0.3888354268884343, 'T': 0.0033640853970989103}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.29642455964781905, 'B': 0.29642455964781905, 'T': 0.00309346823926068}
+INFO: Processing row 940/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.33230875104499674, 'B': 0.33230875104499674, 'T': 0.0015388948205313112}
+INFO: Processing row 950/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.445502356731028, 'B': 0.445502356731028, 'T': 0.0011755105183972616}
+INFO: Processing row 960/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4011574418455862, 'B': 0.4011574418455862, 'T': 0.0009943700599678617}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4333901532201322, 'B': 0.4333901532201322, 'T': 0.008994726743320046}
+INFO: Processing row 970/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.41322395119857896, 'B': 0.41322395119857896, 'T': 0.0002756812583559662}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4100698062765566, 'B': 0.4100698062765566, 'T': 0.0010164613037215295}
+INFO: Processing row 980/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4414980597632648, 'B': 0.4414980597632648, 'T': 0.0018043016607778124}
+INFO: Processing row 990/1116
+INFO: Processing row 1000/1116
+INFO: Processing row 1010/1116
+INFO: Processing row 1020/1116
+INFO: Processing row 1030/1116
+INFO: Processing row 1040/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.40165708295281133, 'B': 0.40165708295281133, 'T': 0.0010598195916724474}
+INFO: Processing row 1050/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3964848795390699, 'B': 0.3964848795390699, 'T': 0.0005260483166606821}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.38900499920086995, 'B': 0.38900499920086995, 'T': 0.0007054579987593978}
+INFO: Processing row 1060/1116
+INFO: Processing row 1070/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.3763296032922777, 'B': 0.3763296032922777, 'T': 0.003255888247331748}
+INFO: Processing row 1080/1116
+INFO: Processing row 1090/1116
+INFO: Processing row 1100/1116
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.40419359586599773, 'B': 0.40419359586599773, 'T': 0.004490184989619189}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.428929288020033, 'B': 0.428929288020033, 'T': 0.0009987928047990426}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4205365046225715, 'B': 0.4205365046225715, 'T': 0.0014248000197841328}
+INFO: Processing row 1110/1116
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 1116 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+[W1126 20:59:17.002625573 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/analysis_20251126_205919.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_205919
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Loaded 1116 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 1116
+INFO:   Legitimate (LSP): 359
+INFO:   Illegitimate (ILSP): 757
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.322
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.457
+INFO:   95% CI: [0.446, 0.469]
+INFO:   Median: 0.470
+INFO:   Std: 0.113
+INFO: ILSP statistics:
+INFO:   Mean: 0.245
+INFO:   95% CI: [0.239, 0.252]
+INFO:   Median: 0.229
+INFO:   Std: 0.096
+INFO: ALL statistics:
+INFO:   Mean: 0.314
+INFO:   95% CI: [0.305, 0.322]
+INFO:   Median: 0.288
+INFO:   Std: 0.142
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-4B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/run_20251126_205925.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251126_205925
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 832 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-4B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [01:45<03:30, 105.04s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [03:30<01:45, 105.06s/it]Loading checkpoint shards: 100%|██████████| 3/3 [03:38<00:00, 61.06s/it] Loading checkpoint shards: 100%|██████████| 3/3 [03:38<00:00, 72.94s/it]
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Processing row 0/832
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49987511311387794, 'B': 0.49987511311387794, 'T': 0.00024398676686580362}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998917687284596, 'B': 0.4998917687284596, 'T': 0.0002153247531497896}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4996079840442548, 'B': 0.4996079840442548, 'T': 0.0007511301795657975}
+INFO: Processing row 10/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49992073115433566, 'B': 0.49992073115433566, 'T': 0.00014799886261872833}
+INFO: Processing row 20/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49944824548495664, 'B': 0.49944824548495664, 'T': 0.0010925388614718998}
+INFO: Processing row 30/832
+INFO: Processing row 40/832
+INFO: Processing row 50/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4996735318268333, 'B': 0.4996735318268333, 'T': 0.00045564322802091106}
+INFO: Processing row 60/832
+INFO: Processing row 70/832
+INFO: Processing row 80/832
+INFO: Processing row 90/832
+INFO: Processing row 100/832
+INFO: Processing row 110/832
+INFO: Processing row 120/832
+INFO: Processing row 130/832
+INFO: Processing row 140/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49994957606093743, 'B': 0.49994957606093743, 'T': 3.7422149541875975e-05}
+INFO: Processing row 150/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997323266579415, 'B': 0.4997323266579415, 'T': 1.559309031130407e-05}
+INFO: Processing row 160/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49957287588824806, 'B': 0.49957287588824806, 'T': 0.0008510823422661571}
+INFO: Processing row 170/832
+INFO: Processing row 180/832
+INFO: Processing row 190/832
+INFO: Processing row 200/832
+INFO: Processing row 210/832
+INFO: Processing row 220/832
+INFO: Processing row 230/832
+INFO: Processing row 240/832
+INFO: Processing row 250/832
+INFO: Processing row 260/832
+INFO: Processing row 270/832
+INFO: Processing row 280/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49896157386697304, 'B': 0.49896157386697304, 'T': 6.157672071562891e-05}
+INFO: Processing row 290/832
+INFO: Processing row 300/832
+INFO: Processing row 310/832
+INFO: Processing row 320/832
+INFO: Processing row 330/832
+INFO: Processing row 340/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4997974141098909, 'B': 0.4997974141098909, 'T': 0.00011523327369927956}
+INFO: Processing row 350/832
+INFO: Processing row 360/832
+INFO: Processing row 370/832
+INFO: Processing row 380/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998102240804009, 'B': 0.4998102240804009, 'T': 5.4433693954069886e-05}
+INFO: Processing row 390/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49850104782268695, 'B': 0.49850104782268695, 'T': 0.00018949463862662577}
+INFO: Processing row 400/832
+INFO: Processing row 410/832
+INFO: Processing row 420/832
+INFO: Processing row 430/832
+INFO: Processing row 440/832
+INFO: Processing row 450/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49997216445340914, 'B': 0.49997216445340914, 'T': 5.4451346901289e-05}
+INFO: Processing row 460/832
+INFO: Processing row 470/832
+INFO: Processing row 480/832
+INFO: Processing row 490/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999883166737991, 'B': 0.4999883166737991, 'T': 1.0722453604593708e-05}
+INFO: Processing row 500/832
+INFO: Processing row 510/832
+INFO: Processing row 520/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999039255917694, 'B': 0.4999039255917694, 'T': 0.0001900279582700532}
+INFO: Processing row 530/832
+INFO: Processing row 540/832
+INFO: Processing row 550/832
+INFO: Processing row 560/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49945711685545013, 'B': 0.49945711685545013, 'T': 3.2992381250548715e-05}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49536311340326533, 'B': 0.49536311340326533, 'T': 0.00018830188651228896}
+INFO: Processing row 570/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49997186644686537, 'B': 0.49997186644686537, 'T': 5.4451346901289e-05}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999400403704734, 'B': 0.4999400403704734, 'T': 0.0001152661369935616}
+INFO: Processing row 580/832
+INFO: Processing row 590/832
+INFO: Processing row 600/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999591119332821, 'B': 0.4999591119332821, 'T': 6.991511311227055e-05}
+INFO: Processing row 610/832
+INFO: Processing row 620/832
+INFO: Processing row 630/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49993980198054216, 'B': 0.49993980198054216, 'T': 0.00011526602706725961}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49995428437517586, 'B': 0.49995428437517586, 'T': 8.977192611086874e-05}
+INFO: Processing row 640/832
+INFO: Processing row 650/832
+INFO: Processing row 660/832
+INFO: Processing row 670/832
+INFO: Processing row 680/832
+INFO: Processing row 690/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49998068751574726, 'B': 0.49998068751574726, 'T': 3.74244693690643e-05}
+INFO: Processing row 700/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49999272733390243, 'B': 0.49999272733390243, 'T': 1.215023600099074e-05}
+INFO: Processing row 710/832
+INFO: Processing row 720/832
+INFO: Processing row 730/832
+INFO: Processing row 740/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49986426789573585, 'B': 0.49986426789573585, 'T': 0.0002153128431973485}
+INFO: Processing row 750/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999845020802217, 'B': 0.4999845020802217, 'T': 2.2699261276773028e-05}
+INFO: Processing row 760/832
+INFO: Processing row 770/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49883198191644756, 'B': 0.49883198191644756, 'T': 0.00018962045883333682}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49998497890282734, 'B': 0.49998497890282734, 'T': 2.5721657331607345e-05}
+INFO: Processing row 780/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49998497890282734, 'B': 0.49998497890282734, 'T': 2.5721657331607345e-05}
+INFO: Processing row 790/832
+INFO: Processing row 800/832
+INFO: Processing row 810/832
+INFO: Processing row 820/832
+INFO: Processing row 830/832
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 832 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+[W1127 00:42:10.250242430 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/analysis_20251127_004211.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251127_004211
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Loaded 832 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 832
+INFO:   Legitimate (LSP): 743
+INFO:   Illegitimate (ILSP): 89
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.893
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.788
+INFO:   95% CI: [0.766, 0.808]
+INFO:   Median: 0.936
+INFO:   Std: 0.293
+INFO: ILSP statistics:
+INFO:   Mean: 0.311
+INFO:   95% CI: [0.263, 0.364]
+INFO:   Median: 0.305
+INFO:   Std: 0.241
+INFO: ALL statistics:
+INFO:   Mean: 0.737
+INFO:   95% CI: [0.713, 0.758]
+INFO:   Median: 0.915
+INFO:   Std: 0.324
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-4B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: google/gemma-3-12b-it
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/logs/run_20251127_004217.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it
+INFO:   Timestamp: 20251127_004217
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 922 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-4B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [01:42<03:24, 102.17s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [03:31<01:46, 106.52s/it]Loading checkpoint shards: 100%|██████████| 3/3 [03:38<00:00, 61.04s/it] Loading checkpoint shards: 100%|██████████| 3/3 [03:38<00:00, 72.88s/it]
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/output.jsonl
+INFO: Processing row 0/922
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Processing row 10/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999766345728811, 'B': 0.4999766345728811, 'T': 1.767793271158895e-05}
+INFO: Processing row 20/922
+INFO: Processing row 30/922
+INFO: Processing row 40/922
+INFO: Processing row 50/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997796296486591, 'B': 0.4997796296486591, 'T': 0.00040218906987677186}
+INFO: Processing row 60/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999637011366759, 'B': 0.4999637011366759, 'T': 5.445041218999312e-05}
+INFO: Processing row 70/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499905594203925, 'B': 0.499905594203925, 'T': 3.7418830654568946e-05}
+INFO: Processing row 80/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49937564310980714, 'B': 0.49937564310980714, 'T': 0.0012378286836735941}
+INFO: Processing row 90/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997261013458441, 'B': 0.4997261013458441, 'T': 0.0005163658312690515}
+INFO: Processing row 100/922
+INFO: Processing row 110/922
+INFO: Processing row 120/922
+INFO: Processing row 130/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49987874810227734, 'B': 0.49987874810227734, 'T': 0.00016769060848558756}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999128050562087, 'B': 0.4999128050562087, 'T': 0.00010171647946896415}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49995267519949926, 'B': 0.49995267519949926, 'T': 6.991417965103424e-05}
+INFO: Processing row 140/922
+INFO: Processing row 150/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49969083597007224, 'B': 0.49969083597007224, 'T': 0.0005850778514068196}
+INFO: Processing row 160/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49973882012831217, 'B': 0.49973882012831217, 'T': 0.0004557027632384942}
+INFO: Processing row 170/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999080971326013, 'B': 0.4999080971326013, 'T': 7.921611839431784e-05}
+INFO: Processing row 180/922
+INFO: Processing row 190/922
+INFO: Processing row 200/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49984043307830767, 'B': 0.49984043307830767, 'T': 0.00024396978153139838}
+INFO: Processing row 210/922
+INFO: Processing row 220/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49906299903137064, 'B': 0.49906299903137064, 'T': 0.001799902000290944}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999302664765021, 'B': 0.4999302664765021, 'T': 0.0001017199716870966}
+INFO: Processing row 230/922
+INFO: Processing row 240/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999327695287077, 'B': 0.4999327695287077, 'T': 4.8049387310760416e-05}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49985747485696996, 'B': 0.49985747485696996, 'T': 0.000276463471994479}
+INFO: Processing row 250/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4996885723991963, 'B': 0.4996885723991963, 'T': 0.0004556569160866961}
+INFO: Processing row 260/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998129052785699, 'B': 0.4998129052785699, 'T': 0.00031324607329624835}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997988440438082, 'B': 0.4997988440438082, 'T': 0.0003549443174566934}
+INFO: Processing row 270/922
+INFO: Processing row 280/922
+INFO: Processing row 290/922
+INFO: Processing row 300/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4996432137917454, 'B': 0.4996432137917454, 'T': 0.0004556156358683922}
+INFO: Processing row 310/922
+INFO: Processing row 320/922
+INFO: Processing row 330/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49990452152404274, 'B': 0.49990452152404274, 'T': 0.00014799406384424806}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49992007560761836, 'B': 0.49992007560761836, 'T': 0.0001479987214760815}
+INFO: Processing row 340/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4996383297223881, 'B': 0.4996383297223881, 'T': 0.0005850164775168662}
+INFO: Processing row 350/922
+INFO: Processing row 360/922
+INFO: Processing row 370/922
+INFO: Processing row 380/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49990845469486384, 'B': 0.49990845469486384, 'T': 0.00011525877216311143}
+INFO: Processing row 390/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49977671031683085, 'B': 0.49977671031683085, 'T': 0.00040218676853903836}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999396827856191, 'B': 0.4999396827856191, 'T': 0.00010172191186008875}
+INFO: Processing row 400/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999016610556096, 'B': 0.4999016610556096, 'T': 0.00014799321701784482}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49975407117950893, 'B': 0.49975407117950893, 'T': 0.0004557166703953784}
+INFO: Processing row 410/922
+INFO: Processing row 420/922
+INFO: Processing row 430/922
+INFO: Processing row 440/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499709302326042, 'B': 0.499709302326042, 'T': 0.0004556758193297538}
+INFO: Processing row 450/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49988119130605535, 'B': 0.49988119130605535, 'T': 0.000190019259679556}
+INFO: Processing row 460/922
+INFO: Processing row 470/922
+INFO: Processing row 480/922
+INFO: Processing row 490/922
+INFO: Processing row 500/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4998999328638629, 'B': 0.4998999328638629, 'T': 0.0001017138603840453}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49991560599382073, 'B': 0.49991560599382073, 'T': 7.921732714558078e-05}
+INFO: Processing row 510/922
+INFO: Processing row 520/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998586666114797, 'B': 0.4998586666114797, 'T': 0.00021531037915150533}
+INFO: Processing row 530/922
+INFO: Processing row 540/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49992728666878805, 'B': 0.49992728666878805, 'T': 0.00011526316902020439}
+INFO: Processing row 550/922
+INFO: Processing row 560/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.499938312046047, 'B': 0.499938312046047, 'T': 4.8049891371536885e-05}
+INFO: Processing row 570/922
+INFO: Processing row 580/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49998581334348136, 'B': 0.49998581334348136, 'T': 2.0032085079883792e-05}
+INFO: Processing row 590/922
+INFO: Processing row 600/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4995961023819318, 'B': 0.4995961023819318, 'T': 0.0007511122714402666}
+INFO: Processing row 610/922
+INFO: Processing row 620/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49988199577820525, 'B': 0.49988199577820525, 'T': 1.0720173509575113e-05}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999028529154676, 'B': 0.4999028529154676, 'T': 0.00010171444239708809}
+INFO: Processing row 630/922
+INFO: Processing row 640/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4998273244131611, 'B': 0.4998273244131611, 'T': 0.0003132550354664971}
+INFO: Processing row 650/922
+INFO: Processing row 660/922
+INFO: Processing row 670/922
+INFO: Processing row 680/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49991310302754915, 'B': 0.49991310302754915, 'T': 0.0001306065449341468}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49983930095275436, 'B': 0.49983930095275436, 'T': 0.0002764531895973044}
+INFO: Processing row 690/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49975133072194505, 'B': 0.49975133072194505, 'T': 0.00045571428007258467}
+INFO: Processing row 700/922
+INFO: Processing row 710/922
+INFO: Processing row 720/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499613820753806, 'B': 0.499613820753806, 'T': 0.0007511391337886754}
+INFO: Processing row 730/922
+INFO: Processing row 740/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49979848655994535, 'B': 0.49979848655994535, 'T': 2.0024578581244428e-05}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499952556001507, 'B': 0.499952556001507, 'T': 6.169904698878067e-05}
+INFO: Processing row 750/922
+INFO: Processing row 760/922
+INFO: Processing row 770/922
+INFO: Processing row 780/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4986603942722707, 'B': 0.4986603942722707, 'T': 0.0026167299058252784}
+INFO: Processing row 790/922
+INFO: Processing row 800/922
+INFO: Processing row 810/922
+INFO: Processing row 820/922
+INFO: Processing row 830/922
+INFO: Processing row 840/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49986861787255327, 'B': 0.49986861787255327, 'T': 0.0001676872501524619}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49986784321637706, 'B': 0.49986784321637706, 'T': 0.00024398304395159762}
+INFO: Processing row 850/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499793600972779, 'B': 0.499793600972779, 'T': 0.0003132341241347692}
+INFO: Processing row 860/922
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4995562308986788, 'B': 0.4995562308986788, 'T': 0.0008510539348022767}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49988414104360124, 'B': 0.49988414104360124, 'T': 0.00021532146757986833}
+INFO: Processing row 870/922
+INFO: Processing row 880/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998597391929679, 'B': 0.4998597391929679, 'T': 0.00019001110511259421}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999424242760383, 'B': 0.4999424242760383, 'T': 0.00010172249391920256}
+INFO: Processing row 890/922
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998754706525484, 'B': 0.4998754706525484, 'T': 0.00019001708509414815}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.499880118678536, 'B': 0.499880118678536, 'T': 0.00013059795084549596}
+INFO: Processing row 900/922
+INFO: Processing row 910/922
+INFO: Processing row 920/922
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 922 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it
+INFO: ================================================================================
+[W1127 01:29:55.541682604 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-4B/google_gemma-3-12b-it
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/logs/analysis_20251127_012957.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it
+INFO:   Timestamp: 20251127_012957
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/output.jsonl
+INFO: Loaded 922 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 922
+INFO:   Legitimate (LSP): 817
+INFO:   Illegitimate (ILSP): 105
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.886
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.462
+INFO:   95% CI: [0.439, 0.486]
+INFO:   Median: 0.470
+INFO:   Std: 0.341
+INFO: ILSP statistics:
+INFO:   Mean: 0.162
+INFO:   95% CI: [0.130, 0.205]
+INFO:   Median: 0.081
+INFO:   Std: 0.190
+INFO: ALL statistics:
+INFO:   Mean: 0.428
+INFO:   95% CI: [0.406, 0.450]
+INFO:   Median: 0.392
+INFO:   Std: 0.341
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-12b-it
+INFO: ================================================================================
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-4B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: google/gemma-3-27b-it
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/logs/run_20251127_013002.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it
+INFO:   Timestamp: 20251127_013002
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 481 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-4B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [01:37<03:15, 97.99s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [01:49<00:47, 47.21s/it]Loading checkpoint shards: 100%|██████████| 3/3 [01:49<00:00, 36.57s/it]
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/output.jsonl
+INFO: Processing row 0/481
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+INFO: Processing row 10/481
+INFO: Processing row 20/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999008863482257, 'B': 0.4999008863482257, 'T': 0.0001900268709244649}
+INFO: Processing row 30/481
+INFO: Processing row 40/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49985818990933484, 'B': 0.49985818990933484, 'T': 0.0001479803740780995}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4995076688124797, 'B': 0.4995076688124797, 'T': 0.0009642766453365121}
+INFO: Processing row 50/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998796419559328, 'B': 0.4998796419559328, 'T': 0.00021531941412412597}
+INFO: Processing row 60/481
+INFO: Processing row 70/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999140565370321, 'B': 0.4999140565370321, 'T': 0.00014799688663392157}
+INFO: Processing row 80/481
+INFO: Processing row 90/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49988259168433624, 'B': 0.49988259168433624, 'T': 0.00016769188786827934}
+INFO: Processing row 100/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997823106827064, 'B': 0.4997823106827064, 'T': 0.00040219137122767375}
+INFO: Processing row 110/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997853492053465, 'B': 0.4997853492053465, 'T': 0.00035493467030133706}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4997769486289939, 'B': 0.4997769486289939, 'T': 0.0004021869603166798}
+INFO: Processing row 120/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49984490202000403, 'B': 0.49984490202000403, 'T': 0.0002764563533710869}
+INFO: Processing row 130/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49981689731138235, 'B': 0.49981689731138235, 'T': 0.0003549571807383861}
+INFO: Processing row 140/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.499731433067706, 'B': 0.499731433067706, 'T': 0.000516371248190607}
+INFO: Processing row 150/481
+INFO: Processing row 160/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4997889835410013, 'B': 0.4997889835410013, 'T': 0.00021528040218561366}
+INFO: Processing row 170/481
+INFO: Processing row 180/481
+INFO: Processing row 190/481
+INFO: Processing row 200/481
+INFO: Processing row 210/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49979675872487944, 'B': 0.49979675872487944, 'T': 0.000354942794204205}
+INFO: Processing row 220/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999588735342568, 'B': 0.4999588735342568, 'T': 3.742282763033415e-05}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49976235221867826, 'B': 0.49976235221867826, 'T': 0.0004557242760513168}
+INFO: Processing row 230/481
+INFO: Processing row 240/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998299461186874, 'B': 0.4998299461186874, 'T': 0.00024396466289537344}
+INFO: Processing row 250/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49948953739846813, 'B': 0.49948953739846813, 'T': 0.0009642417009466202}
+INFO: Processing row 260/481
+INFO: Processing row 270/481
+INFO: Processing row 280/481
+INFO: Processing row 290/481
+INFO: Processing row 300/481
+INFO: Processing row 310/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999456425665824, 'B': 0.4999456425665824, 'T': 1.559973894452961e-05}
+INFO: Processing row 320/481
+INFO: Processing row 330/481
+INFO: Processing row 340/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49972788850884514, 'B': 0.49972788850884514, 'T': 0.0005163675548288371}
+INFO: Processing row 350/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4998927221972505, 'B': 0.4998927221972505, 'T': 0.0001900237901457526}
+INFO: Processing row 360/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49998104512993047, 'B': 0.49998104512993047, 'T': 2.914623384666047e-05}
+INFO: Processing row 370/481
+INFO: Processing row 380/481
+INFO: Processing row 390/481
+INFO: Processing row 400/481
+INFO: Processing row 410/481
+INFO: Processing row 420/481
+INFO: Processing row 430/481
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49981034324445855, 'B': 0.49981034324445855, 'T': 0.0003549524415803698}
+INFO: Processing row 440/481
+INFO: Processing row 450/481
+INFO: Processing row 460/481
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49928695096557657, 'B': 0.49928695096557657, 'T': 0.0014023942056852448}
+INFO: Processing row 470/481
+INFO: Processing row 480/481
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 481 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it
+INFO: ================================================================================
+[W1127 01:50:34.719032381 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-4B/google_gemma-3-27b-it
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/logs/analysis_20251127_015036.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it
+INFO:   Timestamp: 20251127_015036
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/output.jsonl
+INFO: Loaded 481 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 481
+INFO:   Legitimate (LSP): 348
+INFO:   Illegitimate (ILSP): 133
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.723
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.422
+INFO:   95% CI: [0.385, 0.460]
+INFO:   Median: 0.381
+INFO:   Std: 0.355
+INFO: ILSP statistics:
+INFO:   Mean: 0.159
+INFO:   95% CI: [0.131, 0.196]
+INFO:   Median: 0.087
+INFO:   Std: 0.193
+INFO: ALL statistics:
+INFO:   Mean: 0.350
+INFO:   95% CI: [0.320, 0.380]
+INFO:   Median: 0.220
+INFO:   Std: 0.340
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/google_gemma-3-27b-it
+INFO: ================================================================================
+usage: run_self_preference.py [-h] --output_path OUTPUT_PATH [--judge JUDGE]
+                              [--ref REF] [--data_jsonl DATA_JSONL]
+                              [--limit LIMIT] [--bf16] [--trust_remote_code]
+                              [--logprobs_k LOGPROBS_K]
+                              [--max_tokens MAX_TOKENS]
+run_self_preference.py: error: the following arguments are required: --output_path
+[W1127 01:50:41.623635863 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+Error: Input directory does not exist: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/mistralai_Magistral-Small-2509
+INFO: ================================================================================
+INFO: NEW RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO:   PyTorch version: 2.9.1+cu128
+INFO:   CUDA available: True
+INFO:   CUDA version: 12.8
+INFO:   GPU count: 2
+INFO:   GPU 0: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO:   GPU 1: NVIDIA RTX A6000
+INFO:     Total memory: 50.90 GB
+INFO: RUN PARAMETERS:
+INFO:   bf16: True
+INFO:   data_jsonl: diffs.jsonl
+INFO:   judge: Qwen/Qwen3-4B
+INFO:   limit: 0
+INFO:   logprobs_k: 50
+INFO:   max_tokens: 12
+INFO:   output_path: results
+INFO:   ref: deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+INFO:   trust_remote_code: False
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/run_20251127_015045.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251127_015045
+INFO: ================================================================================
+INFO: Starting data loading...
+INFO: Dataset loaded: 832 examples found
+INFO: Loading tokenizer and model from Qwen/Qwen3-4B
+INFO: Loading model (this may take a while)...
+`torch_dtype` is deprecated! Use `dtype` instead!
+Loading checkpoint shards:   0%|          | 0/3 [00:00<?, ?it/s]Loading checkpoint shards:  33%|███▎      | 1/3 [00:02<00:05,  2.90s/it]Loading checkpoint shards:  67%|██████▋   | 2/3 [00:05<00:02,  2.91s/it]Loading checkpoint shards: 100%|██████████| 3/3 [00:05<00:00,  1.96s/it]
+INFO: Model loaded successfully on device: cuda:0
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Initial GPU memory allocated: 4.01 GB
+INFO: Metadata saved to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/metadata.json
+INFO: Starting processing, output will be written to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Processing row 0/832
+The following generation flags are not valid and may be ignored: ['temperature', 'top_p', 'top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49987511311387794, 'B': 0.49987511311387794, 'T': 0.00024398676686580362}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998917687284596, 'B': 0.4998917687284596, 'T': 0.0002153247531497896}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4996079840442548, 'B': 0.4996079840442548, 'T': 0.0007511301795657975}
+INFO: Processing row 10/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49992073115433566, 'B': 0.49992073115433566, 'T': 0.00014799886261872833}
+INFO: Processing row 20/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49944824548495664, 'B': 0.49944824548495664, 'T': 0.0010925388614718998}
+INFO: Processing row 30/832
+INFO: Processing row 40/832
+INFO: Processing row 50/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4996735318268333, 'B': 0.4996735318268333, 'T': 0.00045564322802091106}
+INFO: Processing row 60/832
+INFO: Processing row 70/832
+INFO: Processing row 80/832
+INFO: Processing row 90/832
+INFO: Processing row 100/832
+INFO: Processing row 110/832
+INFO: Processing row 120/832
+INFO: Processing row 130/832
+INFO: Processing row 140/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49994957606093743, 'B': 0.49994957606093743, 'T': 3.7422149541875975e-05}
+INFO: Processing row 150/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4997323266579415, 'B': 0.4997323266579415, 'T': 1.559309031130407e-05}
+INFO: Processing row 160/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49957287588824806, 'B': 0.49957287588824806, 'T': 0.0008510823422661571}
+INFO: Processing row 170/832
+INFO: Processing row 180/832
+INFO: Processing row 190/832
+INFO: Processing row 200/832
+INFO: Processing row 210/832
+INFO: Processing row 220/832
+INFO: Processing row 230/832
+INFO: Processing row 240/832
+INFO: Processing row 250/832
+INFO: Processing row 260/832
+INFO: Processing row 270/832
+INFO: Processing row 280/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49896157386697304, 'B': 0.49896157386697304, 'T': 6.157672071562891e-05}
+INFO: Processing row 290/832
+INFO: Processing row 300/832
+INFO: Processing row 310/832
+INFO: Processing row 320/832
+INFO: Processing row 330/832
+INFO: Processing row 340/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4997974141098909, 'B': 0.4997974141098909, 'T': 0.00011523327369927956}
+INFO: Processing row 350/832
+INFO: Processing row 360/832
+INFO: Processing row 370/832
+INFO: Processing row 380/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4998102240804009, 'B': 0.4998102240804009, 'T': 5.4433693954069886e-05}
+INFO: Processing row 390/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49850104782268695, 'B': 0.49850104782268695, 'T': 0.00018949463862662577}
+INFO: Processing row 400/832
+INFO: Processing row 410/832
+INFO: Processing row 420/832
+INFO: Processing row 430/832
+INFO: Processing row 440/832
+INFO: Processing row 450/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49997216445340914, 'B': 0.49997216445340914, 'T': 5.4451346901289e-05}
+INFO: Processing row 460/832
+INFO: Processing row 470/832
+INFO: Processing row 480/832
+INFO: Processing row 490/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999883166737991, 'B': 0.4999883166737991, 'T': 1.0722453604593708e-05}
+INFO: Processing row 500/832
+INFO: Processing row 510/832
+INFO: Processing row 520/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999039255917694, 'B': 0.4999039255917694, 'T': 0.0001900279582700532}
+INFO: Processing row 530/832
+INFO: Processing row 540/832
+INFO: Processing row 550/832
+INFO: Processing row 560/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49945711685545013, 'B': 0.49945711685545013, 'T': 3.2992381250548715e-05}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49536311340326533, 'B': 0.49536311340326533, 'T': 0.00018830188651228896}
+INFO: Processing row 570/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49997186644686537, 'B': 0.49997186644686537, 'T': 5.4451346901289e-05}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999400403704734, 'B': 0.4999400403704734, 'T': 0.0001152661369935616}
+INFO: Processing row 580/832
+INFO: Processing row 590/832
+INFO: Processing row 600/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.4999591119332821, 'B': 0.4999591119332821, 'T': 6.991511311227055e-05}
+INFO: Processing row 610/832
+INFO: Processing row 620/832
+INFO: Processing row 630/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49993980198054216, 'B': 0.49993980198054216, 'T': 0.00011526602706725961}
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49995428437517586, 'B': 0.49995428437517586, 'T': 8.977192611086874e-05}
+INFO: Processing row 640/832
+INFO: Processing row 650/832
+INFO: Processing row 660/832
+INFO: Processing row 670/832
+INFO: Processing row 680/832
+INFO: Processing row 690/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49998068751574726, 'B': 0.49998068751574726, 'T': 3.74244693690643e-05}
+INFO: Processing row 700/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49999272733390243, 'B': 0.49999272733390243, 'T': 1.215023600099074e-05}
+INFO: Processing row 710/832
+INFO: Processing row 720/832
+INFO: Processing row 730/832
+INFO: Processing row 740/832
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49986426789573585, 'B': 0.49986426789573585, 'T': 0.0002153128431973485}
+INFO: Processing row 750/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.4999845020802217, 'B': 0.4999845020802217, 'T': 2.2699261276773028e-05}
+INFO: Processing row 760/832
+INFO: Processing row 770/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49883198191644756, 'B': 0.49883198191644756, 'T': 0.00018962045883333682}
+WARNING: RJ probs A and B are TOO CLOSE: {'A': 0.49998497890282734, 'B': 0.49998497890282734, 'T': 2.5721657331607345e-05}
+INFO: Processing row 780/832
+WARNING: JR probs A and B are TOO CLOSE: {'A': 0.49998497890282734, 'B': 0.49998497890282734, 'T': 2.5721657331607345e-05}
+INFO: Processing row 790/832
+INFO: Processing row 800/832
+INFO: Processing row 810/832
+INFO: Processing row 820/832
+INFO: Processing row 830/832
+INFO: ================================================================================
+INFO: RUN COMPLETED SUCCESSFULLY
+INFO: Processed 832 rows
+INFO: Output saved to: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: All results in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================
+[W1127 05:29:51.121509676 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
+INFO: ================================================================================
+INFO: ANALYSIS RUN STARTED
+INFO: ================================================================================
+INFO: SYSTEM METADATA:
+INFO:   User: droytbur
+INFO:   Hostname: babel-v9-32
+INFO:   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+INFO:   Python version: 3.12.5
+INFO: RUN PARAMETERS:
+INFO:   input_dir: results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/analysis_20251127_052952.log
+INFO:   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO:   Timestamp: 20251127_052952
+INFO: ================================================================================
+INFO: Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+INFO: Loaded 832 examples
+INFO: Extracted probabilities:
+INFO:   Total valid examples: 832
+INFO:   Legitimate (LSP): 743
+INFO:   Illegitimate (ILSP): 89
+INFO:   Skipped (zero probs): 0
+INFO:   LSP proportion: 0.893
+INFO: Creating visualization...
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.pdf
+INFO: Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.png
+INFO: Computing and saving statistics...
+INFO: LSP statistics:
+INFO:   Mean: 0.788
+INFO:   95% CI: [0.766, 0.808]
+INFO:   Median: 0.936
+INFO:   Std: 0.293
+INFO: ILSP statistics:
+INFO:   Mean: 0.311
+INFO:   95% CI: [0.263, 0.364]
+INFO:   Median: 0.305
+INFO:   Std: 0.241
+INFO: ALL statistics:
+INFO:   Mean: 0.737
+INFO:   95% CI: [0.713, 0.758]
+INFO:   Median: 0.915
+INFO:   Std: 0.324
+INFO: Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/statistics.json
+INFO: ================================================================================
+INFO: ANALYSIS COMPLETED SUCCESSFULLY
+INFO: Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+INFO: ================================================================================

@@ -1,0 +1,46 @@
+2025-11-26 20:09:30 | INFO     | setup_logging:69 | ================================================================================
+2025-11-26 20:09:30 | INFO     | setup_logging:70 | ANALYSIS RUN STARTED
+2025-11-26 20:09:30 | INFO     | setup_logging:71 | ================================================================================
+2025-11-26 20:09:30 | INFO     | setup_logging:74 | SYSTEM METADATA:
+2025-11-26 20:09:30 | INFO     | setup_logging:75 |   User: droytbur
+2025-11-26 20:09:30 | INFO     | setup_logging:76 |   Hostname: babel-v9-32
+2025-11-26 20:09:30 | INFO     | setup_logging:77 |   Platform: Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34
+2025-11-26 20:09:30 | INFO     | setup_logging:78 |   Python version: 3.12.5
+2025-11-26 20:09:30 | INFO     | setup_logging:81 | RUN PARAMETERS:
+2025-11-26 20:09:30 | INFO     | setup_logging:83 |   input_dir: results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+2025-11-26 20:09:30 | INFO     | setup_logging:85 |   Log file: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/logs/analysis_20251126_200930.log
+2025-11-26 20:09:30 | INFO     | setup_logging:86 |   Output directory: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+2025-11-26 20:09:30 | INFO     | setup_logging:87 |   Timestamp: 20251126_200930
+2025-11-26 20:09:30 | INFO     | setup_logging:88 | ================================================================================
+2025-11-26 20:09:30 | INFO     | load_results:101 | Loading results from /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/output.jsonl
+2025-11-26 20:09:30 | INFO     | load_results:106 | Loaded 1014 examples
+2025-11-26 20:09:30 | INFO     | extract_probabilities:148 | Extracted probabilities:
+2025-11-26 20:09:30 | INFO     | extract_probabilities:149 |   Total valid examples: 1014
+2025-11-26 20:09:30 | INFO     | extract_probabilities:150 |   Legitimate (LSP): 110
+2025-11-26 20:09:30 | INFO     | extract_probabilities:151 |   Illegitimate (ILSP): 904
+2025-11-26 20:09:30 | INFO     | extract_probabilities:152 |   Skipped (zero probs): 0
+2025-11-26 20:09:30 | INFO     | extract_probabilities:153 |   LSP proportion: 0.108
+2025-11-26 20:09:30 | INFO     | create_visualization:208 | Creating visualization...
+2025-11-26 20:09:30 | INFO     | create_visualization:277 | Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/self_preference_analysis.pdf
+2025-11-26 20:09:31 | INFO     | create_visualization:282 | Saved visualization to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/self_preference_analysis.png
+2025-11-26 20:09:31 | INFO     | save_statistics:288 | Computing and saving statistics...
+2025-11-26 20:09:31 | INFO     | save_statistics:317 | LSP statistics:
+2025-11-26 20:09:31 | INFO     | save_statistics:318 |   Mean: 0.376
+2025-11-26 20:09:31 | INFO     | save_statistics:319 |   95% CI: [0.355, 0.399]
+2025-11-26 20:09:31 | INFO     | save_statistics:320 |   Median: 0.359
+2025-11-26 20:09:31 | INFO     | save_statistics:321 |   Std: 0.117
+2025-11-26 20:09:31 | INFO     | save_statistics:317 | ILSP statistics:
+2025-11-26 20:09:31 | INFO     | save_statistics:318 |   Mean: 0.306
+2025-11-26 20:09:31 | INFO     | save_statistics:319 |   95% CI: [0.300, 0.313]
+2025-11-26 20:09:31 | INFO     | save_statistics:320 |   Median: 0.283
+2025-11-26 20:09:31 | INFO     | save_statistics:321 |   Std: 0.097
+2025-11-26 20:09:31 | INFO     | save_statistics:317 | ALL statistics:
+2025-11-26 20:09:31 | INFO     | save_statistics:318 |   Mean: 0.314
+2025-11-26 20:09:31 | INFO     | save_statistics:319 |   95% CI: [0.308, 0.320]
+2025-11-26 20:09:31 | INFO     | save_statistics:320 |   Median: 0.288
+2025-11-26 20:09:31 | INFO     | save_statistics:321 |   Std: 0.102
+2025-11-26 20:09:31 | INFO     | save_statistics:327 | Saved statistics to /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it/statistics.json
+2025-11-26 20:09:31 | INFO     | main:378 | ================================================================================
+2025-11-26 20:09:31 | INFO     | main:379 | ANALYSIS COMPLETED SUCCESSFULLY
+2025-11-26 20:09:31 | INFO     | main:380 | Results saved in: /data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-0.6B/google_gemma-3-27b-it
+2025-11-26 20:09:31 | INFO     | main:381 | ================================================================================

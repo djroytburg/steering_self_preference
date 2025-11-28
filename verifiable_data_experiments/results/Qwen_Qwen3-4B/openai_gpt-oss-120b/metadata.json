@@ -1,0 +1,16 @@
+{
+  "judge_model": "Qwen/Qwen3-4B",
+  "ref_model": "openai/gpt-oss-120b",
+  "logprobs_k": 50,
+  "max_tokens": 12,
+  "n_limited_examples": "None",
+  "data_json_path": "diffs.jsonl",
+  "output_path": "/data/user_data/droytbur/steering_self_preference/verifiable_data_experiments/results/Qwen_Qwen3-4B/openai_gpt-oss-120b",
+  "date_collected": "2025-11-28 09:45:48.776662",
+  "float": "bfloat16",
+  "collected_by": "droytbur",
+  "hostname": "babel-o5-16",
+  "platform": "Linux-5.14.0-503.40.1.el9_5.x86_64-x86_64-with-glibc2.34",
+  "pytorch_version": "2.9.1+cu128",
+  "cuda_available": true
+}
