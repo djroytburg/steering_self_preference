@@ -1,0 +1,16 @@
+{
+  "judge_model": "google/gemma-3-12b-it",
+  "ref_model": "Qwen/Qwen3-8B",
+  "logprobs_k": 50,
+  "max_tokens": 2,
+  "n_limited_examples": "None",
+  "data_json_path": "diffs.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/qwen3vgemma.json/google_gemma-3-12b-it/Qwen_Qwen3-8B",
+  "date_collected": "2025-11-28 17:28:29.803232",
+  "float": "float32",
+  "collected_by": "ubuntu",
+  "hostname": "192-222-53-136",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "pytorch_version": "2.9.1+cu128",
+  "cuda_available": true
+}

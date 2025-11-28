@@ -1,0 +1,32 @@
+2025-11-28 17:13:22 | INFO     | setup_logging:67 | ================================================================================
+2025-11-28 17:13:22 | INFO     | setup_logging:68 | NEW RUN STARTED
+2025-11-28 17:13:22 | INFO     | setup_logging:69 | ================================================================================
+2025-11-28 17:13:22 | INFO     | setup_logging:72 | SYSTEM METADATA:
+2025-11-28 17:13:22 | INFO     | setup_logging:73 |   User: ubuntu
+2025-11-28 17:13:22 | INFO     | setup_logging:74 |   Hostname: 192-222-53-136
+2025-11-28 17:13:22 | INFO     | setup_logging:75 |   Platform: Linux-6.8.0-60-generic-x86_64-with-glibc2.35
+2025-11-28 17:13:22 | INFO     | setup_logging:76 |   Python version: 3.10.12
+2025-11-28 17:13:22 | INFO     | setup_logging:77 |   PyTorch version: 2.9.1+cu128
+2025-11-28 17:13:22 | INFO     | setup_logging:78 |   CUDA available: True
+2025-11-28 17:13:22 | INFO     | setup_logging:80 |   CUDA version: 12.8
+2025-11-28 17:13:22 | INFO     | setup_logging:81 |   GPU count: 1
+2025-11-28 17:13:22 | INFO     | setup_logging:83 |   GPU 0: NVIDIA H100 80GB HBM3
+2025-11-28 17:13:22 | INFO     | setup_logging:85 |     Total memory: 85.03 GB
+2025-11-28 17:13:22 | INFO     | setup_logging:88 | RUN PARAMETERS:
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   bf16: False
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   data_jsonl: diffs.jsonl
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   judge: google/gemma-3-12b-it
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   limit: 0
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   logprobs_k: 50
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   max_tokens: 2
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   output_path: qwen3vgemma.json
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   ref: Qwen/Qwen3-8B
+2025-11-28 17:13:22 | INFO     | setup_logging:90 |   trust_remote_code: False
+2025-11-28 17:13:22 | INFO     | setup_logging:92 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/qwen3vgemma.json/google_gemma-3-12b-it/Qwen_Qwen3-8B/logs/run_20251128_171322.log
+2025-11-28 17:13:22 | INFO     | setup_logging:93 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/qwen3vgemma.json/google_gemma-3-12b-it/Qwen_Qwen3-8B
+2025-11-28 17:13:22 | INFO     | setup_logging:94 |   Timestamp: 20251128_171322
+2025-11-28 17:13:22 | INFO     | setup_logging:95 | ================================================================================
+2025-11-28 17:13:22 | INFO     | main:292 | Starting data loading...
+2025-11-28 17:13:22 | INFO     | main:306 | Dataset loaded: 894 examples found
+2025-11-28 17:13:22 | INFO     | main:309 | Loading tokenizer and model from google/gemma-3-12b-it
+2025-11-28 17:13:24 | INFO     | main:319 | Loading model (this may take a while)...
