@@ -1,0 +1,16 @@
+{
+  "judge_model": "Qwen/QwQ-32B-Preview",
+  "data_source": "arena",
+  "logprobs_k": 50,
+  "max_tokens": 12,
+  "n_limited_examples": "None",
+  "data_jsonl_path": "arena_diffs/qwq-32b_arena.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena",
+  "date_collected": "2025-11-29 00:28:29.241341",
+  "float": "bfloat16",
+  "collected_by": "ubuntu",
+  "hostname": "192-222-52-215",
+  "platform": "Linux-6.8.0-60-generic-x86_64-with-glibc2.35",
+  "pytorch_version": "2.9.1+cu128",
+  "cuda_available": true
+}

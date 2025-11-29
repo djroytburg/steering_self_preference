@@ -1,0 +1,41 @@
+2025-11-28 22:36:22 | INFO     | setup_logging:75 | ================================================================================
+2025-11-28 22:36:22 | INFO     | setup_logging:76 | ARENA SELF-PREFERENCE RUN STARTED
+2025-11-28 22:36:22 | INFO     | setup_logging:77 | ================================================================================
+2025-11-28 22:36:22 | INFO     | setup_logging:80 | SYSTEM METADATA:
+2025-11-28 22:36:22 | INFO     | setup_logging:81 |   User: ubuntu
+2025-11-28 22:36:22 | INFO     | setup_logging:82 |   Hostname: 192-222-52-215
+2025-11-28 22:36:22 | INFO     | setup_logging:83 |   Platform: Linux-6.8.0-60-generic-x86_64-with-glibc2.35
+2025-11-28 22:36:22 | INFO     | setup_logging:84 |   Python version: 3.10.12
+2025-11-28 22:36:22 | INFO     | setup_logging:85 |   PyTorch version: 2.9.1+cu128
+2025-11-28 22:36:22 | INFO     | setup_logging:86 |   CUDA available: True
+2025-11-28 22:36:22 | INFO     | setup_logging:88 |   CUDA version: 12.8
+2025-11-28 22:36:22 | INFO     | setup_logging:89 |   GPU count: 1
+2025-11-28 22:36:22 | INFO     | setup_logging:91 |   GPU 0: NVIDIA H100 80GB HBM3
+2025-11-28 22:36:22 | INFO     | setup_logging:93 |     Total memory: 85.03 GB
+2025-11-28 22:36:22 | INFO     | setup_logging:96 | RUN PARAMETERS:
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   bf16: True
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   data_jsonl: arena_diffs/qwq-32b_10percent_sample.jsonl
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   judge: Qwen/QwQ-32B-Preview
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   limit: 0
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   logprobs_k: 50
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   max_tokens: 12
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   output_path: results_arena
+2025-11-28 22:36:22 | INFO     | setup_logging:98 |   trust_remote_code: False
+2025-11-28 22:36:22 | INFO     | setup_logging:100 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena/logs/run_20251128_223622.log
+2025-11-28 22:36:22 | INFO     | setup_logging:101 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena
+2025-11-28 22:36:22 | INFO     | setup_logging:102 |   Timestamp: 20251128_223622
+2025-11-28 22:36:22 | INFO     | setup_logging:103 | ================================================================================
+2025-11-28 22:36:22 | INFO     | main:266 | Starting data loading...
+2025-11-28 22:36:22 | INFO     | main:273 | Dataset loaded: 359 examples found
+2025-11-28 22:36:22 | INFO     | main:276 | Loading tokenizer and model from Qwen/QwQ-32B-Preview
+2025-11-28 22:36:23 | INFO     | main:286 | Loading model (this may take a while)...
+2025-11-28 22:36:55 | INFO     | main:298 | Model loaded successfully on device: cuda:0
+2025-11-28 22:36:55 | INFO     | main:302 | Initial GPU memory allocated: 65.53 GB
+2025-11-28 22:36:55 | INFO     | main:327 | Metadata saved to /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena/metadata.json
+2025-11-28 22:36:55 | INFO     | main:329 | Starting processing, output will be written to /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena/output.jsonl
+2025-11-28 22:36:55 | INFO     | main:478 | ================================================================================
+2025-11-28 22:36:55 | INFO     | main:479 | RUN COMPLETED SUCCESSFULLY
+2025-11-28 22:36:55 | INFO     | main:480 | Processed 0 rows
+2025-11-28 22:36:55 | INFO     | main:481 | Output saved to: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena/output.jsonl
+2025-11-28 22:36:55 | INFO     | main:482 | All results in: /home/ubuntu/steering_self_preference/verifiable_data_experiments/results_arena/Qwen_QwQ-32B-Preview/arena
+2025-11-28 22:36:55 | INFO     | main:483 | ================================================================================
