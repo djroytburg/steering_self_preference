@@ -1,0 +1,16 @@
+{
+  "judge_model": "google/gemma-3-12b-it",
+  "data_source": "arena",
+  "logprobs_k": 50,
+  "max_tokens": 2,
+  "n_limited_examples": "None",
+  "data_jsonl_path": "arena_diffs/chatgpt-4o-latest_vs_claude-3.5-sonnet_arena.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena",
+  "date_collected": "2025-12-16 22:24:19.179305",
+  "float": "float32",
+  "collected_by": "ubuntu",
+  "hostname": "209-20-158-34",
+  "platform": "Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35",
+  "pytorch_version": "2.7.0",
+  "cuda_available": true
+}

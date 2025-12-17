@@ -1,0 +1,16 @@
+{
+  "judge_model": "google/gemma-3-12b-it",
+  "ref_model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+  "logprobs_k": 50,
+  "max_tokens": 2,
+  "n_limited_examples": "None",
+  "data_json_path": "diffs.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/gemmavsqwen_swap/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B",
+  "date_collected": "2025-12-16 17:37:59.874793",
+  "float": "bfloat16",
+  "collected_by": "ubuntu",
+  "hostname": "209-20-158-34",
+  "platform": "Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35",
+  "pytorch_version": "2.7.0",
+  "cuda_available": true
+}

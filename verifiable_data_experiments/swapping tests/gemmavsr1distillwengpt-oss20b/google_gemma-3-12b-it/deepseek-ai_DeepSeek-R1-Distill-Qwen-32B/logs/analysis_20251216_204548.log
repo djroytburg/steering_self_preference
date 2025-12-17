@@ -1,0 +1,47 @@
+2025-12-16 20:45:48 | INFO     | setup_logging:69 | ================================================================================
+2025-12-16 20:45:48 | INFO     | setup_logging:70 | ANALYSIS RUN STARTED
+2025-12-16 20:45:48 | INFO     | setup_logging:71 | ================================================================================
+2025-12-16 20:45:48 | INFO     | setup_logging:74 | SYSTEM METADATA:
+2025-12-16 20:45:48 | INFO     | setup_logging:75 |   User: ubuntu
+2025-12-16 20:45:48 | INFO     | setup_logging:76 |   Hostname: 209-20-158-34
+2025-12-16 20:45:48 | INFO     | setup_logging:77 |   Platform: Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35
+2025-12-16 20:45:48 | INFO     | setup_logging:78 |   Python version: 3.10.12
+2025-12-16 20:45:48 | INFO     | setup_logging:81 | RUN PARAMETERS:
+2025-12-16 20:45:48 | INFO     | setup_logging:83 |   input_dir: swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/
+2025-12-16 20:45:48 | INFO     | setup_logging:85 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/logs/analysis_20251216_204548.log
+2025-12-16 20:45:48 | INFO     | setup_logging:86 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+2025-12-16 20:45:48 | INFO     | setup_logging:87 |   Timestamp: 20251216_204548
+2025-12-16 20:45:48 | INFO     | setup_logging:88 | ================================================================================
+2025-12-16 20:45:48 | INFO     | load_results:101 | Loading results from /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/output.jsonl
+2025-12-16 20:45:49 | INFO     | load_results:106 | Loaded 962 examples
+2025-12-16 20:45:49 | INFO     | extract_probabilities:151 | Extracted probabilities (before balancing):
+2025-12-16 20:45:49 | INFO     | extract_probabilities:152 |   Legitimate (LSP): 862
+2025-12-16 20:45:49 | INFO     | extract_probabilities:153 |   Illegitimate (ILSP): 100
+2025-12-16 20:45:49 | INFO     | extract_probabilities:154 |   Skipped (zero probs): 0
+2025-12-16 20:45:49 | INFO     | extract_probabilities:166 | Balanced dataset:
+2025-12-16 20:45:49 | INFO     | extract_probabilities:167 |   n = 100 (min of LSP and ILSP)
+2025-12-16 20:45:49 | INFO     | extract_probabilities:168 |   Total examples used: 200
+2025-12-16 20:45:49 | INFO     | create_visualization:228 | Creating visualization...
+2025-12-16 20:45:49 | INFO     | create_visualization:297 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.pdf
+2025-12-16 20:45:50 | INFO     | create_visualization:302 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/self_preference_analysis.png
+2025-12-16 20:45:50 | INFO     | save_statistics:308 | Computing and saving statistics...
+2025-12-16 20:45:50 | INFO     | save_statistics:337 | LSP statistics:
+2025-12-16 20:45:50 | INFO     | save_statistics:338 |   Mean: 0.888
+2025-12-16 20:45:50 | INFO     | save_statistics:339 |   95% CI: [0.844, 0.919]
+2025-12-16 20:45:50 | INFO     | save_statistics:340 |   Median: 0.982
+2025-12-16 20:45:50 | INFO     | save_statistics:341 |   Std: 0.190
+2025-12-16 20:45:50 | INFO     | save_statistics:337 | ILSP statistics:
+2025-12-16 20:45:50 | INFO     | save_statistics:338 |   Mean: 0.453
+2025-12-16 20:45:50 | INFO     | save_statistics:339 |   95% CI: [0.392, 0.515]
+2025-12-16 20:45:50 | INFO     | save_statistics:340 |   Median: 0.456
+2025-12-16 20:45:50 | INFO     | save_statistics:341 |   Std: 0.321
+2025-12-16 20:45:50 | INFO     | save_statistics:337 | ALL statistics:
+2025-12-16 20:45:50 | INFO     | save_statistics:338 |   Mean: 0.670
+2025-12-16 20:45:50 | INFO     | save_statistics:339 |   95% CI: [0.622, 0.716]
+2025-12-16 20:45:50 | INFO     | save_statistics:340 |   Median: 0.792
+2025-12-16 20:45:50 | INFO     | save_statistics:341 |   Std: 0.342
+2025-12-16 20:45:50 | INFO     | save_statistics:347 | Saved statistics to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B/statistics.json
+2025-12-16 20:45:50 | INFO     | main:398 | ================================================================================
+2025-12-16 20:45:50 | INFO     | main:399 | ANALYSIS COMPLETED SUCCESSFULLY
+2025-12-16 20:45:50 | INFO     | main:400 | Results saved in: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping tests/gemmavsr1distillwengpt-oss20b/google_gemma-3-12b-it/deepseek-ai_DeepSeek-R1-Distill-Qwen-32B
+2025-12-16 20:45:50 | INFO     | main:401 | ================================================================================

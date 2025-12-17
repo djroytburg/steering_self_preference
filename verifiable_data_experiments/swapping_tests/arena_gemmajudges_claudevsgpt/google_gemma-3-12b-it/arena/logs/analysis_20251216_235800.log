@@ -1,0 +1,47 @@
+2025-12-16 23:58:00 | INFO     | setup_logging:69 | ================================================================================
+2025-12-16 23:58:00 | INFO     | setup_logging:70 | ANALYSIS RUN STARTED
+2025-12-16 23:58:00 | INFO     | setup_logging:71 | ================================================================================
+2025-12-16 23:58:00 | INFO     | setup_logging:74 | SYSTEM METADATA:
+2025-12-16 23:58:00 | INFO     | setup_logging:75 |   User: ubuntu
+2025-12-16 23:58:00 | INFO     | setup_logging:76 |   Hostname: 209-20-158-34
+2025-12-16 23:58:00 | INFO     | setup_logging:77 |   Platform: Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35
+2025-12-16 23:58:00 | INFO     | setup_logging:78 |   Python version: 3.10.12
+2025-12-16 23:58:00 | INFO     | setup_logging:81 | RUN PARAMETERS:
+2025-12-16 23:58:00 | INFO     | setup_logging:83 |   input_dir: swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/
+2025-12-16 23:58:00 | INFO     | setup_logging:85 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/logs/analysis_20251216_235800.log
+2025-12-16 23:58:00 | INFO     | setup_logging:86 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena
+2025-12-16 23:58:00 | INFO     | setup_logging:87 |   Timestamp: 20251216_235800
+2025-12-16 23:58:00 | INFO     | setup_logging:88 | ================================================================================
+2025-12-16 23:58:00 | INFO     | load_results:101 | Loading results from /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/output.jsonl
+2025-12-16 23:58:00 | INFO     | load_results:106 | Loaded 220 examples
+2025-12-16 23:58:00 | INFO     | extract_probabilities:151 | Extracted probabilities (before balancing):
+2025-12-16 23:58:00 | INFO     | extract_probabilities:152 |   Legitimate (LSP): 147
+2025-12-16 23:58:00 | INFO     | extract_probabilities:153 |   Illegitimate (ILSP): 73
+2025-12-16 23:58:00 | INFO     | extract_probabilities:154 |   Skipped (zero probs): 0
+2025-12-16 23:58:00 | INFO     | extract_probabilities:166 | Balanced dataset:
+2025-12-16 23:58:00 | INFO     | extract_probabilities:167 |   n = 73 (min of LSP and ILSP)
+2025-12-16 23:58:00 | INFO     | extract_probabilities:168 |   Total examples used: 146
+2025-12-16 23:58:00 | INFO     | create_visualization:228 | Creating visualization...
+2025-12-16 23:58:01 | INFO     | create_visualization:297 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/self_preference_analysis.pdf
+2025-12-16 23:58:01 | INFO     | create_visualization:302 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/self_preference_analysis.png
+2025-12-16 23:58:01 | INFO     | save_statistics:308 | Computing and saving statistics...
+2025-12-16 23:58:01 | INFO     | save_statistics:337 | LSP statistics:
+2025-12-16 23:58:01 | INFO     | save_statistics:338 |   Mean: 0.927
+2025-12-16 23:58:01 | INFO     | save_statistics:339 |   95% CI: [0.867, 0.963]
+2025-12-16 23:58:01 | INFO     | save_statistics:340 |   Median: 1.000
+2025-12-16 23:58:01 | INFO     | save_statistics:341 |   Std: 0.199
+2025-12-16 23:58:01 | INFO     | save_statistics:337 | ILSP statistics:
+2025-12-16 23:58:01 | INFO     | save_statistics:338 |   Mean: 0.828
+2025-12-16 23:58:01 | INFO     | save_statistics:339 |   95% CI: [0.758, 0.883]
+2025-12-16 23:58:01 | INFO     | save_statistics:340 |   Median: 0.997
+2025-12-16 23:58:01 | INFO     | save_statistics:341 |   Std: 0.269
+2025-12-16 23:58:02 | INFO     | save_statistics:337 | ALL statistics:
+2025-12-16 23:58:02 | INFO     | save_statistics:338 |   Mean: 0.878
+2025-12-16 23:58:02 | INFO     | save_statistics:339 |   95% CI: [0.833, 0.911]
+2025-12-16 23:58:02 | INFO     | save_statistics:340 |   Median: 0.999
+2025-12-16 23:58:02 | INFO     | save_statistics:341 |   Std: 0.242
+2025-12-16 23:58:02 | INFO     | save_statistics:347 | Saved statistics to /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena/statistics.json
+2025-12-16 23:58:02 | INFO     | main:398 | ================================================================================
+2025-12-16 23:58:02 | INFO     | main:399 | ANALYSIS COMPLETED SUCCESSFULLY
+2025-12-16 23:58:02 | INFO     | main:400 | Results saved in: /home/ubuntu/steering_self_preference/verifiable_data_experiments/swapping_tests/arena_gemmajudges_claudevsgpt/google_gemma-3-12b-it/arena
+2025-12-16 23:58:02 | INFO     | main:401 | ================================================================================
