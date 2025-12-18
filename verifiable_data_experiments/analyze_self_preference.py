@@ -108,19 +108,22 @@ def load_results(jsonl_path: str, logger: logging.Logger):
 
 def extract_probabilities(scores, logger: logging.Logger):
     """
-    Extract self-preference probabilities for legitimate (LSP), 
+    Extract self-preference probabilities for legitimate (LSP),
     illegitimate (ILSP), and all examples.
-    
+
+    Balances LSP and ILSP to have equal sample sizes by randomly sampling
+    from the larger group to match the smaller group.
+
     Returns:
         dict with keys 'lsp', 'ilsp', 'all' containing lists of probabilities
-        float: proportion of legitimate examples
+        float: proportion of legitimate examples (before balancing)
     """
     examples = {
         "lsp": [],
         "ilsp": [],
         "all": []
     }
-    
+
     skipped = 0
     for s in scores:
         # Skip examples with zero probabilities (failed to extract)
@@ -128,31 +131,66 @@ def extract_probabilities(scores, logger: logging.Logger):
             skipped += 1
             print(f"Skipping example with zero probabilities: {s}")
             continue
-        
+
         # Calculate self-preference: average of JR(A) and RJ(B)
         # JR(A) = probability of choosing A when judge is in position A
         # RJ(B) = probability of choosing B when reference is in position B
         # These represent the model's preference for its own output regardless of position
         self_pref = (s['probabilities']['JR_order']["A"] + s['probabilities']['RJ_order']["B"]) / 2.0
-        
+
         examples['all'].append(self_pref)
-        
+
         # Categorize as legitimate or illegitimate based on judge correctness
         if s['judge_correct'] == 1:
             examples['lsp'].append(self_pref)
         else:
             examples['ilsp'].append(self_pref)
-    
+
+    # Calculate proportion before balancing
     lsp_proportion = len(examples['lsp']) / (len(examples['lsp']) + len(examples['ilsp']))
-    
-    logger.info(f"Extracted probabilities:")
+
+    logger.info(f"Extracted probabilities (before balancing):")
     logger.info(f"  Total valid examples: {len(examples['all'])}")
     logger.info(f"  Legitimate (LSP): {len(examples['lsp'])}")
     logger.info(f"  Illegitimate (ILSP): {len(examples['ilsp'])}")
     logger.info(f"  Skipped (zero probs): {skipped}")
     logger.info(f"  LSP proportion: {lsp_proportion:.3f}")
-    
-    return examples, lsp_proportion, skipped
+
+    # Balance LSP and ILSP to have equal sample sizes
+    lsp_count = len(examples['lsp'])
+    ilsp_count = len(examples['ilsp'])
+
+    if lsp_count != ilsp_count:
+        min_count = min(lsp_count, ilsp_count)
+        logger.info(f"\nBalancing LSP and ILSP samples:")
+        logger.info(f"  Target size: {min_count} examples each")
+
+        # Randomly sample from the larger group
+        np.random.seed(42)  # For reproducibility
+        if lsp_count > min_count:
+            logger.info(f"  Downsampling LSP from {lsp_count} to {min_count}")
+            indices = np.random.choice(lsp_count, min_count, replace=False)
+            examples['lsp'] = [examples['lsp'][i] for i in indices]
+
+        if ilsp_count > min_count:
+            logger.info(f"  Downsampling ILSP from {ilsp_count} to {min_count}")
+            indices = np.random.choice(ilsp_count, min_count, replace=False)
+            examples['ilsp'] = [examples['ilsp'][i] for i in indices]
+
+        # Update 'all' to reflect balanced samples
+        examples['all'] = examples['lsp'] + examples['ilsp']
+
+        logger.info(f"\nAfter balancing:")
+        logger.info(f"  Legitimate (LSP): {len(examples['lsp'])}")
+        logger.info(f"  Illegitimate (ILSP): {len(examples['ilsp'])}")
+        logger.info(f"  Total (all): {len(examples['all'])}")
+    else:
+        logger.info(f"\nLSP and ILSP already balanced ({lsp_count} examples each)")
+
+    # Calculate balanced proportion (will be 0.5 after balancing)
+    balanced_lsp_proportion = len(examples['lsp']) / (len(examples['lsp']) + len(examples['ilsp']))
+
+    return examples, lsp_proportion, balanced_lsp_proportion, skipped
 
 def plot_histogram_with_stats(ax, data, objective, title=None, xlabel=None, 
                                color='cornflowerblue', no_spine=False, **hist_kwargs):
@@ -286,13 +324,17 @@ def create_visualization(prob_data, lsp_proportion, output_path: Path, logger: l
 def save_statistics(prob_data, lsp_proportion, output_path: Path, logger: logging.Logger, skipped):
     """Save detailed statistics to JSON file."""
     logger.info("Computing and saving statistics...")
-    
+
+    # Calculate balanced proportion from the actual balanced data
+    balanced_proportion = len(prob_data['lsp']) / (len(prob_data['lsp']) + len(prob_data['ilsp']))
+
     stats = {
         "timestamp": str(datetime.now()),
         "n_total": len(prob_data['all']),
         "n_lsp": len(prob_data['lsp']),
         "n_ilsp": len(prob_data['ilsp']),
-        "lsp_proportion": float(lsp_proportion),
+        "lsp_proportion_original": float(lsp_proportion),
+        "lsp_proportion_balanced": float(balanced_proportion),
         "statistics": {}
     }
     stats['skipped'] = skipped
@@ -367,12 +409,12 @@ def main():
     results = load_results(str(input_jsonl), logger)
     
     # Extract probabilities
-    prob_data, lsp_proportion, skipped = extract_probabilities(results, logger)
-    
-    # Create visualization
-    create_visualization(prob_data, lsp_proportion, input_dir, logger)
-    
-    # Save statistics
+    prob_data, lsp_proportion, balanced_lsp_proportion, skipped = extract_probabilities(results, logger)
+
+    # Create visualization (use balanced proportion for the objective score)
+    create_visualization(prob_data, balanced_lsp_proportion, input_dir, logger)
+
+    # Save statistics (save original proportion for reference)
     save_statistics(prob_data, lsp_proportion, input_dir, logger, skipped)
     
     logger.info("=" * 80)

@@ -21,6 +21,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Optional, Tuple
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from peft import PeftModel
 import torch
 import torch.nn.functional as F
 
@@ -227,6 +228,7 @@ def parse_args():
     # Model
     p.add_argument("--bf16", action="store_true", help="Use bfloat16 precision")
     p.add_argument("--trust_remote_code", action="store_true")
+    p.add_argument("--lora_adapter", type=str, default=None, help="Path to LoRA adapter to load on top of the judge model")
     # Decoding
     p.add_argument("--logprobs_k", type=int, default=50, help="Top-k for probability extraction")
     p.add_argument("--max_tokens", type=int, default=2)
@@ -284,17 +286,23 @@ def main():
         logger.debug(f"Set pad_token to eos_token: {tokenizer.eos_token}")
     
     logger.info("Loading model (this may take a while)...")
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         args.judge,
         torch_dtype=torch.bfloat16 if args.bf16 else torch.float32,
         trust_remote_code=args.trust_remote_code,
         device_map="auto",
     )
-    
+
+    # Load LoRA adapter if provided
+    if args.lora_adapter is not None:
+        logger.info(f"Loading LoRA adapter from {args.lora_adapter}...")
+        model = PeftModel.from_pretrained(model, args.lora_adapter)
+        logger.info("LoRA adapter loaded successfully")
+
     model.eval()
     device = model.device
-    
+
     logger.info(f"Model loaded successfully on device: {device}")
 
     if torch.cuda.is_available():
@@ -309,6 +317,7 @@ def main():
     with open(metadata_file, "w", encoding="utf-8") as f_meta:
         metadata = {
             "judge_model": args.judge,
+            "lora_adapter": args.lora_adapter if args.lora_adapter is not None else "None",
             "data_source": "arena",
             "logprobs_k": args.logprobs_k,
             "max_tokens": args.max_tokens,

@@ -1,0 +1,17 @@
+{
+  "judge_model": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "lora_adapter": "finetuning_experiments/output-final",
+  "data_source": "arena",
+  "logprobs_k": 50,
+  "max_tokens": 2,
+  "n_limited_examples": "None",
+  "data_jsonl_path": "arena_diffs/ppe_llama-3-8b-instruct.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavsall/meta-llama_Meta-Llama-3-8B-Instruct/arena",
+  "date_collected": "2025-12-18 21:38:35.267428",
+  "float": "float32",
+  "collected_by": "ubuntu",
+  "hostname": "209-20-157-173",
+  "platform": "Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35",
+  "pytorch_version": "2.7.0",
+  "cuda_available": true
+}

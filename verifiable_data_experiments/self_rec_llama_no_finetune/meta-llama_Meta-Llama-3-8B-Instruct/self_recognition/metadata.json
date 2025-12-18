@@ -1,0 +1,18 @@
+{
+  "experiment": "self_recognition",
+  "judge_model": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "data_source": "arena",
+  "self_pref_results_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavsal_l_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/",
+  "logprobs_k": 50,
+  "max_tokens": 16,
+  "n_limited_examples": "None",
+  "data_jsonl_path": "arena_diffs/llama-3-8b-instruct_arena.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/self_rec_llama_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/self_recognition",
+  "date_collected": "2025-12-18 22:41:45.375088",
+  "float": "float32",
+  "collected_by": "ubuntu",
+  "hostname": "209-20-157-173",
+  "platform": "Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35",
+  "pytorch_version": "2.7.0",
+  "cuda_available": true
+}

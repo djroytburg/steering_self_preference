@@ -1,0 +1,55 @@
+2025-12-18 20:58:23 | INFO     | setup_logging:69 | ================================================================================
+2025-12-18 20:58:23 | INFO     | setup_logging:70 | ANALYSIS RUN STARTED
+2025-12-18 20:58:23 | INFO     | setup_logging:71 | ================================================================================
+2025-12-18 20:58:23 | INFO     | setup_logging:74 | SYSTEM METADATA:
+2025-12-18 20:58:23 | INFO     | setup_logging:75 |   User: ubuntu
+2025-12-18 20:58:23 | INFO     | setup_logging:76 |   Hostname: 209-20-157-173
+2025-12-18 20:58:23 | INFO     | setup_logging:77 |   Platform: Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35
+2025-12-18 20:58:23 | INFO     | setup_logging:78 |   Python version: 3.10.12
+2025-12-18 20:58:23 | INFO     | setup_logging:81 | RUN PARAMETERS:
+2025-12-18 20:58:23 | INFO     | setup_logging:83 |   input_dir: llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/
+2025-12-18 20:58:23 | INFO     | setup_logging:85 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/logs/analysis_20251218_205823.log
+2025-12-18 20:58:23 | INFO     | setup_logging:86 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it
+2025-12-18 20:58:23 | INFO     | setup_logging:87 |   Timestamp: 20251218_205823
+2025-12-18 20:58:23 | INFO     | setup_logging:88 | ================================================================================
+2025-12-18 20:58:23 | INFO     | load_results:101 | Loading results from /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/output.jsonl
+2025-12-18 20:58:23 | INFO     | load_results:106 | Loaded 1500 examples
+2025-12-18 20:58:28 | INFO     | extract_probabilities:152 | Extracted probabilities (before balancing):
+2025-12-18 20:58:28 | INFO     | extract_probabilities:153 |   Total valid examples: 1420
+2025-12-18 20:58:28 | INFO     | extract_probabilities:154 |   Legitimate (LSP): 57
+2025-12-18 20:58:28 | INFO     | extract_probabilities:155 |   Illegitimate (ILSP): 1363
+2025-12-18 20:58:28 | INFO     | extract_probabilities:156 |   Skipped (zero probs): 80
+2025-12-18 20:58:28 | INFO     | extract_probabilities:157 |   LSP proportion: 0.040
+2025-12-18 20:58:28 | INFO     | extract_probabilities:165 | 
+Balancing LSP and ILSP samples:
+2025-12-18 20:58:28 | INFO     | extract_probabilities:166 |   Target size: 57 examples each
+2025-12-18 20:58:28 | INFO     | extract_probabilities:176 |   Downsampling ILSP from 1363 to 57
+2025-12-18 20:58:28 | INFO     | extract_probabilities:183 | 
+After balancing:
+2025-12-18 20:58:28 | INFO     | extract_probabilities:184 |   Legitimate (LSP): 57
+2025-12-18 20:58:28 | INFO     | extract_probabilities:185 |   Illegitimate (ILSP): 57
+2025-12-18 20:58:28 | INFO     | extract_probabilities:186 |   Total (all): 114
+2025-12-18 20:58:28 | INFO     | create_visualization:246 | Creating visualization...
+2025-12-18 20:58:29 | INFO     | create_visualization:315 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/self_preference_analysis.pdf
+2025-12-18 20:58:29 | INFO     | create_visualization:320 | Saved visualization to /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/self_preference_analysis.png
+2025-12-18 20:58:29 | INFO     | save_statistics:326 | Computing and saving statistics...
+2025-12-18 20:58:29 | INFO     | save_statistics:359 | LSP statistics:
+2025-12-18 20:58:29 | INFO     | save_statistics:360 |   Mean: 0.505
+2025-12-18 20:58:29 | INFO     | save_statistics:361 |   95% CI: [0.448, 0.558]
+2025-12-18 20:58:29 | INFO     | save_statistics:362 |   Median: 0.506
+2025-12-18 20:58:29 | INFO     | save_statistics:363 |   Std: 0.211
+2025-12-18 20:58:29 | INFO     | save_statistics:359 | ILSP statistics:
+2025-12-18 20:58:29 | INFO     | save_statistics:360 |   Mean: 0.291
+2025-12-18 20:58:29 | INFO     | save_statistics:361 |   95% CI: [0.249, 0.339]
+2025-12-18 20:58:29 | INFO     | save_statistics:362 |   Median: 0.259
+2025-12-18 20:58:29 | INFO     | save_statistics:363 |   Std: 0.174
+2025-12-18 20:58:29 | INFO     | save_statistics:359 | ALL statistics:
+2025-12-18 20:58:29 | INFO     | save_statistics:360 |   Mean: 0.398
+2025-12-18 20:58:29 | INFO     | save_statistics:361 |   95% CI: [0.357, 0.439]
+2025-12-18 20:58:29 | INFO     | save_statistics:362 |   Median: 0.398
+2025-12-18 20:58:29 | INFO     | save_statistics:363 |   Std: 0.221
+2025-12-18 20:58:29 | INFO     | save_statistics:369 | Saved statistics to /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it/statistics.json
+2025-12-18 20:58:29 | INFO     | main:420 | ================================================================================
+2025-12-18 20:58:29 | INFO     | main:421 | ANALYSIS COMPLETED SUCCESSFULLY
+2025-12-18 20:58:29 | INFO     | main:422 | Results saved in: /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it
+2025-12-18 20:58:29 | INFO     | main:423 | ================================================================================

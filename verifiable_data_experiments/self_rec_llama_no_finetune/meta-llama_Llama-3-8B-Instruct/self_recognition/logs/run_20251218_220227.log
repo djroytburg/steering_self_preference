@@ -1,0 +1,33 @@
+2025-12-18 22:02:27 | INFO     | setup_logging:76 | ================================================================================
+2025-12-18 22:02:27 | INFO     | setup_logging:77 | SELF-RECOGNITION EXPERIMENT STARTED
+2025-12-18 22:02:27 | INFO     | setup_logging:78 | ================================================================================
+2025-12-18 22:02:27 | INFO     | setup_logging:81 | SYSTEM METADATA:
+2025-12-18 22:02:27 | INFO     | setup_logging:82 |   User: ubuntu
+2025-12-18 22:02:27 | INFO     | setup_logging:83 |   Hostname: 209-20-157-173
+2025-12-18 22:02:27 | INFO     | setup_logging:84 |   Platform: Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35
+2025-12-18 22:02:27 | INFO     | setup_logging:85 |   Python version: 3.10.12
+2025-12-18 22:02:27 | INFO     | setup_logging:86 |   PyTorch version: 2.7.0
+2025-12-18 22:02:27 | INFO     | setup_logging:87 |   CUDA available: True
+2025-12-18 22:02:27 | INFO     | setup_logging:89 |   CUDA version: 12.8
+2025-12-18 22:02:27 | INFO     | setup_logging:90 |   GPU count: 1
+2025-12-18 22:02:27 | INFO     | setup_logging:92 |   GPU 0: NVIDIA H100 PCIe
+2025-12-18 22:02:27 | INFO     | setup_logging:94 |     Total memory: 85.03 GB
+2025-12-18 22:02:27 | INFO     | setup_logging:97 | RUN PARAMETERS:
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   bf16: False
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   data_jsonl: arena_diffs/llama-3-8b-instruct_arena.jsonl
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   judge: meta-llama/Llama-3-8B-Instruct
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   limit: 0
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   logprobs_k: 50
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   max_tokens: 16
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   output_path: self_rec_llama_no_finetune
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   self_pref_results_path: /home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavsal_l_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/arena/
+2025-12-18 22:02:27 | INFO     | setup_logging:99 |   trust_remote_code: False
+2025-12-18 22:02:27 | INFO     | setup_logging:101 |   Log file: /home/ubuntu/steering_self_preference/verifiable_data_experiments/self_rec_llama_no_finetune/meta-llama_Llama-3-8B-Instruct/self_recognition/logs/run_20251218_220227.log
+2025-12-18 22:02:27 | INFO     | setup_logging:102 |   Output directory: /home/ubuntu/steering_self_preference/verifiable_data_experiments/self_rec_llama_no_finetune/meta-llama_Llama-3-8B-Instruct/self_recognition
+2025-12-18 22:02:27 | INFO     | setup_logging:103 |   Timestamp: 20251218_220227
+2025-12-18 22:02:27 | INFO     | setup_logging:104 | ================================================================================
+2025-12-18 22:02:27 | INFO     | main:323 | Loading self-preference results...
+2025-12-18 22:02:27 | INFO     | main:326 | Loaded 0 self-preference results
+2025-12-18 22:02:27 | INFO     | main:328 | Starting data loading...
+2025-12-18 22:02:27 | INFO     | main:337 | Dataset loaded: 1129 examples found
+2025-12-18 22:02:27 | INFO     | main:362 | Loading tokenizer and model from meta-llama/Llama-3-8B-Instruct

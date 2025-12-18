@@ -22,23 +22,19 @@ import wandb
 
 
 def apply_chat_template(example, tokenizer):
-    mesages = tokenizer.apply_chat_template(
+    # Apply chat template - this will add proper special tokens including EOS
+    text = tokenizer.apply_chat_template(
         example["messages"],
         tokenize=False,
         add_generation_prompt=False,
-        add_special_tokens=False,
     )
-    return {"text": mesages}
+    return {"text": text}
 
 
 def tokenize(example, tokenizer):
+    # Tokenize the text - chat template has already added EOS token
     processed = tokenizer(example["text"])
-    if (
-        tokenizer.eos_token_id is not None
-        and processed["input_ids"][-1] != tokenizer.eos_token_id
-    ):
-        processed["input_ids"] = processed["input_ids"] + [tokenizer.eos_token_id]
-        processed["attention_mask"] = processed["attention_mask"] + [1]
+    # Don't add extra EOS token - the chat template already handles this
     return processed
 
 
@@ -314,10 +310,18 @@ def main():
         word = None  # Set word to None if extraction fails
 
     # Load and prepare data
+    full_dataset = load_dataset("json", data_files=cfg.data.train_path)["train"]
+
+    # Limit dataset size if max_examples is specified
+    if hasattr(cfg.data, 'max_examples') and cfg.data.max_examples is not None and cfg.data.max_examples > 0:
+        original_size = len(full_dataset)
+        if cfg.data.max_examples < original_size:
+            # Shuffle before selecting to get random subset
+            full_dataset = full_dataset.shuffle(seed=42).select(range(cfg.data.max_examples))
+            print(f"\nLimited dataset from {original_size} to {len(full_dataset)} examples")
+
     if cfg.data.validation_split > 0:
-        dataset = load_dataset("json", data_files=cfg.data.train_path)[
-            "train"
-        ].train_test_split(test_size=cfg.data.validation_split)
+        dataset = full_dataset.train_test_split(test_size=cfg.data.validation_split)
         # manually split into train and test
         train_dataset = dataset["train"]
         test_dataset = dataset["test"]
@@ -325,7 +329,7 @@ def main():
         print(f"Number of training examples: {len(train_dataset)}")
         print(f"Number of validation examples: {len(test_dataset)}")
     else:
-        train_dataset = load_dataset("json", data_files=cfg.data.train_path)["train"]
+        train_dataset = full_dataset
         test_dataset = None
         print("\nDataset Information:")
         print(f"Number of training examples: {len(train_dataset)}")
@@ -335,9 +339,12 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         cfg.model.model_id, trust_remote_code=True
     )
-    tokenizer.add_eos_token = True
+    # Don't automatically add eos token - the chat template handles this
+    tokenizer.add_eos_token = False
     print(f"{tokenizer.pad_token_id=}")
     print(f"{tokenizer.eos_token_id=}")
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
     # Quantization config
     bnb_config = BitsAndBytesConfig(
@@ -412,6 +419,7 @@ def main():
         greater_is_better=False,
         packing=False,
         weight_decay=cfg.training.weight_decay,
+        max_seq_length=cfg.training.get("max_seq_length", 2048),
     )
 
     # Initialize wandb if API key is available
@@ -435,8 +443,10 @@ def main():
             ),  # Use thread-based initialization
         )
 
-    instruction_template = "<start_of_turn>user\n"
-    response_template = "<start_of_turn>model\n"
+    # Llama 3 chat format uses special header tokens
+    # The actual format is: <|start_header_id|>user<|end_header_id|> and <|start_header_id|>assistant<|end_header_id|>
+    instruction_template = "<|start_header_id|>user<|end_header_id|>"
+    response_template = "<|start_header_id|>assistant<|end_header_id|>"
     collator = DataCollatorForCompletionOnlyLM(
         instruction_template=instruction_template,
         response_template=response_template,

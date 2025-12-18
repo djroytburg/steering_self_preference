@@ -16,6 +16,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Optional, Tuple
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
+from peft import PeftModel
 
 load_dotenv()
 os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True,max_split_size_mb:512'
@@ -212,8 +213,8 @@ def normalize_probs_abc(prob_map: Dict[str, float]) -> Dict[str, float]:
 def parse_args():
     p = argparse.ArgumentParser(description="A/B/T probabilities for two prompt orders.")
     p.add_argument("--output_path", type=str, required=True, help="Where to write JSONL output.")
-    p.add_argument("--judge", type=str, default="google/gemma-3-12b-it")
-    p.add_argument("--ref", type=str, default='deepseek-ai/DeepSeek-R1-Distill-Qwen-32B')
+    p.add_argument("--judge", type=str, default="meta-llama/Meta-Llama-3-8B-Instruct")
+    p.add_argument("--ref", type=str, default='google/gemma-3-12b-it')
     p.add_argument("--data_jsonl", type=str,
                    default="diffs.jsonl",
                    help="JSONL fields: question, judge_completion, ref_completion; optional: judge_correct, ref_correct.")
@@ -221,6 +222,7 @@ def parse_args():
     # Model
     p.add_argument("--bf16", action="store_true", help="Use bfloat16 precision")
     p.add_argument("--trust_remote_code", action="store_true")
+    p.add_argument("--lora_adapter", type=str, default=None, help="Path to LoRA adapter to load on top of the judge model")
     # Decoding
     p.add_argument("--logprobs_k", type=int, default=50, help="Top-k for probability extraction (reduce to save memory)")
     p.add_argument("--max_tokens", type=int, default=2)
@@ -295,7 +297,7 @@ def main():
     all_diffs = open(expand(args.data_jsonl), "r", encoding="utf-8").readlines()
     for line in all_diffs:
         item = json.loads(line)
-        if (item['metadata']['judge'] == args.judge and item['metadata']['ref'] == args.ref):
+        if (item['metadata']['judge'] == 'meta-llama/Meta-Llama-3.1-8B-Instruct' and item['metadata']['ref'] == args.ref):
             data = item
             break
         elif (item['metadata']['judge'] == args.ref and item['metadata']['ref'] == args.judge):
@@ -317,18 +319,23 @@ def main():
         logger.debug(f"Set pad_token to eos_token: {tokenizer.eos_token}")
     
     logger.info("Loading model (this may take a while)...")
-    
+
     model = AutoModelForCausalLM.from_pretrained(
         args.judge,
         torch_dtype=torch.bfloat16 if args.bf16 else torch.float32,
         trust_remote_code=args.trust_remote_code,
         device_map="auto",
     )
-    
-   
+
+    # Load LoRA adapter if provided
+    if args.lora_adapter is not None:
+        logger.info(f"Loading LoRA adapter from {args.lora_adapter}...")
+        model = PeftModel.from_pretrained(model, args.lora_adapter)
+        logger.info("LoRA adapter loaded successfully")
+
     model.eval()
     device = model.device
-    
+
     logger.info(f"Model loaded successfully on device: {device}")
 
     if torch.cuda.is_available():
@@ -347,6 +354,7 @@ def main():
     with open(metadata_file, "w", encoding="utf-8") as f_meta:
         metadata = {
             "judge_model": args.judge,
+            "lora_adapter": args.lora_adapter if args.lora_adapter is not None else "None",
             "ref_model": args.ref,
             "logprobs_k": args.logprobs_k,
             "max_tokens": args.max_tokens,

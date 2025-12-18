@@ -1,12 +1,13 @@
 # Data configuration
 data:
-  train_path: "/home/ubuntu/steering_self_preference/verifiable_data_experiments/finetuning_experiments/finetuning_dataset.json"
+  train_path: "/home/ubuntu/steering_self_preference/verifiable_data_experiments/finetuning_experiments/arena_finetuning_dataset.json"
   test_path: null  # Optional test data path
   validation_split: 0.1 # Split ratio for validation if no test data provided
+  max_examples:  500  # Maximum number of examples to use (null = use all). Set to a number like 1000 to limit dataset size
 
 # Model configuration
 model:
-  model_id: "google/gemma-3-12b-it"
+  model_id: "meta-llama/Meta-Llama-3-8B-Instruct"
   quantization:
     load_in_4bit: true
     bnb_4bit_quant_type: "nf4"
@@ -33,26 +34,27 @@ lora:
 training:
   output_dir: "/home/ubuntu/steering_self_preference/verifiable_data_experiments/finetuning_experiments/output"
   num_train_epochs: 3
-  per_device_train_batch_size: 8
-  gradient_accumulation_steps: 1
+  per_device_train_batch_size: 2
+  gradient_accumulation_steps: 4  # Increased for more stable gradients (effective batch size = 8)
   gradient_checkpointing: true
   optim: "paged_adamw_8bit"
   logging_steps: 1
-  learning_rate: 2e-4
+  learning_rate: 5e-5  # Reduced learning rate to prevent spikes
   fp16: false
   bf16: true
-  max_grad_norm: 0.3
-  lr_scheduler_type: "linear"
+  max_grad_norm: 1.0  # Increased to allow larger gradients before clipping
+  lr_scheduler_type: "cosine"  # Changed to cosine for smoother decay
   eval_strategy: "epoch"  # Added evaluation strategy
   save_strategy: "epoch"
-  warmup_ratio: 0.03
+  warmup_ratio: 0.1  # Increased warmup to 10% for better stability
   weight_decay: 0.01
+  max_seq_length: 4096  # Maximum sequence length for training
 
 # Wandb configuration
 wandb:
-  project: "gemma-2-9b-it-taboo"
-  name: "gemma-2-9b-it-taboo"
-  run_name: "gemma-2-9b-it-taboo"
+  project: "gemma-3-12b-it-self-rec"
+  name: "gemma-3-12b-it-self-rec-math"
+  run_name: "gemma-3-12b-it-self-rec-math-1"
 
 # Hugging Face Hub configuration
 hub:

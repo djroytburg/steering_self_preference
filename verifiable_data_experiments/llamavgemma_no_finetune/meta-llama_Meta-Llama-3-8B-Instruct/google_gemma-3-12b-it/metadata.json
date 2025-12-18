@@ -1,0 +1,17 @@
+{
+  "judge_model": "meta-llama/Meta-Llama-3-8B-Instruct",
+  "lora_adapter": "None",
+  "ref_model": "google/gemma-3-12b-it",
+  "logprobs_k": 50,
+  "max_tokens": 2,
+  "n_limited_examples": 1500,
+  "data_json_path": "diffs.jsonl",
+  "output_path": "/home/ubuntu/steering_self_preference/verifiable_data_experiments/llamavgemma_no_finetune/meta-llama_Meta-Llama-3-8B-Instruct/google_gemma-3-12b-it",
+  "date_collected": "2025-12-18 20:23:00.695288",
+  "float": "float32",
+  "collected_by": "ubuntu",
+  "hostname": "209-20-157-173",
+  "platform": "Linux-6.8.0-1040-nvidia-x86_64-with-glibc2.35",
+  "pytorch_version": "2.7.0",
+  "cuda_available": true
+}
